@@ -16,12 +16,10 @@ def is_inside_pnpoly(xs, ys, x, y):
 
     for i in range(edge_count):
         j = i + 1
-        a = (ys[i] > y) != (ys[j] > y)
-        b = False
-        if a:
-            b = x < (xs[j]-xs[i]) * (y-ys[i]) / (ys[j]-ys[i]) + xs[i] 
-        if a and b:
+        same_side = (ys[i] > y) != (ys[j] > y)
+        if same_side and x < (xs[j]-xs[i]) * (y-ys[i]) / (ys[j]-ys[i]) + xs[i] :
             inside = not inside
+
     return inside
 
 
