@@ -1,5 +1,5 @@
 def check_intersect(xa, ya, xb, yb):
-    if ya > 0 == yb > 0:
+    if (ya > 0) == (yb > 0):
         return 0
 
     xi = -ya*(xb - xa)/(yb - ya) + xa
@@ -16,8 +16,8 @@ def is_inside_pnpoly(xs, ys, x, y):
 
     for i in range(edge_count):
         j = i + 1
-        same_side = (ys[i] > y) != (ys[j] > y)
-        if same_side and x < (xs[j]-xs[i]) * (y-ys[i]) / (ys[j]-ys[i]) + xs[i] :
+        diff_side = (ys[i] > y) != (ys[j] > y)
+        if diff_side and x < (xs[j]-xs[i]) * (y-ys[i]) / (ys[j]-ys[i]) + xs[i] :
             inside = not inside
 
     return inside
@@ -44,5 +44,8 @@ def read_polygon(filename, comma_separated=False):
                 x, y = [float(value) for value in line.split()]
             xs.append(x)
             ys.append(y)
+    if xs[0] != xs[-1] and ys[0] != ys[-1]:
+        xs.append(xs[0])
+        ys.append(ys[0])
     return xs, ys
 
