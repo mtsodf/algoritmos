@@ -24,18 +24,26 @@ fig, ax = plt.subplots(1,1)
 if args.invert_axis:
     ax.invert_yaxis()
 
-algorithm = is_inside_pnpoly if args.pnpoly else is_inside
+ax.plot(xs, ys, color="black")
 
 if args.point:
     x, y = args.point
-    if algorithm(xs, ys, x, y):
+    inside_point, intersects = is_inside(xs, ys, x, y, True)
+    if inside_point:
         print("Point ({}, {}) is inside".format(x, y))
         c = "blue"
+        for i in intersects:
+            ax.plot(xs[i:i+2], ys[i:i+2], color="cyan")
+        # Add an arrow beginning on x,y 
+        # and ending on the first intersection
+        ax.arrow(x, y, max(xs)-x + max(xs)/10, 0, color="black", width=0.01, ls="--")
+        label = "dentro"
     else:
         print("Point ({}, {}) is outside".format(x, y))
+        label = "fora"
         c = "red"
     
-    ax.scatter([x], [y], color=c)
+    ax.scatter([x], [y], color=c, label=label)
 
 else:
     xmin, xmax = min(xs), max(xs)
@@ -52,19 +60,20 @@ else:
         for j in range(NPOINTS):
             y = ymin + j*(ymax-ymin)/(NPOINTS -1)
 
-            if algorithm(xs, ys, x, y):
+            if is_inside(xs, ys, x, y):
                 inside_x.append(x)
                 inside_y.append(y)
             else:
                 outside_x.append(x)
                 outside_y.append(y)
 
-    ax.scatter(inside_x, inside_y, color="blue")
+    ax.scatter(inside_x, inside_y, color="blue", label="dentro")
     if args.outside:
-        ax.scatter(outside_x, outside_y, color="red")
+        ax.scatter(outside_x, outside_y, color="red", label="fora")
 
-ax.plot(xs, ys, color="black")
+ax.legend()
 ax.set_title(os.path.basename(args.polygon_filename))
+plt.tight_layout()
 
 if args.save:
     figure_path = os.path.splitext(args.polygon_filename)[0] + ".png"
