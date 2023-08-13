@@ -11,10 +11,11 @@ args.add_argument("--outside", "-o", help="Plot outside points", action="store_t
 args.add_argument("--pnpoly", "-p", help="PNPOLY algorithm", action="store_true")
 args.add_argument("--point", "-P", help="Point to check", nargs=2, type=float, default=None)
 args.add_argument("--save", "-s", help="Save picture", action="store_true")
+args.add_argument("--marker_size", "-m", help="Marker size", type=int, default=None)
 
 args = args.parse_args()
 
-xs, ys = read_polygon(args.polygon_filename)
+xs, ys = read_polygon(args.polygon_filename, invert_x_y=False)
 
 print(f"Qtd Vertices = {len(xs) - 1}")
 
@@ -43,7 +44,7 @@ if args.point:
         label = "fora"
         c = "red"
     
-    ax.scatter([x], [y], color=c, label=label)
+    ax.scatter([x], [y], color=c, label=label, s=args.marker_size)
 
 else:
     xmin, xmax = min(xs), max(xs)
@@ -67,9 +68,9 @@ else:
                 outside_x.append(x)
                 outside_y.append(y)
 
-    ax.scatter(inside_x, inside_y, color="blue", label="dentro")
+    ax.scatter(inside_x, inside_y, color="blue", label="dentro", s=args.marker_size)
     if args.outside:
-        ax.scatter(outside_x, outside_y, color="red", label="fora")
+        ax.scatter(outside_x, outside_y, color="red", label="fora", s=args.marker_size)
 
 ax.legend()
 ax.set_title(os.path.basename(args.polygon_filename))
