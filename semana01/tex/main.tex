@@ -20,38 +20,36 @@
 \begin{frame}
 \frametitle{Problema a ser resolvido}
 
-\only<1>{
+\begin{overprint}
+\onslide<1->{
   \begin{block}{Problema}
     Dado um polígono e um ponto P, determinar se P está dentro ou fora do polígono.
   \end{block}
 }
-
-\only<2>{
+\onslide<2>{
   \begin{block}{Teorema de Jordan}
     Seja C uma curva simples e fechada. O complementar de C possui duas componentes conexas, uma limitada e outra ilimitada. 
   \end{block}
+
+  % add two columns to the slide
+  \begin{columns}
+    \column{0.5\textwidth}
+    \begin{center}
+      \begin{figure}
+        \includegraphics[width=0.8\textwidth]{figures/CurvaJordan.jpeg}
+      \end{figure}
+    \end{center}
+
+    \column{0.5\textwidth}
+    \begin{center}
+      \begin{figure}
+      \includegraphics[width=0.6\textwidth]{figures/PolJordan.jpeg}
+      \end{figure}
+    \end{center}
 }
-
-% add two columns to the slide
-\begin{columns}
-  \column{0.5\textwidth}
-  \begin{center}
-    % add an png figure
-
-    \begin{figure}
-    \includegraphics[width=0.8\textwidth]{figures/CurvaJordan.jpeg}
-    \end{figure}
-
-  \end{center}
-
-  \column{0.5\textwidth}
-  \begin{center}
-    \begin{tikzpicture}
-      \draw[thick] (0,0) -- (0,2) -- (2,2) -- (2,0) -- cycle;
-      \filldraw[fill=green!20!white, draw=green!50!black] (1,1) circle (1.5);
-    \end{tikzpicture}
-  \end{center}
 \end{columns}
+
+\end{overprint}
 
 \end{frame}
 
@@ -196,7 +194,7 @@
     \begin{center}
       \begin{itemize}
         \item Execução com polígonos regulares
-        \item Tamanhos de 10 a $10^6$ lados
+        \item Tamanhos de 10 a $10^7$ lados
         \item 5 execuções com cada tamanho
       \end{itemize}
     \end{center}
@@ -215,8 +213,9 @@
 
 \begin{itemize}
   \item O algoritmo funciona para polígonos simples
-  \item O algoritmo tem resultado que parece condizente no caso não-simples
-   \item O tempo de execução é proporicional ao número de arestas
+  \item O algoritmo tratou bem o caso das "quinas"
+  \item O algoritmo tem resultado que é "razoável" no caso não-simples
+  \item O tempo de execução é proporicional ao número de arestas
 \end{itemize}
 
 \end{frame}
