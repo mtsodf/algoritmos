@@ -26,12 +26,12 @@ for n in [10, 100, 1000, 10000, 100000, 1000000, 10000000]:
 df = pd.DataFrame(data)
 df.to_csv("data/performance.csv", index=False)
 
-sns.lineplot(data=df, x="n", y="elapsed_time")
+sns.lineplot(data=df, x="n", y="elapsed_time", errorbar=lambda x: (x.min(), x.max()))
 plt.xlabel("Tamanho Polígono")
 plt.ylabel("Tempo de Execução (s)")
 
 # Log x scale and Log y scale
 plt.xscale("log")
 plt.yscale("log")
-plt.show()
 plt.savefig("tex/figures/performance.png")
+plt.show()
