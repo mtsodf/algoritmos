@@ -1,8 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plt
 
-n = 7
+n = 5
 theta = np.pi/(2*n)
+theta = 0
 points = np.linspace(theta, theta + 2*np.pi, n, endpoint=False)
 x = np.cos(points)
 y = np.sin(points)
