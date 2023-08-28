@@ -76,7 +76,7 @@ class Polygon:
 
         return Polygon(self.xs, self.ys, topology)
 
-    def plot(self, ax=None, linestyle="-", color="black"):
+    def plot(self, ax=None, linestyle="-", color="black", marker="o"):
         if ax is None:
             fig, ax = plt.subplots(1, 1)
 
@@ -84,7 +84,7 @@ class Polygon:
         ys = [self.ys[i] for i in self.topology]
         xs = xs + [xs[0]]
         ys = ys + [ys[0]]
-        ax.plot(xs, ys, marker="o", linestyle=linestyle, color=color)
+        ax.plot(xs, ys, linestyle=linestyle, color=color, marker=marker)
 
     def __str__(self):
         return str(self.topology)
