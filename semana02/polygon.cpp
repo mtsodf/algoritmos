@@ -6,8 +6,12 @@ using namespace std;
 int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y)
 {
     FILE *f = fopen(filename, "r");
+
     if (f == NULL)
+    {
+        printf("Error opening file %s\n", filename);
         return -1;
+    }
 
     // Read while not end of file
     int n = 0;
