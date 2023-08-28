@@ -90,9 +90,9 @@ class Polygon:
         return str(self.topology)
 
 
-def triangulate(polygon, verbose=False):
+def triangulate(polygon, verbose=False, return_diags=False):
     if polygon.get_size() == 3:
-        return [polygon]
+        return [] if return_diags else [polygon]
 
     min_x = float("inf")
     n = polygon.get_size()
@@ -122,21 +122,27 @@ def triangulate(polygon, verbose=False):
                 area = triang_area(triang_x, triang_y)
                 if area > max_area:
                     max_area = area
-                    max_index = vert_index
+                    max_area_index = vert_index
                     max_area_i = i
 
     if max_area_i is None:
         diag_v0 = next_i
         diag_v1 = prev_i
+        diag_v0_index = next_index
+        diag_v1_index = prev_index
     else:
         diag_v0 = max_area_i
         diag_v1 = min_x_i
+        diag_v0_index = max_area_index
+        diag_v1_index = min_x_i
 
     polygon1 = polygon.semi_polygon(diag_v0, diag_v1, step=+1)
     polygon2 = polygon.semi_polygon(diag_v0, diag_v1, step=-1)
 
-    return triangulate(polygon1, verbose=verbose) + triangulate(
-        polygon2, verbose=verbose
+    return (
+        ([diag_v0_index, diag_v1_index] if return_diags else [])
+        + triangulate(polygon1, verbose=verbose, return_diags=return_diags)
+        + triangulate(polygon2, verbose=verbose, return_diags=return_diags)
     )
 
 
