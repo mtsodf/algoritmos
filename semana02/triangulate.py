@@ -156,6 +156,33 @@ def triang_area(xs, ys):
     return 0.5 * abs(delta_x0 * delta_y1 - delta_y0 * delta_x1)
 
 
+def coloring(pol):
+    diags = triangulate(pol, return_diags=True)
+    n_max = max(pol.topology)
+    degrees = [0] * (n_max + 1)
+
+    for diag in diags:
+        degrees[diag[0]] += 1
+        degrees[diag[1]] += 1
+
+    colors = [-1] * pol.get_size()
+
+    colors[0] = 1
+    colors[1] = 2
+
+    for i in range(1, pol.get_size()):
+        index = pol.topology[i]
+        deg = degrees[index]
+        i_next = (i + 1) % pol.get_size()
+        i_prev = (i - 1) % pol.get_size()
+        if deg % 2 == 1:
+            colors[i_next] = colors[i_prev]
+        else:
+            colors[i_next] = 6 - colors[i_prev] - colors[i]
+
+    return colors
+
+
 if __name__ == "__main__":
     xs, ys = read_polygon("semana02/data/asadelta.txt")
     p = Polygon(xs, ys)
