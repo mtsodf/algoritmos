@@ -100,10 +100,10 @@ def triangulate(polygon, verbose=False):
         if polygon.xs[vert_index] < min_x:
             min_x = polygon.xs[vert_index]
             min_x_index = vert_index
-            min_i = i
+            min_x_i = i
 
-    prev_i = (min_i - 1) % n
-    next_i = (min_i + 1) % n
+    prev_i = (min_x_i - 1) % n
+    next_i = (min_x_i + 1) % n
 
     prev_index = polygon.topology[prev_i]
     next_index = polygon.topology[next_i]
@@ -113,7 +113,7 @@ def triangulate(polygon, verbose=False):
     triang_y = [polygon.ys[i] for i in triang_verts]
 
     max_area = -float("inf")
-    i_max, max_index = None, None
+    max_area_i, max_index = None, None
     for i, vert_index in enumerate(polygon.topology):
         if vert_index not in triang_verts:
             xp, yp = polygon.xs[vert_index], polygon.ys[vert_index]
@@ -123,14 +123,14 @@ def triangulate(polygon, verbose=False):
                 if area > max_area:
                     max_area = area
                     max_index = vert_index
-                    i_max = i
+                    max_area_i = i
 
-    if i_max is None:
+    if max_area_i is None:
         diag_v0 = next_i
         diag_v1 = prev_i
     else:
-        diag_v0 = i_max
-        diag_v1 = min_i
+        diag_v0 = max_area_i
+        diag_v1 = min_x_i
 
     polygon1 = polygon.semi_polygon(diag_v0, diag_v1, step=+1)
     polygon2 = polygon.semi_polygon(diag_v0, diag_v1, step=-1)
