@@ -13,20 +13,6 @@ def check_intersect(xp, yp, xa, ya, xb, yb):
         return None
 
 
-def is_inside_pnpoly(xs, ys, x, y):
-    edge_count = len(xs) - 1
-
-    inside = False
-
-    for i in range(edge_count):
-        j = i + 1
-        diff_side = (ys[i] > y) != (ys[j] > y)
-        if diff_side and x < (xs[j] - xs[i]) * (y - ys[i]) / (ys[j] - ys[i]) + xs[i]:
-            inside = not inside
-
-    return inside
-
-
 def is_inside(xs, ys, x, y, return_intersects=False, closed_polygon=True):
     edge_count = len(xs) - 1 if closed_polygon else len(xs)
     intersects = []
@@ -140,15 +126,18 @@ def triangulate(polygon, verbose=False):
                     i_max = i
 
     if i_max is None:
-        return triangulate(
-            polygon.semi_polygon(next_i, prev_i, step=-1), verbose=verbose
-        ) + triangulate(polygon.semi_polygon(next_i, prev_i, step=1), verbose=verbose)
+        diag_v0 = next_i
+        diag_v1 = prev_i
     else:
-        polygon2 = polygon.semi_polygon(i_max, min_i, step=-1)
-        polygon1 = polygon.semi_polygon(i_max, min_i, step=1)
-        return triangulate(polygon1, verbose=verbose) + triangulate(
-            polygon2, verbose=verbose
-        )
+        diag_v0 = i_max
+        diag_v1 = min_i
+
+    polygon1 = polygon.semi_polygon(diag_v0, diag_v1, step=+1)
+    polygon2 = polygon.semi_polygon(diag_v0, diag_v1, step=-1)
+
+    return triangulate(polygon1, verbose=verbose) + triangulate(
+        polygon2, verbose=verbose
+    )
 
 
 def triang_area(xs, ys):
