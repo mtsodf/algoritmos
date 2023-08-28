@@ -134,13 +134,13 @@ def triangulate(polygon, verbose=False, return_diags=False):
         diag_v0 = max_area_i
         diag_v1 = min_x_i
         diag_v0_index = max_area_index
-        diag_v1_index = min_x_i
+        diag_v1_index = min_x_index
 
     polygon1 = polygon.semi_polygon(diag_v0, diag_v1, step=+1)
     polygon2 = polygon.semi_polygon(diag_v0, diag_v1, step=-1)
 
     return (
-        ([diag_v0_index, diag_v1_index] if return_diags else [])
+        ([[diag_v0_index, diag_v1_index]] if return_diags else [])
         + triangulate(polygon1, verbose=verbose, return_diags=return_diags)
         + triangulate(polygon2, verbose=verbose, return_diags=return_diags)
     )
