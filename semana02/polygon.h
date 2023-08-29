@@ -10,5 +10,9 @@ public:
     vector<int> *vert_list;
     Polygon(vector<double> *xs, vector<double> *ys);
     Polygon(vector<double> *xs, vector<double> *ys, vector<int> *vert_list);
+    Polygon *semi_polygon(int i, int j, int step);
+    vector<Polygon> *triangulate();
 };
+
 bool is_inside(Polygon *p, double xp, double yp);
+void print_polygon(Polygon *p);

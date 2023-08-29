@@ -9,9 +9,11 @@ using namespace std;
 int main()
 {
     vector<double> xs, ys;
-    read_polygon_from_file("../semana01/data/alien.txt", xs, ys);
-    Polygon p(&xs, &ys);
+    read_polygon_from_file("../../semana01/data/alien.txt", xs, ys);
+    Polygon *p = new Polygon(&xs, &ys);
 
+    cout << "Escrevendo Alien" << endl;
+    cout << "Size = " << xs.size() << endl;
     // Write polygon on stdout
     for (int i = 0; i < xs.size(); i++)
     {
