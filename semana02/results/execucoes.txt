@@ -144,3 +144,12 @@ file;size;time(s)
 ../data/caxeiro/polygon_50_7.txt;51;2.532250e-04
 ../data/caxeiro/polygon_50_8.txt;51;2.619100e-04
 ../data/caxeiro/polygon_50_9.txt;51;2.385520e-04
+../data/regular/regular_100000.txt;100001;2.045668e+02
+../data/regular/regular_100000.txt;100001;2.036261e+02
+../data/regular/regular_100000.txt;100001;2.044610e+02
+../data/regular/regular_100000.txt;100001;2.039355e+02
+../data/regular/regular_100000.txt;100001;2.042651e+02
+../data/regular/regular_100000.txt;100001;2.038210e+02
+../data/regular/regular_100000.txt;100001;2.038490e+02
+../data/regular/regular_100000.txt;100001;2.039716e+02
+../data/regular/regular_100000.txt;100001;2.035310e+02
