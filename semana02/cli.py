@@ -38,4 +38,4 @@ if args.show:
 
 pngfile = os.path.splitext(args.input)[0] + args.suffix + ".png"
 pngfile = os.path.join(args.outputdir, os.path.basename(pngfile))
-plt.savefig(pngfile)
+plt.savefig(pngfile, dpi=400)
