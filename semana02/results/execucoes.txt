@@ -1,3 +1,4 @@
+file;size;time(s)
 ../data/regular/regular_10.txt;11;3.082500e-05
 ../data/regular/regular_100.txt;101;8.352570e-04
 ../data/regular/regular_1000.txt;1001;6.135383e-02
