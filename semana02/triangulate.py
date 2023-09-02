@@ -171,6 +171,7 @@ def coloring(pol):
     colors[1] = 2
 
     for i in range(1, pol.get_size()):
+        i = i % pol.get_size()
         index = pol.topology[i]
         deg = degrees[index]
         i_next = (i + 1) % pol.get_size()
