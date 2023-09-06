@@ -12,6 +12,7 @@ public:
     Polygon(vector<double> *xs, vector<double> *ys, vector<int> *vert_list);
     Polygon *semi_polygon(int i, int j, int step);
     vector<Polygon> *triangulate();
+    bool point_inside(double xp, double yp);
 };
 
 bool is_inside(Polygon *p, double xp, double yp);

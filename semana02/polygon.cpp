@@ -82,6 +82,28 @@ Polygon *Polygon::semi_polygon(int i, int j, int step)
     return new Polygon(xs, ys, new_vert_list);
 }
 
+bool Polygon::point_inside(double xp, double yp)
+{
+    vector<double> *xs = this->xs;
+    vector<double> *ys = this->ys;
+    vector<int> *vert_list = this->vert_list;
+
+    int n = vert_list->size();
+    int j = n - 1;
+    int cont = 0;
+    for (int i = 0; i < n; j = i++)
+    {
+        double xi = (*xs)[(*vert_list)[i]];
+        double yi = (*ys)[(*vert_list)[i]];
+        double xj = (*xs)[(*vert_list)[j]];
+        double yj = (*ys)[(*vert_list)[j]];
+
+        if (((yi > yp) != (yj > yp)) && (xp < (xj - xi) * (yp - yi) / (yj - yi) + xi))
+            cont++;
+    }
+    return cont % 2 == 1;
+}
+
 bool is_inside(Polygon *p, double xp, double yp)
 {
     vector<double> *xs = p->xs;
@@ -218,4 +240,19 @@ void print_polygon(Polygon *p)
     {
         printf("%lf %lf\n", (*xs)[(*vert_list)[i]], (*ys)[(*vert_list)[i]]);
     }
+}
+
+void print_polygon_to_file(Polygon *p, const char *filename)
+{
+    FILE *f = fopen(filename, "w");
+    vector<double> *xs = p->xs;
+    vector<double> *ys = p->ys;
+    vector<int> *vert_list = p->vert_list;
+
+    int n = vert_list->size();
+    for (int i = 0; i < n; i++)
+    {
+        fprintf(f, "%lf %lf\n", (*xs)[(*vert_list)[i]], (*ys)[(*vert_list)[i]]);
+    }
+    fclose(f);
 }

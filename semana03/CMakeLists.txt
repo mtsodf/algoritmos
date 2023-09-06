@@ -1,0 +1,2 @@
+add_executable(convex_hull convex_hull_main.cpp)
+target_link_libraries(convex_hull polygon)
