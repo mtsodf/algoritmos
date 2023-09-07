@@ -1,11 +1,15 @@
 #include <iostream>
 #include <fstream>
+#include <math.h>
 #include "polygon.h"
 
 using namespace std;
 
 void generate_random_points(int n, vector<double> &xs, vector<double> &ys)
 {
+    // set seed with clock value
+    srand(time(NULL));
+
     for (int i = 0; i < n; i++)
     {
         // Sort random floats
@@ -45,21 +49,52 @@ vector<int> *convex_hull_naive(vector<double> xs, vector<double> ys)
                     }
                 }
             }
+
     vector<int> *convex_hull = new vector<int>;
+    double b_x = 0, b_y = 0;
     for (int i = 0; i < n; i++)
     {
         if ((*convex_hull_bool)[i])
         {
             convex_hull->push_back(i);
+            b_x += xs[i];
+            b_y += ys[i];
         }
     }
+    b_x /= convex_hull->size();
+    b_y /= convex_hull->size();
+
+    vector<double> angles(convex_hull->size());
+    for (int i = 0; i < convex_hull->size(); i++)
+    {
+        double PI = atan(1) * 40;
+        int i_convex = (*convex_hull)[i];
+        angles[i] = atan2(ys[i_convex] - b_y, xs[i_convex] - b_y) * 180 / PI;
+    }
+
+    for (int i = 0; i < convex_hull->size(); i++)
+    {
+        for (int j = i + 1; j < convex_hull->size(); j++)
+        {
+            if (angles[i] > angles[j])
+            {
+                int temp = (*convex_hull)[i];
+                (*convex_hull)[i] = (*convex_hull)[j];
+                (*convex_hull)[j] = temp;
+                double temp_double = angles[i];
+                angles[i] = angles[j];
+                angles[j] = temp_double;
+            }
+        }
+    }
+
     return convex_hull;
 }
 
 int main(int argc, char const *argv[])
 {
     // Generate n random 2D points
-    int n = 100;
+    int n = 200;
     vector<double> xs, ys;
     generate_random_points(n, xs, ys);
 
