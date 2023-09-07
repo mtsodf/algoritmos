@@ -1,17 +1,19 @@
 import os
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-print(os.getcwd())
-
-values = np.loadtxt("convex_hull.txt")
-print(values)
+with open("convex_hull.json", "r") as f:
+    json_values = json.load(f)
 
 
-xs = values[:, 0]
-ys = values[:, 1]
-convex_hull = values[:, 2].astype(int)
+xs = json_values["points_x"]
+ys = json_values["points_y"]
+convex_hull = json_values["convex_hull"]
 
-plt.scatter(xs, ys, c=convex_hull)
+colors = np.zeros(len(xs))
+colors[convex_hull] = 1
+
+plt.scatter(xs, ys, c=colors)
 plt.show()

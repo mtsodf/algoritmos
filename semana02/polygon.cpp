@@ -104,6 +104,11 @@ bool Polygon::point_inside(double xp, double yp)
     return cont % 2 == 1;
 }
 
+int Polygon::get_size()
+{
+    return vert_list->size();
+}
+
 bool is_inside(Polygon *p, double xp, double yp)
 {
     vector<double> *xs = p->xs;

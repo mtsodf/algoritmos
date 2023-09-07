@@ -13,6 +13,7 @@ public:
     Polygon *semi_polygon(int i, int j, int step);
     vector<Polygon> *triangulate();
     bool point_inside(double xp, double yp);
+    int get_size();
 };
 
 bool is_inside(Polygon *p, double xp, double yp);
