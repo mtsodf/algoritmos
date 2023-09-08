@@ -9,7 +9,7 @@ int inline remainder(int a, int b)
     return (a % b + b) % b;
 }
 
-int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y)
+int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y, bool comma)
 {
     FILE *f = fopen(filename, "r");
 
@@ -24,7 +24,14 @@ int read_polygon_from_file(const char *filename, vector<double> &x, vector<doubl
     while (!feof(f))
     {
         double x0, y0;
-        fscanf(f, "%lf %lf", &x0, &y0);
+        if (comma)
+        {
+            fscanf(f, "%lf,%lf", &x0, &y0);
+        }
+        else
+        {
+            fscanf(f, "%lf %lf", &x0, &y0);
+        }
         x.push_back(x0);
         y.push_back(y0);
         n++;
@@ -32,6 +39,11 @@ int read_polygon_from_file(const char *filename, vector<double> &x, vector<doubl
 
     fclose(f);
     return n;
+}
+
+int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y)
+{
+    return read_polygon_from_file(filename, x, y, false);
 }
 
 Polygon::Polygon(vector<double> *xs, vector<double> *ys)

@@ -2,6 +2,7 @@
 #include <vector>
 using namespace std;
 
+int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y, bool comma);
 int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y);
 class Polygon
 {
