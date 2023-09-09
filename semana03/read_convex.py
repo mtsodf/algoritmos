@@ -1,10 +1,18 @@
+import argparse
 import os
 import json
 import numpy as np
 import matplotlib.pyplot as plt
 
+parser = argparse.ArgumentParser()
+parser.add_argument("file", default="convex_hull.json")
+parser.add_argument("--point_labels", "-pl", action="store_true")
+parser.add_argument("--equal", "-e", action="store_true")
 
-with open("convex_hull.json", "r") as f:
+args = parser.parse_args()
+
+
+with open(args.file, "r") as f:
     json_values = json.load(f)
 
 
@@ -22,9 +30,20 @@ convex_y = ys[convex_hull]
 colors = np.zeros(len(xs))
 colors[convex_hull] = 1
 
-plt.scatter(xs, ys, c=colors)
-plt.plot(convex_x, convex_y)
-# add point index text
-for i in convex_hull[::-1]:
-    plt.text(xs[i], ys[i], str(i))
+fig, ax = plt.subplots(1, 1)
+ax.scatter(xs, ys)
+ax.scatter(convex_x, convex_y, c="r")
+ax.plot(convex_x, convex_y)
+
+if args.point_labels:
+    # add point index text
+    for i in convex_hull[::-1]:
+        ax.text(xs[i], ys[i], str(i))
+    for i in range(len(xs)):
+        ax.text(xs[i], ys[i], str(i))
+
+# set equal scale
+if args.equal:
+    ax.set_aspect("equal", "box")
+
 plt.show()
