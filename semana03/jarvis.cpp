@@ -23,7 +23,7 @@ double angle(double xa, double ya, double xb, double yb) {
 }
 
 vector<int> *paper_jarvis(vector<double> xs, vector<double> ys) {
-    bool verbose = true;
+    bool verbose = false;
     int n = xs.size();
 
     vector<int> *convex_hull = new vector<int>();
@@ -38,8 +38,8 @@ vector<int> *paper_jarvis(vector<double> xs, vector<double> ys) {
     double xmin = get_min_value(&xs);
     double ymin = get_min_value(&ys);
 
-    double x_pivot = xmin - 1;
-    double y_pivot = ymin - 1;
+    double x_pivot = xmin - 0;
+    double y_pivot = ymin - 0;
 
     if (verbose) cout << "Pivot = " << x_pivot << ", " << y_pivot << endl;
 
@@ -76,10 +76,9 @@ vector<int> *paper_jarvis(vector<double> xs, vector<double> ys) {
             if (iters > 0) inside_hull[cur_i] = true;
 
             if (iters >= 2) {
-                double max_angle = angle(x_pivot, y_pivot, xs[first_point], ys[first_point]);
                 for (int i = 0; i < n; i++) {
                     if (i == pivot_i || inside_hull[i] || i == first_point) continue;
-                    if (angles[i] > max_angle) {
+                    if (ccw(x_pivot, y_pivot, xs[first_point], ys[first_point], xs[i], ys[i])) {
                         inside_hull[i] = true;
                         if (verbose) cout << "Point " << i << " is inside convex hull" << endl;
                     }
