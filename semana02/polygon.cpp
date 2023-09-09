@@ -1,35 +1,30 @@
+#include "polygon.h"
+
 #include <stdio.h>
+
 #include <iostream>
 #include <vector>
-#include "polygon.h"
 using namespace std;
 
-int inline remainder(int a, int b)
-{
+int inline remainder(int a, int b) {
     return (a % b + b) % b;
 }
 
-int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y, bool comma)
-{
-    FILE *f = fopen(filename, "r");
+int read_polygon_from_file(string filename, vector<double> &x, vector<double> &y, bool comma) {
+    FILE *f = fopen(filename.c_str(), "r");
 
-    if (f == NULL)
-    {
-        printf("Error opening file %s\n", filename);
+    if (f == NULL) {
+        printf("Error opening file %s\n", filename.c_str());
         return -1;
     }
 
     // Read while not end of file
     int n = 0;
-    while (!feof(f))
-    {
+    while (!feof(f)) {
         double x0, y0;
-        if (comma)
-        {
+        if (comma) {
             fscanf(f, "%lf,%lf", &x0, &y0);
-        }
-        else
-        {
+        } else {
             fscanf(f, "%lf %lf", &x0, &y0);
         }
         x.push_back(x0);
@@ -41,13 +36,11 @@ int read_polygon_from_file(const char *filename, vector<double> &x, vector<doubl
     return n;
 }
 
-int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y)
-{
+int read_polygon_from_file(string filename, vector<double> &x, vector<double> &y) {
     return read_polygon_from_file(filename, x, y, false);
 }
 
-Polygon::Polygon(vector<double> *xs, vector<double> *ys)
-{
+Polygon::Polygon(vector<double> *xs, vector<double> *ys) {
     this->xs = xs;
     this->ys = ys;
 
@@ -55,38 +48,31 @@ Polygon::Polygon(vector<double> *xs, vector<double> *ys)
 
     // Create a list of vertices
     vert_list = new vector<int>;
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         vert_list->push_back(i);
     }
 }
 
-Polygon::Polygon(vector<double> *xs, vector<double> *ys, vector<int> *vert_list)
-{
+Polygon::Polygon(vector<double> *xs, vector<double> *ys, vector<int> *vert_list) {
     this->xs = xs;
     this->ys = ys;
     this->vert_list = vert_list;
 }
 
-Polygon *Polygon::semi_polygon(int i, int j, int step)
-{
+Polygon *Polygon::semi_polygon(int i, int j, int step) {
     vector<int> *new_vert_list = new vector<int>;
     int n = vert_list->size();
     i = remainder(i, n);
     j = remainder(j, n);
     int k = i;
     int size;
-    if (step == 1)
-    {
+    if (step == 1) {
         size = remainder(j - i, n) + 1;
-    }
-    else
-    {
+    } else {
         size = remainder(i - j, n) + 1;
     }
     new_vert_list->reserve(size);
-    while (k != j)
-    {
+    while (k != j) {
         new_vert_list->push_back((*vert_list)[k]);
         k = remainder(k + step, n);
     }
@@ -94,8 +80,7 @@ Polygon *Polygon::semi_polygon(int i, int j, int step)
     return new Polygon(xs, ys, new_vert_list);
 }
 
-bool Polygon::point_inside(double xp, double yp)
-{
+bool Polygon::point_inside(double xp, double yp) {
     vector<double> *xs = this->xs;
     vector<double> *ys = this->ys;
     vector<int> *vert_list = this->vert_list;
@@ -103,8 +88,7 @@ bool Polygon::point_inside(double xp, double yp)
     int n = vert_list->size();
     int j = n - 1;
     int cont = 0;
-    for (int i = 0; i < n; j = i++)
-    {
+    for (int i = 0; i < n; j = i++) {
         double xi = (*xs)[(*vert_list)[i]];
         double yi = (*ys)[(*vert_list)[i]];
         double xj = (*xs)[(*vert_list)[j]];
@@ -116,13 +100,11 @@ bool Polygon::point_inside(double xp, double yp)
     return cont % 2 == 1;
 }
 
-int Polygon::get_size()
-{
+int Polygon::get_size() {
     return vert_list->size();
 }
 
-bool is_inside(Polygon *p, double xp, double yp)
-{
+bool is_inside(Polygon *p, double xp, double yp) {
     vector<double> *xs = p->xs;
     vector<double> *ys = p->ys;
     vector<int> *vert_list = p->vert_list;
@@ -130,8 +112,7 @@ bool is_inside(Polygon *p, double xp, double yp)
     int n = vert_list->size();
     int j = n - 1;
     int cont = 0;
-    for (int i = 0; i < n; j = i++)
-    {
+    for (int i = 0; i < n; j = i++) {
         double xi = (*xs)[(*vert_list)[i]];
         double yi = (*ys)[(*vert_list)[i]];
         double xj = (*xs)[(*vert_list)[j]];
@@ -143,8 +124,7 @@ bool is_inside(Polygon *p, double xp, double yp)
     return cont % 2 == 1;
 }
 
-double triang_area(double *xs, double *ys)
-{
+double triang_area(double *xs, double *ys) {
     double delta_x0 = xs[1] - xs[0];
     double delta_x1 = xs[2] - xs[0];
     double delta_y0 = ys[1] - ys[0];
@@ -156,10 +136,8 @@ double triang_area(double *xs, double *ys)
     return area;
 }
 
-vector<Polygon> *Polygon::triangulate()
-{
-    if (this->vert_list->size() == 3)
-    {
+vector<Polygon> *Polygon::triangulate() {
+    if (this->vert_list->size() == 3) {
         vector<Polygon> *triangles = new vector<Polygon>;
         triangles->push_back(*this);
         return triangles;
@@ -169,10 +147,8 @@ vector<Polygon> *Polygon::triangulate()
     double min_x = 1e99;
     int min_x_i = 0;
     int min_x_index = -1;
-    for (int i = 0; i < n; i++)
-    {
-        if ((*xs)[(*vert_list)[i]] < min_x)
-        {
+    for (int i = 0; i < n; i++) {
+        if ((*xs)[(*vert_list)[i]] < min_x) {
             min_x_index = (*vert_list)[i];
             min_x = (*xs)[min_x_index];
             min_x_i = i;
@@ -206,18 +182,15 @@ vector<Polygon> *Polygon::triangulate()
     area_triang_x[1] = (*xs)[next_index];
     area_triang_y[1] = (*ys)[next_index];
 
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         int index = (*vert_list)[i];
         if (index == prev_index || index == next_index || index == min_x_index)
             continue;
-        if (is_inside(triang, (*xs)[index], (*ys)[index]))
-        {
+        if (is_inside(triang, (*xs)[index], (*ys)[index])) {
             area_triang_x[2] = (*xs)[index];
             area_triang_y[2] = (*ys)[index];
             double area = triang_area(area_triang_x, area_triang_y);
-            if (area > max_area)
-            {
+            if (area > max_area) {
                 max_area = area;
                 max_area_i = i;
                 max_area_index = index;
@@ -226,13 +199,10 @@ vector<Polygon> *Polygon::triangulate()
     }
 
     Polygon *p0, *p1;
-    if (max_area_i == -1)
-    {
+    if (max_area_i == -1) {
         p0 = this->semi_polygon(prev_i, next_i, 1);
         p1 = this->semi_polygon(prev_i, next_i, -1);
-    }
-    else
-    {
+    } else {
         p0 = this->semi_polygon(min_x_i, max_area_i, 1);
         p1 = this->semi_polygon(min_x_i, max_area_i, -1);
     }
@@ -246,29 +216,25 @@ vector<Polygon> *Polygon::triangulate()
     return triangles0;
 }
 
-void print_polygon(Polygon *p)
-{
+void print_polygon(Polygon *p) {
     vector<double> *xs = p->xs;
     vector<double> *ys = p->ys;
     vector<int> *vert_list = p->vert_list;
 
     int n = vert_list->size();
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         printf("%lf %lf\n", (*xs)[(*vert_list)[i]], (*ys)[(*vert_list)[i]]);
     }
 }
 
-void print_polygon_to_file(Polygon *p, const char *filename)
-{
+void print_polygon_to_file(Polygon *p, const char *filename) {
     FILE *f = fopen(filename, "w");
     vector<double> *xs = p->xs;
     vector<double> *ys = p->ys;
     vector<int> *vert_list = p->vert_list;
 
     int n = vert_list->size();
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         fprintf(f, "%lf %lf\n", (*xs)[(*vert_list)[i]], (*ys)[(*vert_list)[i]]);
     }
     fclose(f);

@@ -1,5 +1,6 @@
 #include <math.h>
 
+#include <boost/program_options.hpp>
 #include <fstream>
 #include <iostream>
 
@@ -127,17 +128,39 @@ vector<int> *convex_hull_naive(vector<double> xs, vector<double> ys) {
     return convex_bool_to_int(convex_hull_bool, xs, ys);
 }
 
-int main(int argc, char const *argv[]) {
-    // Generate n random 2D points
-    int n = 100;
-    vector<double> xs, ys;
-    generate_random_points(n, xs, ys, true);
-    // read_polygon_from_file("../../semana02/data/spiral/spiral_1000.txt", xs, ys);
-    // read_polygon_from_file("../../semana02/data/caxeiro/polygon_1000_1.txt", xs, ys);
-    // read_polygon_from_file("../../semana03/data/alien.txt", xs, ys);
-    // read_polygon_from_file("../../semana01/countrydata/Brazil.txt", xs, ys, true);
-    n = xs.size();
+namespace po = boost::program_options;
 
+int main(int argc, char const *argv[]) {
+    po::options_description desc("Allowed options");
+    desc.add_options()("help", "produce help message")("input", po::value<string>(), "Input points")("random_points", po::value<int>(), "Generate random points");
+    desc.add_options()("output", po::value<string>()->default_value("convex_hull.json"), "Output file");
+    desc.add_options()("alg", po::value<string>()->default_value("jarvis"), "Algorithm to use (naive, n3, jarvis)");
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    string output_filepath = vm["output"].as<string>();
+    string algname = vm["alg"].as<string>();
+
+    if (vm.count("help")) {
+        std::cout << desc << "\n";
+        return 1;
+    }
+
+    vector<double> xs, ys;
+    if (vm.count("input")) {
+        string input_file = vm["input"].as<string>();
+        cout << "Input file: " << input_file << "\n";
+        read_polygon_from_file(input_file, xs, ys, false);
+    } else if (vm.count("random_points")) {
+        int n = vm["random_points"].as<int>();
+        generate_random_points(n, xs, ys, true);
+    } else {
+        std::cout << "No input file was given\n";
+        return 1;
+    }
+    int n = xs.size();
     cout << "Problem size = " << n << endl;
 
     // Measure time of one algorithm
@@ -145,21 +168,27 @@ int main(int argc, char const *argv[]) {
     double cpu_time_used;
     start = clock();
 
-    // vector<int> *convex_hull = convex_hull_naive(xs, ys);
-    vector<int> *convex_hull = convex_hull_n3(xs, ys);
+    vector<int> *convex_hull;
+    if (algname == "naive")
+        convex_hull = convex_hull_naive(xs, ys);
+    else if (algname == "n3")
+        convex_hull = convex_hull_n3(xs, ys);
+    else if (algname == "jarvis")
+        convex_hull = paper_jarvis(xs, ys);
+    else {
+        cout << "Algorithm not found" << endl;
+        return -1;
+    }
     // vector<int> *convex_hull = jarvis(xs, ys);
-    // vector<int> *convex_hull = paper_jarvis(xs, ys);
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     cout << "Time = " << cpu_time_used << endl;
 
-    if (convex_hull == NULL) {
-        return -1;
-    }
+    if (convex_hull == NULL) return -1;
 
     // Write to file
     ofstream output;
-    output.open("convex_hull.json");
+    output.open(output_filepath);
     output << "{\n";
     output << "\"time\": " << cpu_time_used << ",\n";
     output << "\"points_x\": [\n";

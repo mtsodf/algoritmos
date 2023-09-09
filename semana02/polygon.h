@@ -2,11 +2,10 @@
 #include <vector>
 using namespace std;
 
-int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y, bool comma);
-int read_polygon_from_file(const char *filename, vector<double> &x, vector<double> &y);
-class Polygon
-{
-public:
+int read_polygon_from_file(string filename, vector<double> &x, vector<double> &y, bool comma);
+int read_polygon_from_file(string filename, vector<double> &x, vector<double> &y);
+class Polygon {
+   public:
     vector<double> *xs, *ys;
     vector<int> *vert_list;
     Polygon(vector<double> *xs, vector<double> *ys);
