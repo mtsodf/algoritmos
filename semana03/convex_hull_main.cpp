@@ -8,11 +8,11 @@
 
 using namespace std;
 
-void generate_random_points(int n, vector<double> &xs, vector<double> &ys) {
+void generate_random_points(int n, vector<double> &xs, vector<double> &ys, bool circle = false) {
     // set seed with clock value
     int seed = time(NULL);
-    seed = 1694207162;
-    seed = 1694207106;
+    // seed = 1694207106;
+    // seed = 1694207162;
     cout << "Current SEED = " << seed << endl;
     srand(seed);
 
@@ -20,6 +20,12 @@ void generate_random_points(int n, vector<double> &xs, vector<double> &ys) {
         // Sort random floats
         double x = (double)rand() / RAND_MAX;
         double y = (double)rand() / RAND_MAX;
+        if (circle) {
+            double theta = 2 * M_PI * x;
+            double r = y;
+            x = r * cos(theta);
+            y = r * sin(theta);
+        }
         xs.push_back(x);
         ys.push_back(y);
     }
@@ -123,22 +129,29 @@ vector<int> *convex_hull_naive(vector<double> xs, vector<double> ys) {
 
 int main(int argc, char const *argv[]) {
     // Generate n random 2D points
-    int n = 10;
+    int n = 100;
     vector<double> xs, ys;
-    generate_random_points(n, xs, ys);
+    generate_random_points(n, xs, ys, true);
     // read_polygon_from_file("../../semana02/data/spiral/spiral_1000.txt", xs, ys);
-    // read_polygon_from_file("../../semana02/data/caxeiro/polygon_1000_1.txt",
-    // xs, ys); read_polygon_from_file("../../semana03/data/alien.txt", xs, ys);
-    // read_polygon_from_file("../../semana01/countrydata/Brazil.txt", xs, ys,
-    // true);
+    // read_polygon_from_file("../../semana02/data/caxeiro/polygon_1000_1.txt", xs, ys);
+    // read_polygon_from_file("../../semana03/data/alien.txt", xs, ys);
+    // read_polygon_from_file("../../semana01/countrydata/Brazil.txt", xs, ys, true);
     n = xs.size();
 
     cout << "Problem size = " << n << endl;
 
+    // Measure time of one algorithm
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
+
     // vector<int> *convex_hull = convex_hull_naive(xs, ys);
-    // vector<int> *convex_hull = convex_hull_n3(xs, ys);
+    vector<int> *convex_hull = convex_hull_n3(xs, ys);
     // vector<int> *convex_hull = jarvis(xs, ys);
-    vector<int> *convex_hull = paper_jarvis(xs, ys);
+    // vector<int> *convex_hull = paper_jarvis(xs, ys);
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time = " << cpu_time_used << endl;
 
     if (convex_hull == NULL) {
         return -1;
@@ -148,6 +161,7 @@ int main(int argc, char const *argv[]) {
     ofstream output;
     output.open("convex_hull.json");
     output << "{\n";
+    output << "\"time\": " << cpu_time_used << ",\n";
     output << "\"points_x\": [\n";
     for (int i = 0; i < n; i++) {
         output << xs[i];
