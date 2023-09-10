@@ -48,9 +48,8 @@ vector<int> *convex_bool_to_int(vector<bool> *convex_hull_bool,
 
     vector<double> angles(convex_hull->size());
     for (int i = 0; i < convex_hull->size(); i++) {
-        double PI = atan(1) * 4;
         int i_convex = (*convex_hull)[i];
-        angles[i] = atan2(ys[i_convex] - b_y, xs[i_convex] - b_x) * 180 / PI;
+        angles[i] = atan2(ys[i_convex] - b_y, xs[i_convex] - b_x) * 180 / M_PI;
     }
 
     for (int i = 0; i < convex_hull->size(); i++) {
@@ -93,7 +92,7 @@ vector<int> *convex_hull_n3(vector<double> xs, vector<double> ys) {
             if (all_cw) {
                 (*convex_hull_bool)[i] = true;
                 (*convex_hull_bool)[j] = true;
-                cout << "i = " << i << ", j = " << j << endl;
+                // cout << "i = " << i << ", j = " << j << endl;
             }
         }
     cout << "N Convex Hull = " << convex_hull_bool->size() << endl;
@@ -190,6 +189,8 @@ int main(int argc, char const *argv[]) {
     ofstream output;
     output.open(output_filepath);
     output << "{\n";
+    output << "\"n\": " << n << ",\n";
+    output << "\"algorithm\": \"" << algname << "\",\n";
     output << "\"time\": " << cpu_time_used << ",\n";
     output << "\"points_x\": [\n";
     for (int i = 0; i < n; i++) {
