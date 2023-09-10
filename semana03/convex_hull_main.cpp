@@ -92,7 +92,6 @@ vector<int> *convex_hull_n3(vector<double> xs, vector<double> ys) {
             if (all_cw) {
                 (*convex_hull_bool)[i] = true;
                 (*convex_hull_bool)[j] = true;
-                // cout << "i = " << i << ", j = " << j << endl;
             }
         }
     cout << "N Convex Hull = " << convex_hull_bool->size() << endl;
@@ -166,7 +165,6 @@ int main(int argc, char const *argv[]) {
     clock_t start, end;
     double cpu_time_used;
     start = clock();
-
     vector<int> *convex_hull;
     if (algname == "naive")
         convex_hull = convex_hull_naive(xs, ys);
@@ -178,7 +176,6 @@ int main(int argc, char const *argv[]) {
         cout << "Algorithm not found" << endl;
         return -1;
     }
-    // vector<int> *convex_hull = jarvis(xs, ys);
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     cout << "Time = " << cpu_time_used << endl;
