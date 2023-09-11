@@ -15,6 +15,7 @@ target_link_libraries(convex_hull polygon jarvis)
 #Link boost on convex_hull
 target_link_libraries(convex_hull ${Boost_LIBRARIES})
 
-
-
 add_test(convex_hull_test convex_hull)
+
+# Copy run_circles script to build directory
+configure_file(run_circles.sh run_circles.sh COPYONLY)
