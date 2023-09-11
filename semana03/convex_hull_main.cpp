@@ -11,7 +11,7 @@ using namespace std;
 
 void generate_random_points(int n, vector<double> &xs, vector<double> &ys, bool circle = false) {
     // set seed with clock value
-    int seed = time(NULL);
+    int seed = clock();
     // seed = 1694207106;
     // seed = 1694207162;
     cout << "Current SEED = " << seed << endl;
@@ -133,6 +133,7 @@ int main(int argc, char const *argv[]) {
     desc.add_options()("help", "produce help message")("input", po::value<string>(), "Input points")("random_points", po::value<int>(), "Generate random points");
     desc.add_options()("output", po::value<string>()->default_value("convex_hull.json"), "Output file");
     desc.add_options()("alg", po::value<string>()->default_value("jarvis"), "Algorithm to use (naive, n3, jarvis)");
+    desc.add_options()("circle", po::value<int>()->default_value(0), "Generate points in a circle");
 
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -153,7 +154,7 @@ int main(int argc, char const *argv[]) {
         read_polygon_from_file(input_file, xs, ys, false);
     } else if (vm.count("random_points")) {
         int n = vm["random_points"].as<int>();
-        generate_random_points(n, xs, ys, true);
+        generate_random_points(n, xs, ys, vm["circle"].as<int>());
     } else {
         std::cout << "No input file was given\n";
         return 1;
@@ -187,8 +188,9 @@ int main(int argc, char const *argv[]) {
     output.open(output_filepath);
     output << "{\n";
     output << "\"n\": " << n << ",\n";
+    output << "\"h\": " << convex_hull->size() << ",\n";
     output << "\"algorithm\": \"" << algname << "\",\n";
-    output << "\"time\": " << cpu_time_used << ",\n";
+    output << "\"time\": " << std::scientific << std::setprecision(8) << cpu_time_used << ",\n";
     output << "\"points_x\": [\n";
     for (int i = 0; i < n; i++) {
         output << xs[i];
