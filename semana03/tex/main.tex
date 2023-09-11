@@ -38,18 +38,12 @@
 \end{frame}
 
 \begin{frame}{Algoritmos}
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-    \end{column}
-    \begin{column}{0.5\textwidth}
       Três algoritmos implementados:
       \begin{itemize}
         \item Algoritmo Triângulos: $O(n^4)$
         \item Algoritmo Segmentos: $O(n^3)$
         \item Algoritmo de Jarvis: $O(hn)$
       \end{itemize}
-    \end{column}
-  \end{columns}
 \end{frame}
 
 \begin{frame}{Algoritmo Triângulos}
@@ -107,14 +101,16 @@
         \onslide<4>\include{figures/algs/jarvis_3}
         \onslide<5>\include{figures/algs/jarvis_4}
         \onslide<6>\include{figures/algs/jarvis_5}
+        \onslide<7>\include{figures/algs/jarvis_6}
+        \onslide<8->\include{figures/algs/jarvis_9}
       \end{overprint}
     \end{figure}
   \end{center}
 
   \begin{overprint}
-    \onslide<7>{
+    \onslide<9>{
       \begin{equation}
-        \text{Custo} = h_{\text{Região convexa}} \times (\underbrace{O(n)}_{\text{Próximo Ponto}} + \underbrace{O(n)}_{\text{Pontos dentro}}) = O(hn)
+        \text{Custo} = \underbrace{h}_{\text{Região convexa}} \times (\underbrace{O(n)}_{\text{Próximo Ponto}} + \underbrace{O(n)}_{\text{Pontos dentro}}) = O(hn)
       \end{equation}
     }
   \end{overprint}
