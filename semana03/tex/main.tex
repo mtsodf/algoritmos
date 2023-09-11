@@ -11,6 +11,13 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+
+\usepackage{pgfplots}
+\DeclareUnicodeCharacter{2212}{−}
+\usepgfplotslibrary{groupplots,dateplot}
+\usetikzlibrary{patterns,shapes.arrows}
+\pgfplotsset{compat=newest}
 
 \begin{document}
 
@@ -37,14 +44,81 @@
     \begin{column}{0.5\textwidth}
       Três algoritmos implementados:
       \begin{itemize}
-        \item<1-> Algoritmo 01: $O(n^4)$
-        \item<2-> Algoritmo 02: $O(n^3)$
-        \item<3-> Algoritmo 03 (Jarvis): $O(hn)$
+        \item Algoritmo Triângulos: $O(n^4)$
+        \item Algoritmo Segmentos: $O(n^3)$
+        \item Algoritmo de Jarvis: $O(hn)$
       \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
 
+\begin{frame}{Algoritmo Triângulos}
+
+  % Add centralized figure
+  \begin{center}
+    \begin{figure}
+      \begin{overprint}
+        \onslide<1>\include{figures/algs/naive_0}
+        \onslide<2>\include{figures/algs/naive_1}
+        \onslide<3>\include{figures/algs/naive_2}
+        \onslide<4>\include{figures/algs/naive_3}
+        \onslide<5->\include{figures/algs/naive_4}
+      \end{overprint}
+    \end{figure}
+  \end{center}
+
+  \begin{overprint}
+    \onslide<5>{
+      \begin{equation}
+        \text{Custo} = \underbrace{O(n^3)}_{\text{Triângulos}} \times \underbrace{O(n)}_{\text{Pontos dentro}} +\underbrace{O(nlog(n))}_{\text{Ordenar pontos}} = O(n^4)
+      \end{equation}
+    }
+  \end{overprint}
+\end{frame}
+
+\begin{frame}{Algoritmo Segmentos}
+  % Add centralized figure
+  \begin{center}
+    \begin{figure}
+      \begin{overprint}
+        \onslide<1>\include{figures/algs/segments_0}
+        \onslide<2->\include{figures/algs/segments_1}
+      \end{overprint}
+    \end{figure}
+  \end{center}
+
+  \begin{overprint}
+    \onslide<3>{
+      \begin{equation}
+        \text{Custo} = \underbrace{O(n^2)}_{\text{Segmentos}} \times \underbrace{O(n)}_{\text{CCW Pontos}} + \underbrace{O(nlog(n))}_{\text{Ordenar pontos}} = O(n^3)
+      \end{equation}
+    }
+  \end{overprint}
+\end{frame}
+
+\begin{frame}{Algoritmo Jarvis}
+  % Add centralized figure
+  \begin{center}
+    \begin{figure}
+      \begin{overprint}
+        \onslide<1>\include{figures/algs/jarvis_0}
+        \onslide<2>\include{figures/algs/jarvis_1}
+        \onslide<3>\include{figures/algs/jarvis_2}
+        \onslide<4>\include{figures/algs/jarvis_3}
+        \onslide<5>\include{figures/algs/jarvis_4}
+        \onslide<6>\include{figures/algs/jarvis_5}
+      \end{overprint}
+    \end{figure}
+  \end{center}
+
+  \begin{overprint}
+    \onslide<7>{
+      \begin{equation}
+        \text{Custo} = h_{\text{Região convexa}} \times (\underbrace{O(n)}_{\text{Próximo Ponto}} + \underbrace{O(n)}_{\text{Pontos dentro}}) = O(hn)
+      \end{equation}
+    }
+  \end{overprint}
+\end{frame}
 
 \begin{frame}{Exemplos}
 
@@ -55,6 +129,7 @@
           \includegraphics<1-2>[width=\textwidth]{./figures/introbs_pointsonly.png}
           \includegraphics<3-4>[width=\textwidth]{./figures/fishdp_pointsonly.png}
           \includegraphics<5-6>[width=\textwidth]{./figures/dog_pointsonly.png}
+          \includegraphics<7-8>[width=\textwidth]{./figures/canada_pointsonly.png}
         \end{figure}
       \end{column}
       \begin{column}{0.5\textwidth}
@@ -62,6 +137,7 @@
           \includegraphics<2>[width=\textwidth]{./figures/introbs.png}
           \includegraphics<4>[width=\textwidth]{./figures/fishdp.png}
           \includegraphics<6>[width=\textwidth]{./figures/dog.png}
+          \includegraphics<8>[width=\textwidth]{./figures/canada.png}
         \end{figure}
       \end{column}
     \end{columns}
@@ -70,11 +146,26 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Conclusões}
+\frametitle{Tempo de execução}
+  \begin{itemize}
+    \item Pontos gerados aleatoriamente dentro de um círculo de raio 1
+    \item $h \sim \sqrt{n}$
+  \end{itemize}
+\end{frame}
 
-\begin{itemize}
-\end{itemize}
-
+\begin{frame}
+\frametitle{Tempo de execução}
+% Two columns
+\begin{columns}
+  \begin{column}{0.7\textwidth}
+    \begin{figure}
+      \includegraphics[width=0.9\textwidth]{./figures/circles_time.png}
+    \end{figure}
+  \end{column}
+  \begin{column}{0.3\textwidth}
+    Pontos gerados aleatoriamente no intervalo dentro de um círculo.
+  \end{column}
+\end{columns}
 \end{frame}
 
 \end{document}
