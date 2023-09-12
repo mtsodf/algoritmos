@@ -29,12 +29,12 @@
 \frametitle{Problema}
 
 \onslide<1->{
-    Dado um conjunto de pontos no  $\mathbb{R}^2$, encontrar o menor polígono convexo que contém todos os pontos.
+    Dado um conjunto de pontos no  $\mathbb{R}^2$, encontrar o menor conjunto convexo que contém todos os pontos (fecho convexo).
 }
 \begin{figure}
 \begin{overprint}
-  \onslide<2> \include{figures/points}
-  \onslide<3> \include{figures/points_hull}
+  \onslide<1> \include{figures/points}
+  \onslide<2> \include{figures/points_hull}
 \end{overprint}
 \end{figure}
 
@@ -45,8 +45,16 @@
       \begin{itemize}
         \item Algoritmo Triângulos: $O(n^4)$
         \item Algoritmo Segmentos: $O(n^3)$
-        \item Algoritmo de Jarvis: $O(hn)$
+        \item Algoritmo de Jarvis: $O(hn)$, onde h é o número de vértices do fecho convexo.
       \end{itemize}
+
+      \vspace{1cm}
+      \onslide<2>{
+      \begin{itemize}
+        \item Implementação em C++
+        \item Disponível em: \url{https://github.com/mtsodf/algoritmos/tree/main/semana03}
+      \end{itemize}
+      }
 \end{frame}
 
 \begin{frame}{Algoritmo Triângulos}
@@ -68,7 +76,7 @@
   \begin{overprint}
     \onslide<6>{
       \begin{equation}
-        \text{Custo} = \underbrace{O(n^3)}_{\text{Triângulos}} \times \underbrace{O(n)}_{\text{Pontos dentro}} +\underbrace{O(nlog(n))}_{\text{Ordenar pontos}} = O(n^4)
+        \text{Custo} = \underbrace{O(n^3)}_{\text{Triângulos}} \times \underbrace{O(n)}_{\text{Pontos dentro}} +\underbrace{O(hlog(h))}_{\text{Ordenar pontos}} = O(n^4)
       \end{equation}
     }
   \end{overprint}
@@ -88,7 +96,7 @@
   \begin{overprint}
     \onslide<3>{
       \begin{equation}
-        \text{Custo} = \underbrace{O(n^2)}_{\text{Segmentos}} \times \underbrace{O(n)}_{\text{CCW Pontos}} + \underbrace{O(nlog(n))}_{\text{Ordenar pontos}} = O(n^3)
+        \text{Custo} = \underbrace{O(n^2)}_{\text{Segmentos}} \times \underbrace{O(n)}_{\text{CCW Pontos}} + \underbrace{O(hlog(h))}_{\text{Ordenar pontos}} = O(n^3)
       \end{equation}
     }
   \end{overprint}
@@ -152,7 +160,7 @@
   \begin{column}{0.4\textwidth}
   \begin{itemize}
     \item Pontos gerados aleatoriamente dentro de um círculo de raio 1
-    \item $h \sim \sqrt{n}$
+    \item $h \sim \sqrt{n}$, onde h é o número de vértices do fecho convexo.
   \end{itemize}
   \end{column}
   \begin{column}{0.6\textwidth}
