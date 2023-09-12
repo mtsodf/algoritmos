@@ -16,7 +16,7 @@
 \usepackage{pgfplots}
 \DeclareUnicodeCharacter{2212}{−}
 \usepgfplotslibrary{groupplots,dateplot}
-\usetikzlibrary{patterns,shapes.arrows}
+\usetikzlibrary{patterns,shapes.arrows, positioning}
 \pgfplotsset{compat=newest}
 
 \begin{document}
@@ -52,8 +52,8 @@
 \begin{frame}{Algoritmo Triângulos}
 
   % Add centralized figure
+    % \begin{figure}
   \begin{center}
-    \begin{figure}
       \begin{overprint}
         \onslide<1>\include{figures/algs/naive_0}
         \onslide<2>\include{figures/algs/naive_1}
@@ -62,8 +62,8 @@
         \onslide<5>\include{figures/algs/naive_4}
         \onslide<6->\include{figures/algs/naive_5}
       \end{overprint}
-    \end{figure}
   \end{center}
+    % \end{figure}
 
   \begin{overprint}
     \onslide<6>{
