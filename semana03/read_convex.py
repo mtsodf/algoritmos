@@ -49,7 +49,12 @@ for points_file in args.files:
         convex_x = xs[convex_hull]
         convex_y = ys[convex_hull]
 
-        ax.scatter(convex_x, convex_y, c="r", s=args.marker_size * 2)
+        ax.scatter(
+            convex_x,
+            convex_y,
+            c="r",
+            s=None if args.marker_size is None else args.marker_size * 2,
+        )
         ax.plot(convex_x, convex_y, color="black")
 
         output = os.path.splitext(points_file)[0] + ".png"
