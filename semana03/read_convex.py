@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 parser = argparse.ArgumentParser()
 parser.add_argument("files", nargs="+", default="convex_hull.json")
 parser.add_argument("--point_labels", "-pl", action="store_true")
+parser.add_argument("--marker_size", "-ms", type=int, default=None)
 parser.add_argument("--equal", "-e", action="store_true")
 parser.add_argument("--invert_x", "-ix", action="store_true")
 parser.add_argument("--invert_y", "-iy", action="store_true")
@@ -31,7 +32,7 @@ for points_file in args.files:
     colors[convex_hull] = 1
 
     fig, ax = plt.subplots(1, 1)
-    ax.scatter(xs, ys)
+    ax.scatter(xs, ys, s=args.marker_size)
 
     if args.invert_x:
         ax.invert_xaxis()
@@ -42,7 +43,7 @@ for points_file in args.files:
     output = os.path.splitext(points_file)[0] + "_pointsonly.png"
     fig.savefig(output)
 
-    ax.scatter(convex_x, convex_y, c="r")
+    ax.scatter(convex_x, convex_y, c="r", s=args.marker_size * 2)
     ax.plot(convex_x, convex_y, color="black")
 
     if args.point_labels:
