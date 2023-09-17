@@ -17,15 +17,15 @@ class Point {
 };
 
 bool ccw(Point *a, Point *b, Point *c) {
-    return ccw(a->x, a->y, b->x, b->y, c->x, c->y);
+    return (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x) > 1e-12;
 }
 
-double get_min_point_index(vector<double> *x, vector<double> *y) {
+double get_min_point_index(vector<Point *> points) {
     double min_value = INFINITY;
     int min_index = 0;
-    for (int i = 0; i < y->size(); i++) {
-        if ((*y)[i] < min_value || ((*y)[i] == min_value && (*x)[i] < (*x)[min_index])) {
-            min_value = (*y)[i];
+    for (int i = 0; i < points.size(); i++) {
+        if (points[i]->y < min_value || (points[i]->y == min_value && points[i]->x < points[min_index]->x)) {
+            min_value = points[i]->y;
             min_index = i;
         }
     }
@@ -52,26 +52,25 @@ void write_points_on_json(fstream &output, vector<Point *> points) {
     output << "\n]";
 }
 
-vector<int> *graham(vector<double> xs, vector<double> ys) {
-    vector<Point *> points = vector<Point *>();
+vector<int> *graham(vector<Point *> points) {
+    int init_point = get_min_point_index(points);
 
-    for (int i = 0; i < xs.size(); i++) {
-        points.push_back(new Point(xs[i], ys[i]));
-    }
-    int init_point = get_min_point_index(&xs, &ys);
+    Point *base_point = points[init_point];
 
     // Put init_point at the beginning of the vector
     Point *temp = points[0];
     points[0] = points[init_point];
     points[init_point] = temp;
-    Point *base_point = points[0];
 
     cout << "Base point = " << base_point->x << ", " << base_point->y << endl;
 
     // Sort beggining from second element
 
     sort(begin(points) + 1, end(points), [&base_point](Point *a, Point *b) {
-        return ccw(base_point->x, base_point->y, a->x, a->y, b->x, b->y);
+        return ccw(base_point, a, b);
+        // double ang0 = angle(base_point->x, base_point->y, a->x, a->y);
+        // double ang1 = angle(base_point->x, base_point->y, b->x, b->y);
+        // return ang0 < ang1;
     });
 
     vector<int> convex_hull;

@@ -1,10 +1,3 @@
-# Find BOOST
-find_package(Boost COMPONENTS program_options REQUIRED)
-message(STATUS "Boost found: ${Boost_FOUND}")
-message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
-message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
-include_directories(${Boost_INCLUDE_DIRS})
-
 add_library(random_points random_points.cpp)
 
 add_library(jarvis jarvis.cpp)

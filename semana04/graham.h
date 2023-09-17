@@ -2,4 +2,14 @@
 #include <vector>
 
 using namespace std;
-vector<int> *graham(vector<double> xs, vector<double> ys);
+// Add Point definition
+class Point {
+   public:
+    double x;
+    double y;
+    Point(double x, double y) {
+        this->x = x;
+        this->y = y;
+    }
+};
+vector<int> *graham(vector<Point *> points);

@@ -5,6 +5,13 @@ project(Algoritmos)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Find BOOST
+find_package(Boost COMPONENTS program_options REQUIRED)
+message(STATUS "Boost found: ${Boost_FOUND}")
+message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
+include_directories(${Boost_INCLUDE_DIRS})
+
 enable_testing()
 add_subdirectory(semana02)
 include_directories(semana02)
