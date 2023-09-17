@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "jarvis.h"
+#include "point.h"
 
 using namespace std;
 
