@@ -1,6 +1,6 @@
 mkdir -p circles
 
-for alg in "selection" "heap" "std" "insertion" "quick"
+for alg in "selection" "heap" "std" "insertion" "quick" "merge"
 do
 for i in 1 2 3 4 5
 do

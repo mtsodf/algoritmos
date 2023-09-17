@@ -58,3 +58,35 @@ void quick_sort(vector<Point *> *points, int init, int end, function<bool(Point 
     quick_sort(points, init, pivot_pos, comparator);
     quick_sort(points, pivot_pos + 1, end, comparator);
 }
+
+void merge_sort(vector<Point *> *points, vector<Point *> *aux, int init, int end, function<bool(Point *, Point *)> comparator) {
+    if (init >= end - 1) return;
+    int middle = init + (end - init) / 2;
+    merge_sort(points, aux, init, middle, comparator);
+    merge_sort(points, aux, middle, end, comparator);
+
+    // Copy to aux
+    for (int i = init; i < end; i++) (*aux)[i] = (*points)[i];
+
+    int left = init;
+    int right = middle;
+
+    for (int i = init; i < end; i++) {
+        if (left >= middle)
+            (*points)[i] = (*aux)[right++];
+        else if (right >= end)
+            (*points)[i] = (*aux)[left++];
+        else if (comparator((*aux)[right], (*aux)[left]))
+            (*points)[i] = (*aux)[right++];
+        else
+            (*points)[i] = (*aux)[left++];
+    }
+}
+
+void merge_sort(vector<Point *> *points, int init, int end, function<bool(Point *, Point *)> comparator) {
+    int n = points->size();
+    vector<Point *> *aux;
+    aux = new vector<Point *>(n);
+    fill(aux->begin(), aux->end(), nullptr);
+    merge_sort(points, aux, init, end, comparator);
+}

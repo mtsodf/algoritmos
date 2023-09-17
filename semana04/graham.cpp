@@ -53,6 +53,8 @@ vector<int> *graham(vector<Point *> *points, string sort_alg) {
         quick_sort(points, 1, points->size(), comparator);
     } else if (sort_alg == "insertion") {
         insertion_sort(points, 1, points->size(), comparator);
+    } else if (sort_alg == "merge") {
+        merge_sort(points, 1, points->size(), comparator);
     } else {
         cout << "Algorithm " << sort_alg << " not available." << endl;
     }
