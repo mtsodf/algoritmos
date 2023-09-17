@@ -1,3 +1,5 @@
+#include "graham.h"
+
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -5,16 +7,6 @@
 #include "jarvis.h"
 
 using namespace std;
-
-class Point {
-   public:
-    double x;
-    double y;
-    Point(double x, double y) {
-        this->x = x;
-        this->y = y;
-    }
-};
 
 bool ccw(Point *a, Point *b, Point *c) {
     return (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x) > 1e-9;
