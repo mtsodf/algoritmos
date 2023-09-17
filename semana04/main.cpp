@@ -62,13 +62,28 @@ int main(int argc, char const *argv[]) {
     }
     cout << "Quantidade de pontos = " << points.size() << endl;
 
+    // Measure time of one algorithm
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
     vector<int> *convex_hull = graham(&points);
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
+    cout << "Time = " << cpu_time_used << endl;
 
     cout << "Output file = " << output_filepath << endl;
 
     fstream output;
     output.open(output_filepath, ios::out);
     output << "{\n";
+
+    output << "\"n\": " << points.size() << ",\n";
+    output << "\"h\": " << convex_hull->size() << ",\n";
+    output << "\"algorithm\": \""
+           << "graham"
+           << "\",\n";
+    output << "\"time\": " << std::scientific << std::setprecision(8) << cpu_time_used << ",\n";
+
     write_points_on_json(output, points);
 
     output << "," << endl;
