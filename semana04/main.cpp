@@ -1,4 +1,5 @@
 #include <boost/program_options.hpp>
+#include <fstream>
 #include <iostream>
 
 #include "graham.h"
@@ -7,6 +8,26 @@
 #include "random_points.h"
 
 namespace po = boost::program_options;
+
+void write_points_on_json(fstream &output, vector<Point *> points) {
+    int n = points.size();
+    output << "\"points_x\": [\n";
+    for (int i = 0; i < n; i++) {
+        output << points[i]->x;
+        if (i < n - 1) {
+            output << ",\n";
+        }
+    }
+    output << "\n],\n";
+    output << "\"points_y\": [\n";
+    for (int i = 0; i < n; i++) {
+        output << points[i]->y;
+        if (i < n - 1) {
+            output << ",\n";
+        }
+    }
+    output << "\n]";
+}
 
 int main(int argc, char const *argv[]) {
     po::options_description desc("Allowed options");
@@ -19,6 +40,8 @@ int main(int argc, char const *argv[]) {
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
     po::notify(vm);
+
+    string output_filepath = vm["output"].as<string>();
 
     vector<double> xs, ys;
     if (vm.count("input")) {
@@ -37,6 +60,28 @@ int main(int argc, char const *argv[]) {
     for (int i = 0; i < xs.size(); i++) {
         points.push_back(new Point(xs[i], ys[i]));
     }
+    cout << "Quantidade de pontos = " << points.size() << endl;
 
-    graham(points);
+    vector<int> *convex_hull = graham(&points);
+
+    cout << "Output file = " << output_filepath << endl;
+
+    fstream output;
+    output.open(output_filepath, ios::out);
+    output << "{\n";
+    write_points_on_json(output, points);
+
+    output << "," << endl;
+    output << "\"convex_hull\": [\n";
+
+    for (int i = 0; i < convex_hull->size(); i++) {
+        output << (*convex_hull)[i];
+        if (i < convex_hull->size() - 1) {
+            output << ",\n";
+        }
+    }
+    output << "]" << endl;
+
+    output << "}\n";
+    output.close();
 }

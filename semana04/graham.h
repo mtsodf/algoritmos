@@ -12,4 +12,4 @@ class Point {
         this->y = y;
     }
 };
-vector<int> *graham(vector<Point *> points);
+vector<int> *graham(vector<Point *> *points);

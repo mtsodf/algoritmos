@@ -17,7 +17,7 @@ class Point {
 };
 
 bool ccw(Point *a, Point *b, Point *c) {
-    return (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x) > 1e-12;
+    return (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x) > 1e-9;
 }
 
 double get_min_point_index(vector<Point *> points) {
@@ -32,77 +32,44 @@ double get_min_point_index(vector<Point *> points) {
     return min_index;
 }
 
-void write_points_on_json(fstream &output, vector<Point *> points) {
-    int n = points.size();
-    output << "\"points_x\": [\n";
-    for (int i = 0; i < n; i++) {
-        output << points[i]->x;
-        if (i < n - 1) {
-            output << ",\n";
-        }
-    }
-    output << "\n],\n";
-    output << "\"points_y\": [\n";
-    for (int i = 0; i < n; i++) {
-        output << points[i]->y;
-        if (i < n - 1) {
-            output << ",\n";
-        }
-    }
-    output << "\n]";
-}
+vector<int> *graham(vector<Point *> *points) {
+    int init_point = get_min_point_index(*points);
 
-vector<int> *graham(vector<Point *> points) {
-    int init_point = get_min_point_index(points);
-
-    Point *base_point = points[init_point];
+    Point *base_point = (*points)[init_point];
 
     // Put init_point at the beginning of the vector
-    Point *temp = points[0];
-    points[0] = points[init_point];
-    points[init_point] = temp;
+    Point *temp = (*points)[0];
+    (*points)[0] = (*points)[init_point];
+    (*points)[init_point] = temp;
 
     cout << "Base point = " << base_point->x << ", " << base_point->y << endl;
 
     // Sort beggining from second element
 
-    sort(begin(points) + 1, end(points), [&base_point](Point *a, Point *b) {
+    sort(begin(*points) + 1, end(*points), [&base_point](Point *a, Point *b) {
         return ccw(base_point, a, b);
         // double ang0 = angle(base_point->x, base_point->y, a->x, a->y);
         // double ang1 = angle(base_point->x, base_point->y, b->x, b->y);
         // return ang0 < ang1;
     });
 
-    vector<int> convex_hull;
-    convex_hull.reserve(points.size());
-    convex_hull.push_back(0);
-    convex_hull.push_back(1);
+    vector<int> *convex_hull = new vector<int>;
+    convex_hull->reserve(points->size());
+    convex_hull->push_back(0);
+    convex_hull->push_back(1);
 
     int n_hull = 2;
-
-    for (int i = 2; i < points.size(); i++) {
-        while (!ccw(points[convex_hull[convex_hull.size() - 2]], points[convex_hull[convex_hull.size() - 1]], points[i])) {
-            convex_hull.pop_back();
+    Point *a, *b;
+    for (int i = 2; i < points->size(); i++) {
+        a = (*points)[(*convex_hull)[convex_hull->size() - 2]];
+        b = (*points)[(*convex_hull)[convex_hull->size() - 1]];
+        while (!ccw(a, b, (*points)[i])) {
+            convex_hull->pop_back();
+            a = (*points)[(*convex_hull)[convex_hull->size() - 2]];
+            b = (*points)[(*convex_hull)[convex_hull->size() - 1]];
         }
-        convex_hull.push_back(i);
+        convex_hull->push_back(i);
     }
 
-    fstream output;
-    output.open("output.json", ios::out);
-    output << "{\n";
-    write_points_on_json(output, points);
-    output << "," << endl;
-    output << "\"convex_hull\": [\n";
-    for (int i = 0; i < convex_hull.size(); i++) {
-        output << convex_hull[i];
-        if (i < convex_hull.size() - 1) {
-            output << ",\n";
-        }
-    }
-    output << "]" << endl;
-
-    output << "}\n";
-    output.close();
-
-    return NULL;
+    return convex_hull;
 }
