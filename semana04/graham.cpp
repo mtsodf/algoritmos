@@ -49,6 +49,10 @@ vector<int> *graham(vector<Point *> *points, string sort_alg) {
         selection_sort(points, 1, points->size(), comparator);
     } else if (sort_alg == "heap") {
         heap_sort(points, 1, points->size(), comparator);
+    } else if (sort_alg == "quick") {
+        quick_sort(points, 1, points->size(), comparator);
+    } else if (sort_alg == "insertion") {
+        insertion_sort(points, 1, points->size(), comparator);
     } else {
         cout << "Algorithm " << sort_alg << " not available." << endl;
     }
