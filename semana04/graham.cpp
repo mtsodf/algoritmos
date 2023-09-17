@@ -6,6 +6,7 @@
 
 #include "jarvis.h"
 #include "point.h"
+#include "sort_algs.h"
 
 using namespace std;
 
@@ -25,7 +26,7 @@ double get_min_point_index(vector<Point *> points) {
     return min_index;
 }
 
-vector<int> *graham(vector<Point *> *points) {
+vector<int> *graham(vector<Point *> *points, string sort_alg) {
     int init_point = get_min_point_index(*points);
 
     Point *base_point = (*points)[init_point];
@@ -37,14 +38,27 @@ vector<int> *graham(vector<Point *> *points) {
 
     cout << "Base point = " << base_point->x << ", " << base_point->y << endl;
 
-    // Sort beggining from second element
-
-    sort(begin(*points) + 1, end(*points), [&base_point](Point *a, Point *b) {
+    function<bool(Point *, Point *)> comparator = [&base_point](Point *a, Point *b) {
         return ccw(base_point, a, b);
-        // double ang0 = angle(base_point->x, base_point->y, a->x, a->y);
-        // double ang1 = angle(base_point->x, base_point->y, b->x, b->y);
-        // return ang0 < ang1;
-    });
+    };
+
+    // Sort beggining from second element
+    if (sort_alg == "std") {
+        sort(begin(*points) + 1, end(*points), comparator);
+    } else if (sort_alg == "selection") {
+        selection_sort(points, 1, points->size(), comparator);
+    } else if (sort_alg == "heap") {
+        heap_sort(points, 1, points->size(), comparator);
+    } else {
+        cout << "Algorithm " << sort_alg << " not available." << endl;
+    }
+
+    // sort(begin(*points) + 1, end(*points), [&base_point](Point *a, Point *b) {
+    // return ccw(base_point, a, b);
+    // double ang0 = angle(base_point->x, base_point->y, a->x, a->y);
+    // double ang1 = angle(base_point->x, base_point->y, b->x, b->y);
+    // return ang0 < ang1;
+    // });
 
     vector<int> *convex_hull = new vector<int>;
     convex_hull->reserve(points->size());

@@ -33,7 +33,7 @@ int main(int argc, char const *argv[]) {
     po::options_description desc("Allowed options");
     desc.add_options()("help", "produce help message")("input", po::value<string>(), "Input points")("random_points", po::value<int>(), "Generate random points");
     desc.add_options()("output", po::value<string>()->default_value("convex_hull.json"), "Output file");
-    desc.add_options()("alg", po::value<string>()->default_value("jarvis"), "Algorithm to use (naive, n3, jarvis)");
+    desc.add_options()("alg", po::value<string>()->default_value("std"), "Algorithm to sort points");
     desc.add_options()("circle", po::value<int>()->default_value(0), "Generate points in a circle");
     desc.add_options()("comma", po::value<int>()->default_value(0), "File with comma separated points");
 
@@ -66,7 +66,7 @@ int main(int argc, char const *argv[]) {
     clock_t start, end;
     double cpu_time_used;
     start = clock();
-    vector<int> *convex_hull = graham(&points);
+    vector<int> *convex_hull = graham(&points, vm["alg"].as<string>());
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     cout << "Time = " << cpu_time_used << endl;
@@ -80,7 +80,7 @@ int main(int argc, char const *argv[]) {
     output << "\"n\": " << points.size() << ",\n";
     output << "\"h\": " << convex_hull->size() << ",\n";
     output << "\"algorithm\": \""
-           << "graham"
+           << "graham_" << vm["alg"].as<string>()
            << "\",\n";
     output << "\"time\": " << std::scientific << std::setprecision(8) << cpu_time_used << ",\n";
 
