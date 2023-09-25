@@ -26,113 +26,79 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Problema}
+  \frametitle{Problema}
 
-\onslide<1->{
-    Dado um conjunto de pontos no  $\mathbb{R}^2$, encontrar o menor conjunto convexo que contém todos os pontos (fecho convexo).
-}
-\begin{figure}
-\begin{overprint}
-  \onslide<1> \include{./figures/points}
-  \onslide<2> \include{./figures/points_hull}
-\end{overprint}
-\end{figure}
-
-
+  \onslide<1->{
+      Dado um conjunto de pontos no  $\mathbb{R}^2$, encontrar o menor conjunto convexo que contém todos os pontos (fecho convexo).
+  }
+  \begin{figure}
+    \begin{overprint}
+      \onslide<1> \include{./figures/points}
+      \onslide<2> \include{./figures/points_hull}
+    \end{overprint}
+  \end{figure}
 \end{frame}
 
 \begin{frame}{Algoritmo de Graham}
+  % Make 2 columns
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \onslide<1->{\item Encontrar o ponto mais baixo e a esquerda (pivot)}
+        \onslide<3->{\item Ordena os pontos em ordem crescente de ângulo em relação ao pivot}
+        \onslide<6->{\item Adiciona os pontos ao fecho convexo, caso não vire para a direita. Caso contrário, remove o ponto anterior.}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \include{graham/fig}
+    \end{column}
+  \end{columns}
+  
 \end{frame}
 
 \begin{frame}{Exemplos}
-
   \begin{overprint}
     \begin{columns}
       \begin{column}{0.5\textwidth}
         \begin{figure}
-          \includegraphics<1-2>[width=\textwidth]{./figures/introbs_pointsonly.png}
-          \includegraphics<3-4>[width=\textwidth]{./figures/fishdp_pointsonly.png}
+          \includegraphics<1-2>[width=\textwidth]{./figures/cartbs_pointsonly.png}
+          \includegraphics<3-4>[width=\textwidth]{./figures/catholebs_pointsonly.png}
           \includegraphics<5-6>[width=\textwidth]{./figures/dog_pointsonly.png}
-          \includegraphics<7-8>[width=\textwidth]{./figures/canada_pointsonly.png}
         \end{figure}
       \end{column}
       \begin{column}{0.5\textwidth}
         \begin{figure}
-          \includegraphics<2>[width=\textwidth]{./figures/introbs.png}
-          \includegraphics<4>[width=\textwidth]{./figures/fishdp.png}
+          \includegraphics<2>[width=\textwidth]{./figures/cartbs.png}
+          \includegraphics<4>[width=\textwidth]{./figures/catholebs.png}
           \includegraphics<6>[width=\textwidth]{./figures/dog.png}
-          \includegraphics<8>[width=\textwidth]{./figures/canada.png}
         \end{figure}
       \end{column}
     \end{columns}
   \end{overprint}
-
 \end{frame}
 
-\begin{frame}[fragile]{Selection Sort}                                                                                                                 
-  \begin{tikzpicture}                                                                                                                                    
-                                                                                                                                                        
-    % Lista inicial                                                                                                                                        
-    \foreach \x/\num in {1/5, 2/3, 3/9, 4/2, 5/7} {                                                                                                        
-      \draw[fill=blue!20] (\x,0) rectangle ++(1,1) node[midway] {\num};                                                                                    
-    }                                                                                                                                                      
-                                                                                                                                                           
-    % Destaque da iteração atual                                                                                                                           
-    % \draw[fill=yellow!60] (1,0) rectangle ++(1,1);                                                                                                         
-    % \draw[fill=yellow!60] (4,0) rectangle ++(1,1);                                                                                                         
-                                                                                                                                                           
-    % Min valor                                                                                                                                            
-    \draw[fill=green!40] (2,1.5) rectangle ++(1,1) node[midway] {2};                                                                                       
-                                                                                                                                                           
-    % Flechas de troca                                                                                                                                     
-    \draw[->,thick] (2,1) -- ++(0,-0.8) -- ++(2,0);                                                                                                        
-    \draw[->,thick] (4,1) -- ++(0,-0.8) -- ++(-2,0);                                                                                                       
-                                                                                                                                                           
-    % Lista após a iteração                                                                                                                                
-    \foreach \x/\num in {1/2, 2/3, 3/9, 4/5/, 5/7} {                                                                                                       
-      \draw[fill=blue!20] (\x,-3) rectangle ++(1,1) node[midway] {\num};                                                                                   
-    }                                                                                                                                                      
-                                                                                                                                                           
-    \end{tikzpicture}
-\end{frame}                                                                                                                                            
-                                                                                                                                                         
-  \begin{frame}[fragile]{Insertion Sort}                                                                                                                 
-  \begin{tikzpicture}[scale=1]                                                                                                                           
-      \node[draw] at (0,0) {5};                                                                                                                          
-      \node[draw] at (1,0) {4};                                                                                                                          
-                                                                                                                                                         
-      \node[draw] at (5,0) {4};                                                                                                                          
-      \node[draw] at (6,0) {5};                                                                                                                          
-  \end{tikzpicture}                                                                                                                                      
-                                                                                                                                                         
-  Insertion sort: \verb|[5, 4]| $\rightarrow$ \verb|[4, 5]|                                                                                              
-  \end{frame}                                                                                                                                            
-                                                                                                                                                         
-  \begin{frame}[fragile]{Merge Sort}                                                                                                                     
-  \begin{tikzpicture}[scale=1]                                                                                                                           
-      \node[draw] at (0,0) {5};                                                                                                                          
-      \node[draw] at (1,0) {4};                                                                                                                          
-                                                                                                                                                         
-      \node[draw] at (5,0) {4};                                                                                                                          
-      \node[draw] at (6,0) {5};                                                                                                                          
-  \end{tikzpicture}                                                                                                                                      
-                                                                                                                                                         
-  Merge sort: \verb|[5, 4]| $\rightarrow$ \verb|[4, 5]|                                                                                                  
-  \end{frame}                                                                                                                                            
-                                                                                                                                                         
-  \begin{frame}[fragile]{Quick Sort}                                                                                                                     
-  \begin{tikzpicture}[scale=1]                                                                                                                           
-      \node[draw] at (0,0) {5};                                                                                                                          
-      \node[draw] at (1,0) {1};                                                                                                                          
-      \node[draw] at (2,0) {4};                                                                                                                          
-                                                                                                                                                         
-      \node[draw] at (5,0) {1};                                                                                                                          
-      \node[draw] at (6,0) {5};                                                                                                                          
-      \node[draw] at (7,0) {4};                                                                                                                          
-  \end{tikzpicture}                                                                                                                                      
-                                                                                                                                                         
-  Quick sort: \verb|[5,1,4]| $\rightarrow$ \verb|[1,5,4]|                                                                                                
-  \end{frame}     
+\begin{frame}{Algoritmos de Ordenação}
+
+  \vfill
+
+  Algoritmos $O(n^2)$ (pior caso):
+  \begin{itemize}
+    \item Selection Sort
+    \item Insertion Sort
+    \item Quick Sort - {\color{red} $O(n log(n))$ (caso médio)}
+  \end{itemize}
+
+  \vfill
+
+  Algoritmos $O(n log(n))$ (pior caso):
+  \begin{itemize}
+    \item Merge Sort
+    \item Heap Sort
+  \end{itemize}
+
+  \vfill
+  
+\end{frame}
 
 \begin{frame}
 \frametitle{Tempo de execução}
@@ -156,9 +122,24 @@
 \begin{frame}
 \frametitle{Tempo de execução}
     \begin{figure}
-      % include pgf circle_times.pgf here
-      \includegraphics[width=0.9\textwidth]{./figures/circle_times.png}
+        \includegraphics[width=0.7\textwidth]{./figures/circle_times.png}
     \end{figure}
 \end{frame}
+
+\begin{frame}
+\frametitle{Tempo de execução}
+    \begin{figure}
+        \includegraphics[width=0.7\textwidth]{./figures/circle_times_nlogn.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Tempo de execução - Graham x Jarvis}
+    \begin{figure}
+      % include pgf circle_times.pgf here
+      \includegraphics[width=0.7\textwidth]{./figures/circle_times_2.png}
+    \end{figure}
+\end{frame}
+
 
 \end{document}
