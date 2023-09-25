@@ -1,0 +1,164 @@
+\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
+
+\usetheme{default}  % You can choose any other theme you prefer
+
+\title{04 - Algoritmos}
+\author{Mateus Oliveira de Figueiredo}
+\date{26/09/2023}
+
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+
+\usepackage{pgfplots}
+\DeclareUnicodeCharacter{2212}{−}
+\usepgfplotslibrary{groupplots,dateplot}
+\usetikzlibrary{patterns,shapes.arrows, positioning}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Problema}
+
+\onslide<1->{
+    Dado um conjunto de pontos no  $\mathbb{R}^2$, encontrar o menor conjunto convexo que contém todos os pontos (fecho convexo).
+}
+\begin{figure}
+\begin{overprint}
+  \onslide<1> \include{./figures/points}
+  \onslide<2> \include{./figures/points_hull}
+\end{overprint}
+\end{figure}
+
+
+\end{frame}
+
+\begin{frame}{Algoritmo de Graham}
+\end{frame}
+
+\begin{frame}{Exemplos}
+
+  \begin{overprint}
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{figure}
+          \includegraphics<1-2>[width=\textwidth]{./figures/introbs_pointsonly.png}
+          \includegraphics<3-4>[width=\textwidth]{./figures/fishdp_pointsonly.png}
+          \includegraphics<5-6>[width=\textwidth]{./figures/dog_pointsonly.png}
+          \includegraphics<7-8>[width=\textwidth]{./figures/canada_pointsonly.png}
+        \end{figure}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{figure}
+          \includegraphics<2>[width=\textwidth]{./figures/introbs.png}
+          \includegraphics<4>[width=\textwidth]{./figures/fishdp.png}
+          \includegraphics<6>[width=\textwidth]{./figures/dog.png}
+          \includegraphics<8>[width=\textwidth]{./figures/canada.png}
+        \end{figure}
+      \end{column}
+    \end{columns}
+  \end{overprint}
+
+\end{frame}
+
+\begin{frame}[fragile]{Selection Sort}                                                                                                                 
+  \begin{tikzpicture}                                                                                                                                    
+                                                                                                                                                        
+    % Lista inicial                                                                                                                                        
+    \foreach \x/\num in {1/5, 2/3, 3/9, 4/2, 5/7} {                                                                                                        
+      \draw[fill=blue!20] (\x,0) rectangle ++(1,1) node[midway] {\num};                                                                                    
+    }                                                                                                                                                      
+                                                                                                                                                           
+    % Destaque da iteração atual                                                                                                                           
+    % \draw[fill=yellow!60] (1,0) rectangle ++(1,1);                                                                                                         
+    % \draw[fill=yellow!60] (4,0) rectangle ++(1,1);                                                                                                         
+                                                                                                                                                           
+    % Min valor                                                                                                                                            
+    \draw[fill=green!40] (2,1.5) rectangle ++(1,1) node[midway] {2};                                                                                       
+                                                                                                                                                           
+    % Flechas de troca                                                                                                                                     
+    \draw[->,thick] (2,1) -- ++(0,-0.8) -- ++(2,0);                                                                                                        
+    \draw[->,thick] (4,1) -- ++(0,-0.8) -- ++(-2,0);                                                                                                       
+                                                                                                                                                           
+    % Lista após a iteração                                                                                                                                
+    \foreach \x/\num in {1/2, 2/3, 3/9, 4/5/, 5/7} {                                                                                                       
+      \draw[fill=blue!20] (\x,-3) rectangle ++(1,1) node[midway] {\num};                                                                                   
+    }                                                                                                                                                      
+                                                                                                                                                           
+    \end{tikzpicture}
+\end{frame}                                                                                                                                            
+                                                                                                                                                         
+  \begin{frame}[fragile]{Insertion Sort}                                                                                                                 
+  \begin{tikzpicture}[scale=1]                                                                                                                           
+      \node[draw] at (0,0) {5};                                                                                                                          
+      \node[draw] at (1,0) {4};                                                                                                                          
+                                                                                                                                                         
+      \node[draw] at (5,0) {4};                                                                                                                          
+      \node[draw] at (6,0) {5};                                                                                                                          
+  \end{tikzpicture}                                                                                                                                      
+                                                                                                                                                         
+  Insertion sort: \verb|[5, 4]| $\rightarrow$ \verb|[4, 5]|                                                                                              
+  \end{frame}                                                                                                                                            
+                                                                                                                                                         
+  \begin{frame}[fragile]{Merge Sort}                                                                                                                     
+  \begin{tikzpicture}[scale=1]                                                                                                                           
+      \node[draw] at (0,0) {5};                                                                                                                          
+      \node[draw] at (1,0) {4};                                                                                                                          
+                                                                                                                                                         
+      \node[draw] at (5,0) {4};                                                                                                                          
+      \node[draw] at (6,0) {5};                                                                                                                          
+  \end{tikzpicture}                                                                                                                                      
+                                                                                                                                                         
+  Merge sort: \verb|[5, 4]| $\rightarrow$ \verb|[4, 5]|                                                                                                  
+  \end{frame}                                                                                                                                            
+                                                                                                                                                         
+  \begin{frame}[fragile]{Quick Sort}                                                                                                                     
+  \begin{tikzpicture}[scale=1]                                                                                                                           
+      \node[draw] at (0,0) {5};                                                                                                                          
+      \node[draw] at (1,0) {1};                                                                                                                          
+      \node[draw] at (2,0) {4};                                                                                                                          
+                                                                                                                                                         
+      \node[draw] at (5,0) {1};                                                                                                                          
+      \node[draw] at (6,0) {5};                                                                                                                          
+      \node[draw] at (7,0) {4};                                                                                                                          
+  \end{tikzpicture}                                                                                                                                      
+                                                                                                                                                         
+  Quick sort: \verb|[5,1,4]| $\rightarrow$ \verb|[1,5,4]|                                                                                                
+  \end{frame}     
+
+\begin{frame}
+\frametitle{Tempo de execução}
+% Two columns
+\begin{columns}
+  \begin{column}{0.4\textwidth}
+  \begin{itemize}
+    \item Pontos gerados aleatoriamente dentro de um círculo de raio 1
+    \item $h \sim \sqrt{n}$, onde h é o número de vértices do fecho convexo.
+  \end{itemize}
+  \end{column}
+  \begin{column}{0.6\textwidth}
+    \begin{figure}
+      \includegraphics[width=0.9\textwidth]{./figures/random_merge_1000_1.png}
+    \end{figure}
+  \end{column}
+\end{columns}
+  
+\end{frame}
+
+\begin{frame}
+\frametitle{Tempo de execução}
+    \begin{figure}
+      % include pgf circle_times.pgf here
+      \includegraphics[width=0.9\textwidth]{./figures/circle_times.png}
+    \end{figure}
+\end{frame}
+
+\end{document}
