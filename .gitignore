@@ -4,3 +4,13 @@
 main.pdf
 .vscode/
 build/
+*.aux
+*.log
+*.out
+*.nav
+*.snm
+*.toc
+*.vrb
+*.synctex.gz
+*.fdb_latexmk
+
