@@ -24,3 +24,15 @@ void generate_random_points(int n, vector<double> &xs, vector<double> &ys, bool 
         ys.push_back(y);
     }
 }
+
+void generate_regular_polygon(int n, vector<double> &xs, vector<double> &ys) {
+    xs.reserve(n);
+    ys.reserve(n);
+
+    for (int i = 0; i < n; i++) {
+        double x = cos(2 * M_PI * i / n);
+        double y = sin(2 * M_PI * i / n);
+        xs.push_back(x);
+        ys.push_back(y);
+    }
+}
