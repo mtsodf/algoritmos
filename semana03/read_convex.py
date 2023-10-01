@@ -12,6 +12,7 @@ parser.add_argument("--equal", "-e", action="store_true")
 parser.add_argument("--invert_x", "-ix", action="store_true")
 parser.add_argument("--invert_y", "-iy", action="store_true")
 parser.add_argument("--show", "-s", action="store_true")
+parser.add_argument("--adj", "-ad", action="store_true")
 
 args = parser.parse_args()
 
@@ -59,6 +60,25 @@ for points_file in args.files:
 
         output = os.path.splitext(points_file)[0] + ".png"
         fig.savefig(output)
+    if args.adj:
+        triangles = json_values["triangles"]
+        for trig in triangles:
+            for i in range(3):
+                ax.plot(
+                    [xs[trig[i]], xs[trig[(i + 1) % 3]]],
+                    [ys[trig[i]], ys[trig[(i + 1) % 3]]],
+                    color="black",
+                )
+        for i, adj in enumerate(json_values["adjacency_list"]):
+            for j in adj:
+                if j >= 0:
+                    xb_0 = np.mean(xs[triangles[i]])
+                    yb_0 = np.mean(ys[triangles[i]])
+                    xb_1 = np.mean(xs[triangles[j]])
+                    yb_1 = np.mean(ys[triangles[j]])
+                    ax.plot([xb_0, xb_1], [yb_0, yb_1], color="blue", marker="o")
+                    xb_0 = np.mean(xs[triangles[i]])
+                    yb_0 = np.mean(ys[triangles[i]])
 
     if args.show:
         plt.show()
