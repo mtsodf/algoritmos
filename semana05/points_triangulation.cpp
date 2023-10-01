@@ -125,7 +125,7 @@ void correct_adjacency_list(vector<vector<int>> &triangles, vector<vector<int>> 
             if (b == 1) adjacency_list[cur_triangle][2] = edge_triangle;
             if (b == 2) adjacency_list[cur_triangle][0] = edge_triangle;
 
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < 3; i++) {
                 int v1 = triangles[edge_triangle][i], v2 = triangles[edge_triangle][(i + 1) % 3];
                 int v3 = triangles[cur_triangle][a], v4 = triangles[cur_triangle][b];
                 if ((v1 == v3 && v2 == v4) || (v1 == v4 && v2 == v3)) {
@@ -177,7 +177,7 @@ void triangulate_graham(vector<Point *> *points, vector<vector<int>> &triangles,
     (*edges_triangles)[0][1] = 0;
     (*edges_triangles)[1][0] = 0;
     (*edges_triangles)[1][2] = 0;
-    (*edges_triangles)[2][2] = 0;
+    (*edges_triangles)[2][1] = 0;
     (*edges_triangles)[0][2] = 0;
     (*edges_triangles)[2][0] = 0;
 
