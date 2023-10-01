@@ -2,8 +2,8 @@
 
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <string>
-#include <unordered_map>
 #include <utility>
 
 #include "graham.h"
@@ -12,16 +12,6 @@
 #include "utilities.h"
 
 using namespace std;
-
-// Custom hash function for Pair
-struct pair_hash {
-    template <class T1, class T2>
-    size_t operator()(const pair<T1, T2> &p) const {
-        auto h1 = hash<T1>{}(p.first);
-        auto h2 = hash<T2>{}(p.second);
-        return h1 ^ h2;
-    }
-};
 
 void change_value(vector<int> &vec, int old_value, int new_value) {
     for (int i = 0; i < vec.size(); i++) {
@@ -136,7 +126,7 @@ void write_triangulation_json(vector<Point *> *points, vector<vector<int>> *tria
     output.close();
 }
 
-void correct_adjacency_list(vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list, unordered_map<pair<int, int>, int, pair_hash> &edges_triangles, int cur_triangle) {
+void correct_adjacency_list(vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list, map<pair<int, int>, int> &edges_triangles, int cur_triangle) {
     adjacency_list.push_back({-1, -1, -1});
     for (int a = 2, b = 0; b < 3; a = b, b++) {
         // int edge_triangle = edges_triangles[triangles[cur_triangle][a]][triangles[cur_triangle][b]];
@@ -205,7 +195,7 @@ void triangulate_graham(vector<Point *> *points, vector<vector<int>> &triangles,
     // (*edges_triangles)[2][1] = 0;
     // (*edges_triangles)[0][2] = 0;
     // (*edges_triangles)[2][0] = 0;
-    unordered_map<pair<int, int>, int, pair_hash> *edges_triangles = new unordered_map<pair<int, int>, int, pair_hash>;
+    map<pair<int, int>, int> *edges_triangles = new map<pair<int, int>, int>;
     (*edges_triangles)[make_pair(0, 1)] = 0;
     (*edges_triangles)[make_pair(1, 0)] = 0;
     (*edges_triangles)[make_pair(1, 2)] = 0;
