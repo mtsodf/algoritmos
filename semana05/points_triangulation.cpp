@@ -100,12 +100,13 @@ void triangulate_convex_polygon(vector<int> &points_int, vector<vector<int>> &tr
     }
 }
 
-void write_triangulation_json(vector<Point *> *points, vector<vector<int>> *triangles, vector<vector<int>> *adjacency_list, double time_seconds, string filename) {
+void write_triangulation_json(vector<Point *> *points, vector<vector<int>> *triangles, vector<vector<int>> *adjacency_list, string alg, double time_seconds, string filename) {
     fstream output;
     output.open(filename, ios::out);
     output << "{\n";
     output << "\"n\": " << points->size() << ",\n";
     output << "\"time\":" << std::scientific << std::setprecision(8) << time_seconds << ",\n";
+    output << "\"algorithm\": \"" << alg << "\",\n";
     write_points_on_json(output, *points);
     output << ",\n";
     write_int_matrix_on_json(output, *triangles, "triangles");
