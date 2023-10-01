@@ -225,7 +225,6 @@ bool is_exit(vector<vector<int>> &triangles, int t_cur) {
 }
 
 void find_path_from_baricenter_to_outside(vector<Point *> *points, vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list, vector<int> &path) {
-    cout << __FILE__ << ":" << __LINE__ << endl;
     double xb = 0, yb = 0;
     for (int i = 0; i < points->size(); i++) {
         xb += (*points)[i]->x;
@@ -234,7 +233,6 @@ void find_path_from_baricenter_to_outside(vector<Point *> *points, vector<vector
     xb /= points->size();
     yb /= points->size();
 
-    cout << __FILE__ << ":" << __LINE__ << endl;
     Point *baricenter = new Point(xb, yb);
     vector<int> *tpoints = new vector<int>(3);
 
@@ -251,11 +249,9 @@ void find_path_from_baricenter_to_outside(vector<Point *> *points, vector<vector
         }
     }
 
-    cout << __FILE__ << ":" << __LINE__ << endl;
     path.push_back(t_begin);
     vector<bool> visited(triangles.size(), false);
     visited[t_begin] = true;
-    cout << __FILE__ << ":" << __LINE__ << endl;
 
     int t_cur = t_begin;
     while (!is_exit(adjacency_list, t_cur)) {
@@ -263,7 +259,6 @@ void find_path_from_baricenter_to_outside(vector<Point *> *points, vector<vector
         for (int i = 0; i < 3; i++) {
             int t_next = adjacency_list[t_cur][i];
             if (!visited[t_next]) {
-                cout << "Visiting " << t_next << endl;
                 path.push_back(t_next);
                 visited[t_next] = true;
                 t_cur = t_next;
@@ -276,5 +271,4 @@ void find_path_from_baricenter_to_outside(vector<Point *> *points, vector<vector
             t_cur = path[path.size() - 1];
         }
     }
-    cout << __FILE__ << ":" << __LINE__ << endl;
 }
