@@ -41,6 +41,8 @@ int main(int argc, char const *argv[]) {
         points->push_back(new Point(xs[i], ys[i]));
     }
 
+    cout << "n = " << points->size() << endl;
+
     vector<vector<int>> triangles;
     vector<vector<int>> adjacency_list;
     clock_t start, end;

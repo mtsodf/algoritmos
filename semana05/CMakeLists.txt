@@ -10,3 +10,5 @@ add_test(semana05 semana05)
 add_executable(triangulation_tests triangulation_tests.cpp)
 target_link_libraries(triangulation_tests points_triangulation utilities polygon random_points)
 add_test(triangulation_tests triangulation_tests)
+
+configure_file(run_circles.sh run_circles.sh COPYONLY)
