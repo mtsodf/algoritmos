@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <vector>
+
+#include "point.h"
 using namespace std;
 
 int inline remainder(int a, int b) {
@@ -56,6 +58,16 @@ Polygon::Polygon(vector<double> *xs, vector<double> *ys) {
 Polygon::Polygon(vector<double> *xs, vector<double> *ys, vector<int> *vert_list) {
     this->xs = xs;
     this->ys = ys;
+    this->vert_list = vert_list;
+}
+
+Polygon::Polygon(vector<Point *> *points, vector<int> *vert_list) {
+    this->xs = new vector<double>(points->size());
+    this->ys = new vector<double>(points->size());
+    for (int i = 0; i < points->size(); i++) {
+        (*xs)[i] = (*points)[i]->x;
+        (*ys)[i] = (*points)[i]->y;
+    }
     this->vert_list = vert_list;
 }
 
