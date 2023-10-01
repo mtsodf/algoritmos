@@ -78,9 +78,18 @@ for points_file in args.files:
                     yb_0 = np.mean(ys[triangles[i]])
                     xb_1 = np.mean(xs[triangles[j]])
                     yb_1 = np.mean(ys[triangles[j]])
-                    ax.plot([xb_0, xb_1], [yb_0, yb_1], color="blue", marker="o")
-                    xb_0 = np.mean(xs[triangles[i]])
-                    yb_0 = np.mean(ys[triangles[i]])
+
+                    # Get middle point of commom edge
+                    xm = 0
+                    ym = 0
+                    for k in triangles[i]:
+                        if k in triangles[j]:
+                            xm += xs[k] / 2
+                            ym += ys[k] / 2
+
+                    ax.plot(
+                        [xb_0, xm, xb_1], [yb_0, ym, yb_1], color="blue", marker="o"
+                    )
 
     if args.show:
         plt.show()
