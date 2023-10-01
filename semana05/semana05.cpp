@@ -43,7 +43,14 @@ int main(int argc, char const *argv[]) {
 
     vector<vector<int>> triangles;
     vector<vector<int>> adjacency_list;
+    clock_t start, end;
+    double cpu_time_used;
+    start = clock();
     triangulate_trig(points, triangles, adjacency_list);
+    end = clock();
+    cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
 
-    write_triangulation_json(points, &triangles, &adjacency_list, output_filepath);
+    cout << "Time: " << cpu_time_used << endl;
+
+    write_triangulation_json(points, &triangles, &adjacency_list, cpu_time_used, output_filepath);
 }

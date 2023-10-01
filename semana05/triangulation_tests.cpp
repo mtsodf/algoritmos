@@ -35,7 +35,7 @@ int main() {
     vector<vector<int>> triangles;
     vector<vector<int>> adjacency_list;
     triangulate_convex_polygon(points_int, triangles, adjacency_list);
-    write_triangulation_json(&points, &triangles, &adjacency_list, "triangulation.json");
+    write_triangulation_json(&points, &triangles, &adjacency_list, -1.0, "triangulation.json");
 
     // Compare triangles benchmark with triangles
     for (int i = 0; i < triangles_benchmark.size(); i++) {
