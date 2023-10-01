@@ -11,7 +11,19 @@
 using namespace std;
 
 bool ccw(Point *a, Point *b, Point *c) {
-    return (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x) > 1e-9;
+    return (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x) >= 1e-12;
+}
+
+double EPSILON = 1e-6;
+bool ccw_or_collinear(Point *a, Point *b, Point *c) {
+    double cross = (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x);
+    if (cross > EPSILON) {
+        return true;
+    } else if (cross < -EPSILON) {
+        return false;
+    } else {
+        return a->dist(b) < a->dist(c);
+    }
 }
 
 double get_min_point_index(vector<Point *> points) {
@@ -39,7 +51,7 @@ vector<int> *graham(vector<Point *> *points, string sort_alg) {
     cout << "Base point = " << base_point->x << ", " << base_point->y << endl;
 
     function<bool(Point *, Point *)> comparator = [&base_point](Point *a, Point *b) {
-        return ccw(base_point, a, b);
+        return ccw_or_collinear(base_point, a, b);
     };
 
     // Sort beggining from second element
@@ -59,13 +71,6 @@ vector<int> *graham(vector<Point *> *points, string sort_alg) {
         cout << "Algorithm " << sort_alg << " not available." << endl;
     }
 
-    // sort(begin(*points) + 1, end(*points), [&base_point](Point *a, Point *b) {
-    // return ccw(base_point, a, b);
-    // double ang0 = angle(base_point->x, base_point->y, a->x, a->y);
-    // double ang1 = angle(base_point->x, base_point->y, b->x, b->y);
-    // return ang0 < ang1;
-    // });
-
     vector<int> *convex_hull = new vector<int>;
     convex_hull->reserve(points->size());
     convex_hull->push_back(0);
@@ -76,13 +81,13 @@ vector<int> *graham(vector<Point *> *points, string sort_alg) {
     for (int i = 2; i < points->size(); i++) {
         a = (*points)[(*convex_hull)[convex_hull->size() - 2]];
         b = (*points)[(*convex_hull)[convex_hull->size() - 1]];
-        while (!ccw(a, b, (*points)[i])) {
+        while (!ccw_or_collinear(a, b, (*points)[i])) {
             convex_hull->pop_back();
             a = (*points)[(*convex_hull)[convex_hull->size() - 2]];
             b = (*points)[(*convex_hull)[convex_hull->size() - 1]];
         }
         convex_hull->push_back(i);
     }
-
+    cout << "Convex hull size = " << convex_hull->size() << endl;
     return convex_hull;
 }
