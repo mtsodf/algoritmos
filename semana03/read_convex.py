@@ -13,6 +13,7 @@ parser.add_argument("--invert_x", "-ix", action="store_true")
 parser.add_argument("--invert_y", "-iy", action="store_true")
 parser.add_argument("--show", "-s", action="store_true")
 parser.add_argument("--adj", "-ad", action="store_true")
+parser.add_argument("--path", "-p", action="store_true")
 
 args = parser.parse_args()
 
@@ -90,6 +91,23 @@ for points_file in args.files:
                     ax.plot(
                         [xb_0, xm, xb_1], [yb_0, ym, yb_1], color="blue", marker="o"
                     )
+
+    if args.path:
+        path = json_values["path"]
+        for i in range(len(path) - 1):
+            xb_0 = np.mean(xs[triangles[path[i]]])
+            yb_0 = np.mean(ys[triangles[path[i]]])
+            xb_1 = np.mean(xs[triangles[path[i + 1]]])
+            yb_1 = np.mean(ys[triangles[path[i + 1]]])
+
+            # Get middle point of commom edge
+            xm = 0
+            ym = 0
+            for k in triangles[path[i]]:
+                if k in triangles[path[i + 1]]:
+                    xm += xs[k] / 2
+                    ym += ys[k] / 2
+            ax.plot([xb_0, xm, xb_1], [yb_0, ym, yb_1], color="red", marker="o")
 
     if args.show:
         plt.show()
