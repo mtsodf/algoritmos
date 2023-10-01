@@ -115,3 +115,93 @@ void write_triangulation_json(vector<Point *> *points, vector<vector<int>> *tria
     output << "}\n";
     output.close();
 }
+
+void correct_adjacency_list(vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list, vector<vector<int>> &edges_triangles, int cur_triangle) {
+    adjacency_list.push_back({-1, -1, -1});
+    for (int a = 2, b = 0; b < 3; a = b, b++) {
+        int edge_triangle = edges_triangles[triangles[cur_triangle][a]][triangles[cur_triangle][b]];
+        if (edge_triangle != -1) {
+            if (b == 0) adjacency_list[cur_triangle][1] = edge_triangle;
+            if (b == 1) adjacency_list[cur_triangle][2] = edge_triangle;
+            if (b == 2) adjacency_list[cur_triangle][0] = edge_triangle;
+
+            for (int i = 0; i < 2; i++) {
+                int v1 = triangles[edge_triangle][i], v2 = triangles[edge_triangle][(i + 1) % 3];
+                int v3 = triangles[cur_triangle][a], v4 = triangles[cur_triangle][b];
+                if ((v1 == v3 && v2 == v4) || (v1 == v4 && v2 == v3)) {
+                    if (i == 0) adjacency_list[edge_triangle][2] = cur_triangle;
+                    if (i == 1) adjacency_list[edge_triangle][0] = cur_triangle;
+                    if (i == 2) adjacency_list[edge_triangle][1] = cur_triangle;
+                }
+            }
+
+        } else {
+            edges_triangles[triangles[cur_triangle][a]][triangles[cur_triangle][b]] = cur_triangle;
+            edges_triangles[triangles[cur_triangle][b]][triangles[cur_triangle][a]] = cur_triangle;
+        }
+    }
+}
+
+void triangulate_graham(vector<Point *> *points, vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list) {
+    int init_point = get_min_point_index(*points);
+
+    Point *base_point = (*points)[init_point];
+
+    // Put init_point at the beginning of the vector
+    Point *temp = (*points)[0];
+    (*points)[0] = (*points)[init_point];
+    (*points)[init_point] = temp;
+
+    cout << "Base point = " << base_point->x << ", " << base_point->y << endl;
+
+    function<bool(Point *, Point *)> comparator = [&base_point](Point *a, Point *b) {
+        return ccw_or_collinear(base_point, a, b);
+    };
+
+    // Sort beggining from second element
+    sort(begin(*points) + 1, end(*points), comparator);
+
+    vector<int> *convex_hull = new vector<int>;
+    convex_hull->reserve(points->size());
+    convex_hull->push_back(0);
+    convex_hull->push_back(1);
+    convex_hull->push_back(2);
+
+    triangles.reserve(2 * points->size() - 1);
+    adjacency_list.reserve(2 * points->size() - 1);
+
+    triangles.push_back({0, 1, 2});
+    adjacency_list.push_back({-1, -1, -1});
+
+    vector<vector<int>> *edges_triangles = new vector<vector<int>>(points->size(), vector<int>(points->size(), -1));
+    (*edges_triangles)[0][1] = 0;
+    (*edges_triangles)[1][0] = 0;
+    (*edges_triangles)[1][2] = 0;
+    (*edges_triangles)[2][2] = 0;
+    (*edges_triangles)[0][2] = 0;
+    (*edges_triangles)[2][0] = 0;
+
+    Point *point_a, *point_b;
+    for (int i = 3; i < points->size(); i++) {
+        point_a = (*points)[(*convex_hull)[convex_hull->size() - 2]];
+        point_b = (*points)[(*convex_hull)[convex_hull->size() - 1]];
+
+        int a = 0;
+        int b = (*convex_hull)[convex_hull->size() - 1];
+        int c = i;
+        triangles.push_back({a, b, c});
+        int cur_triangle = triangles.size() - 1;
+        correct_adjacency_list(triangles, adjacency_list, *edges_triangles, cur_triangle);
+
+        while (!ccw_or_collinear(point_a, point_b, (*points)[i])) {
+            triangles.push_back({(*convex_hull)[convex_hull->size() - 2], (*convex_hull)[convex_hull->size() - 1], i});
+            cur_triangle = triangles.size() - 1;
+            correct_adjacency_list(triangles, adjacency_list, *edges_triangles, cur_triangle);
+            convex_hull->pop_back();
+            point_a = (*points)[(*convex_hull)[convex_hull->size() - 2]];
+            point_b = (*points)[(*convex_hull)[convex_hull->size() - 1]];
+        }
+        convex_hull->push_back(i);
+    }
+    cout << "Convex hull size = " << convex_hull->size() << endl;
+}

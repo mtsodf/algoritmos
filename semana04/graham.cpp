@@ -15,6 +15,7 @@ bool ccw(Point *a, Point *b, Point *c) {
 }
 
 double EPSILON = 1e-6;
+
 bool ccw_or_collinear(Point *a, Point *b, Point *c) {
     double cross = (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x);
     if (cross > EPSILON) {

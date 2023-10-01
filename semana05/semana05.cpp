@@ -49,8 +49,9 @@ int main(int argc, char const *argv[]) {
     double cpu_time_used;
     string alg = vm["alg"].as<string>();
     if (alg == "graham") {
-        cout << "Not implemented yet.\n";
-        return 1;
+        start = clock();
+        triangulate_graham(points, triangles, adjacency_list);
+        end = clock();
     } else if (alg == "trig") {
         start = clock();
         triangulate_trig(points, triangles, adjacency_list);

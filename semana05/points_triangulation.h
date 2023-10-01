@@ -5,3 +5,5 @@
 void triangulate_convex_polygon(vector<int> &points_int, vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list);
 void write_triangulation_json(vector<Point *> *points, vector<vector<int>> *triangles, vector<vector<int>> *adjacency_list, string alg, double time_seconds, string filename);
 void triangulate_trig(vector<Point *> *points, vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list);
+
+void triangulate_graham(vector<Point *> *points, vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list);
