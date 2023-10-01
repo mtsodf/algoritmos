@@ -8,8 +8,16 @@
 int main() {
     vector<double> xs;
     vector<double> ys;
-    // read_polygon_from_file("../../semana05/data/test_0.txt", xs, ys, false);
+    // read_polygon_from_file("../../semana03/data/alien_no_duplicates.txt", xs, ys, false);
+    // read_polygon_from_file("../../semana02/data/spiral/spiral_100.txt", xs, ys, false);
     generate_regular_polygon(10, xs, ys);
+    // xs.push_back(0.1);
+    // ys.push_back(0);
+
+    for (int i = 0; i < 10; i++) {
+        xs.push_back((double)rand() / RAND_MAX);
+        ys.push_back((double)rand() / RAND_MAX);
+    }
 
     vector<Point *> *points = new vector<Point *>;
 

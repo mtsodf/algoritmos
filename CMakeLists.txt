@@ -13,14 +13,12 @@ message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
 include_directories(${Boost_INCLUDE_DIRS})
 
 enable_testing()
-add_subdirectory(semana02)
 include_directories(semana02)
-
-add_subdirectory(semana03)
 include_directories(semana03)
-
-add_subdirectory(semana04)
 include_directories(semana04)
-
-add_subdirectory(semana05)
 include_directories(semana05)
+
+add_subdirectory(semana02)
+add_subdirectory(semana03)
+add_subdirectory(semana04)
+add_subdirectory(semana05)
