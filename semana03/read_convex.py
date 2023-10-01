@@ -60,7 +60,8 @@ for points_file in args.files:
 
         output = os.path.splitext(points_file)[0] + ".png"
         fig.savefig(output)
-    if args.adj:
+
+    if "triangles" in json_values:
         triangles = json_values["triangles"]
         for trig in triangles:
             for i in range(3):
@@ -69,6 +70,7 @@ for points_file in args.files:
                     [ys[trig[i]], ys[trig[(i + 1) % 3]]],
                     color="black",
                 )
+    if args.adj:
         for i, adj in enumerate(json_values["adjacency_list"]):
             for j in adj:
                 if j >= 0:
