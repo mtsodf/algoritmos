@@ -20,3 +20,7 @@ add_subdirectory(semana03)
 include_directories(semana03)
 
 add_subdirectory(semana04)
+include_directories(semana04)
+
+add_subdirectory(semana05)
+include_directories(semana05)

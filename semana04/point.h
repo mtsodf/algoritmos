@@ -1,6 +1,5 @@
 #pragma once
 
-using namespace std;
 // Add Point definition
 class Point {
    public:
