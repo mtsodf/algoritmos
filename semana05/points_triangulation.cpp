@@ -100,13 +100,21 @@ void triangulate_convex_polygon(vector<int> &points_int, vector<vector<int>> &tr
     }
 }
 
-void write_triangulation_json(vector<Point *> *points, vector<vector<int>> *triangles, vector<vector<int>> *adjacency_list, string alg, double time_seconds, string filename) {
+void write_triangulation_json(vector<Point *> *points, vector<vector<int>> *triangles, vector<vector<int>> *adjacency_list, string alg, double time_seconds, vector<int> &path, string filename) {
     fstream output;
     output.open(filename, ios::out);
     output << "{\n";
     output << "\"n\": " << points->size() << ",\n";
     output << "\"time\":" << std::scientific << std::setprecision(8) << time_seconds << ",\n";
     output << "\"algorithm\": \"" << alg << "\",\n";
+    output << "\"path\": [";
+    for (int i = 0; i < path.size(); i++) {
+        output << path[i];
+        if (i < path.size() - 1) {
+            output << ", ";
+        }
+    }
+    output << "],\n";
     write_points_on_json(output, *points);
     output << ",\n";
     write_int_matrix_on_json(output, *triangles, "triangles");
@@ -204,4 +212,69 @@ void triangulate_graham(vector<Point *> *points, vector<vector<int>> &triangles,
         convex_hull->push_back(i);
     }
     cout << "Convex hull size = " << convex_hull->size() << endl;
+}
+
+bool is_exit(vector<vector<int>> &triangles, int t_cur) {
+    int a_index = triangles[t_cur][0];
+    int b_index = triangles[t_cur][1];
+    int c_index = triangles[t_cur][2];
+    if (a_index == -1 || b_index == -1 || c_index == -1) {
+        return true;
+    }
+    return false;
+}
+
+void find_path_from_baricenter_to_outside(vector<Point *> *points, vector<vector<int>> &triangles, vector<vector<int>> &adjacency_list, vector<int> &path) {
+    cout << __FILE__ << ":" << __LINE__ << endl;
+    double xb = 0, yb = 0;
+    for (int i = 0; i < points->size(); i++) {
+        xb += (*points)[i]->x;
+        yb += (*points)[i]->y;
+    }
+    xb /= points->size();
+    yb /= points->size();
+
+    cout << __FILE__ << ":" << __LINE__ << endl;
+    Point *baricenter = new Point(xb, yb);
+    vector<int> *tpoints = new vector<int>(3);
+
+    Polygon *poligon = new Polygon(points, NULL);
+    int t_begin;
+    for (t_begin = 0; t_begin < triangles.size(); t_begin++) {
+        int a_index = triangles[t_begin][0];
+        int b_index = triangles[t_begin][1];
+        int c_index = triangles[t_begin][2];
+        (*tpoints) = {a_index, b_index, c_index};
+        poligon->vert_list = tpoints;
+        if (poligon->point_inside(baricenter->x, baricenter->y)) {
+            break;
+        }
+    }
+
+    cout << __FILE__ << ":" << __LINE__ << endl;
+    path.push_back(t_begin);
+    vector<bool> visited(triangles.size(), false);
+    visited[t_begin] = true;
+    cout << __FILE__ << ":" << __LINE__ << endl;
+
+    int t_cur = t_begin;
+    while (!is_exit(adjacency_list, t_cur)) {
+        bool has_next = false;
+        for (int i = 0; i < 3; i++) {
+            int t_next = adjacency_list[t_cur][i];
+            if (!visited[t_next]) {
+                cout << "Visiting " << t_next << endl;
+                path.push_back(t_next);
+                visited[t_next] = true;
+                t_cur = t_next;
+                has_next = true;
+                break;
+            }
+        }
+        if (!has_next) {
+            path.pop_back();
+            t_cur = path[path.size() - 1];
+        }
+    }
+    cout << __FILE__ << ":" << __LINE__ << endl;
 }

@@ -64,5 +64,8 @@ int main(int argc, char const *argv[]) {
 
     cout << "Time: " << cpu_time_used << endl;
 
-    write_triangulation_json(points, &triangles, &adjacency_list, alg, cpu_time_used, output_filepath);
+    vector<int> path;
+    find_path_from_baricenter_to_outside(points, triangles, adjacency_list, path);
+
+    write_triangulation_json(points, &triangles, &adjacency_list, alg, cpu_time_used, path, output_filepath);
 }
