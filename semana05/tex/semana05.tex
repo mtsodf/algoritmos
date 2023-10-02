@@ -1,0 +1,147 @@
+\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
+
+
+\usetheme{default}  % You can choose any other theme you prefer
+
+\title{05 - Algoritmos}
+\author{Mateus Oliveira de Figueiredo}
+\date{02/10/2023}
+
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+
+\usepackage{pgfplots}
+\DeclareUnicodeCharacter{2212}{−}
+\usepgfplotslibrary{groupplots,dateplot}
+\usetikzlibrary{patterns,shapes.arrows, positioning}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Problema}
+
+  \onslide<1->{
+      Dado um conjunto de pontos no  $\mathbb{R}^2$, realizar a triangulação do fecho convexo.
+  }
+  % Add two columns
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \begin{overprint}
+          \include{tikz_figs/first_example}
+        \end{overprint}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \onslide<3>{
+        \begin{table}[ht]
+        \caption{Resposta esperada}
+        \centering
+        \begin{tabular}{|c|c|c|}
+        \hline
+        Triang. & Vértices & Adj. \\
+        \hline
+        0 & C, F, H  & 1, 3, 2 \\
+        \hline
+        $\hdots$ & $\hdots$ & $\hdots$ \\
+        \hline
+        \end{tabular}
+        \end{table}
+      }
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Algoritmo de Triangulação 01}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \onslide<1->{\item Encontrar o fecho convexo}
+        \onslide<2->{\item Triangular o pontos do fecho convexo}
+        \onslide<3->{\item Adicionar pontos interiores criando três novos triangulos}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \include{tikz_figs/trig_alg}
+    \end{column}
+  \end{columns}
+  
+\end{frame}
+
+
+\begin{frame}{Algoritmo de Graham}
+  % Make 2 columns
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{itemize}
+        \onslide<1->{\item Encontrar o ponto mais baixo e a esquerda (pivot)}
+        \onslide<3->{\item Ordena os pontos em ordem crescente de ângulo em relação ao pivot}
+        \onslide<6->{\item Adiciona os pontos ao fecho convexo, caso não vire para a direita. Caso contrário, remove o ponto anterior.}
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \include{tikz_figs/graham_triang}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% \begin{frame}{Exemplos}
+%   \begin{overprint}
+%     \begin{columns}
+%       \begin{column}{0.5\textwidth}
+%         \begin{figure}
+%           \includegraphics<1-2>[width=\textwidth]{./figures/cartbs_pointsonly.png}
+%           \includegraphics<3-4>[width=\textwidth]{./figures/catholebs_pointsonly.png}
+%           \includegraphics<5-6>[width=\textwidth]{./figures/dog_pointsonly.png}
+%         \end{figure}
+%       \end{column}
+%       \begin{column}{0.5\textwidth}
+%         \begin{figure}
+%           \includegraphics<2>[width=\textwidth]{./figures/cartbs.png}
+%           \includegraphics<4>[width=\textwidth]{./figures/catholebs.png}
+%           \includegraphics<6>[width=\textwidth]{./figures/dog.png}
+%         \end{figure}
+%       \end{column}
+%     \end{columns}
+%   \end{overprint}
+% \end{frame}
+
+% \begin{frame}
+% \frametitle{Tempo de execução}
+% % Two columns
+% \begin{columns}
+%   \begin{column}{0.4\textwidth}
+%   \begin{itemize}
+%     \item Pontos gerados aleatoriamente dentro de um círculo de raio 1
+%     \item $h \sim \sqrt{n}$, onde h é o número de vértices do fecho convexo.
+%   \end{itemize}
+%   \end{column}
+%   \begin{column}{0.6\textwidth}
+%     \begin{figure}
+%       \includegraphics[width=0.9\textwidth]{./figures/random_merge_1000_1.png}
+%     \end{figure}
+%   \end{column}
+% \end{columns}
+
+% \end{frame}
+
+% \begin{frame}
+% \frametitle{Tempo de execução}
+%     \begin{figure}
+%         \includegraphics[width=0.7\textwidth]{./figures/circle_times.png}
+%     \end{figure}
+% \end{frame}
+
+
+\end{document}
