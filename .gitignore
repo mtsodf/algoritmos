@@ -11,6 +11,7 @@ build/
 *.snm
 *.toc
 *.vrb
+*.fls
 *.synctex.gz
 *.fdb_latexmk
 
