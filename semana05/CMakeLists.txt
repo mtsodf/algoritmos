@@ -12,3 +12,4 @@ target_link_libraries(triangulation_tests points_triangulation utilities polygon
 add_test(triangulation_tests triangulation_tests)
 
 configure_file(run_circles.sh run_circles.sh COPYONLY)
+configure_file(run_shapes.sh run_shapes.sh COPYONLY)

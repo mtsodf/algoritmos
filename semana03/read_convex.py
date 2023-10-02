@@ -11,6 +11,7 @@ parser.add_argument("--marker_size", "-ms", type=int, default=None)
 parser.add_argument("--equal", "-e", action="store_true")
 parser.add_argument("--invert_x", "-ix", action="store_true")
 parser.add_argument("--invert_y", "-iy", action="store_true")
+parser.add_argument("--line_width", "-lw", type=float, default=1.0)
 parser.add_argument("--show", "-s", action="store_true")
 parser.add_argument("--adj", "-ad", action="store_true")
 parser.add_argument("--path", "-p", action="store_true")
@@ -59,9 +60,6 @@ for points_file in args.files:
         )
         ax.plot(convex_x, convex_y, color="black")
 
-        output = os.path.splitext(points_file)[0] + ".png"
-        fig.savefig(output)
-
     if "triangles" in json_values:
         triangles = json_values["triangles"]
         for trig in triangles:
@@ -70,6 +68,7 @@ for points_file in args.files:
                     [xs[trig[i]], xs[trig[(i + 1) % 3]]],
                     [ys[trig[i]], ys[trig[(i + 1) % 3]]],
                     color="black",
+                    lw=args.line_width,
                 )
     if args.adj:
         for i, adj in enumerate(json_values["adjacency_list"]):
@@ -88,8 +87,13 @@ for points_file in args.files:
                             xm += xs[k] / 2
                             ym += ys[k] / 2
 
+                    # Plot the three points but the middle point without marker
                     ax.plot(
-                        [xb_0, xm, xb_1], [yb_0, ym, yb_1], color="blue", marker="o"
+                        [xb_0, xm, xb_1],
+                        [yb_0, ym, yb_1],
+                        color="blue",
+                        marker="o",
+                        markevery=[0, 2],
                     )
 
     if args.path:
@@ -108,6 +112,9 @@ for points_file in args.files:
                     xm += xs[k] / 2
                     ym += ys[k] / 2
             ax.plot([xb_0, xm, xb_1], [yb_0, ym, yb_1], color="red", marker="o")
+
+    output = os.path.splitext(points_file)[0] + ".png"
+    fig.savefig(output)
 
     if args.show:
         plt.show()
