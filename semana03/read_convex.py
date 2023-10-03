@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser()
 parser.add_argument("files", nargs="+", default="convex_hull.json")
+parser.add_argument("--suffix", "-suf", default="")
 parser.add_argument("--point_labels", "-pl", action="store_true")
 parser.add_argument("--marker_size", "-ms", type=int, default=None)
 parser.add_argument("--equal", "-e", action="store_true")
@@ -42,7 +43,7 @@ for points_file in args.files:
     if args.equal:
         ax.set_aspect("equal", "box")
 
-    output = os.path.splitext(points_file)[0] + "_pointsonly.png"
+    output = os.path.splitext(points_file)[0] + "_pointsonly" + args.suffix + ".png"
     fig.savefig(output)
 
     if "convex_hull" in json_values:
@@ -111,9 +112,15 @@ for points_file in args.files:
                 if k in triangles[path[i + 1]]:
                     xm += xs[k] / 2
                     ym += ys[k] / 2
-            ax.plot([xb_0, xm, xb_1], [yb_0, ym, yb_1], color="red", marker="o")
+            ax.plot(
+                [xb_0, xm, xb_1],
+                [yb_0, ym, yb_1],
+                color="red",
+                marker="o",
+                markevery=[0, 2],
+            )
 
-    output = os.path.splitext(points_file)[0] + ".png"
+    output = os.path.splitext(points_file)[0] + args.suffix + ".png"
     fig.savefig(output)
 
     if args.show:
