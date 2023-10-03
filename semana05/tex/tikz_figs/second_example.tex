@@ -14,6 +14,10 @@
     \draw[thick] (A) -- (B) -- (C) -- (D) -- (E) -- cycle;
     \draw[thick,red] (A) -- (C) -- (D) -- cycle;
 
+    \coordinate (CenterACD) at (barycentric cs:A=1,C=1,D=1);
+    \node[red] at (CenterACD) {1};
+
+
     
     % Label the points
     \node[above right] at (A) {A};
