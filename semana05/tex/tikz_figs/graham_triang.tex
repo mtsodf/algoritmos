@@ -41,7 +41,16 @@
         \node[above right] at (F) {5};
         \node[above right] at (G) {6};
         \node[above right] at (H) {7};
+        % \node[above right] at (A) {A};
+        % \node[above right] at (B) {B};
+        % \node[above right] at (C) {C};
+        % \node[above right] at (D) {D};
+        % \node[above right] at (E) {E};
+        % \node[above right] at (F) {F};
+        % \node[above right] at (G) {G};
+        % \node[above right] at (H) {H};
     }
+
 
     \onslide<5->{
         \draw[thick] (A) -- (B);
@@ -59,42 +68,41 @@
         \draw[thick] (B) -- (D);
     }
 
-    \onslide<9-10>{
+    \onslide<9-11>{
         \draw[thick] (D) -- (E);
+    }
+    \onslide<10-11>{
         \draw[thick] (E) -- (F);
     }
 
-    \onslide<10>{
+    \onslide<11>{
         \draw[thick] (F) -- (G);
     }
 
-    \onslide<11>{
+    \onslide<12>{
         \draw[thick] (D) -- (E);
         \draw[thick] (E) -- (G);
     }
 
-    \onslide<12->{
+    \onslide<13->{
         \draw[thick] (D) -- (G);
     }
 
-    \onslide<13->{
+    \onslide<14->{
         \draw[thick] (G) -- (H);
     }
 
-    \onslide<14->{
+    \onslide<15->{
         \draw[thick] (H) -- (A);
     }
 
+    
+    \onslide<6->{\draw[dashed,red] (A) -- (C);\draw[dashed,red] (B) -- (C);}
+    \onslide<7->{\draw[dashed,red] (A) -- (D);\draw[dashed,red] (D) -- (C);}
+    \onslide<9->{\draw[dashed,red] (A) -- (E);\draw[dashed,red] (D) -- (E);}
+    \onslide<10->{\draw[dashed,red] (A) -- (F);\draw[dashed,red] (F) -- (E);}
+    \onslide<11->{\draw[dashed,red] (A) -- (G);\draw[dashed,red] (F) -- (G);}
+    \onslide<12->{\draw[dashed,red] (F) -- (G);\draw[dashed,red] (E) -- (G);}
+    \onslide<14->{\draw[dashed,red] (A) -- (H);\draw[dashed,red] (H) -- (G);}
 
-    
-    % Draw the convex hull
-    
-    % Draw the convex hull
-    % \draw[thick] (A) -- (C) -- (D) -- (F) -- (B) -- cycle;
-    
-    % Arrows indicating the convex hull construction
-    % \draw[->, thick, red] ($(A)!0.5!(B)$) -- ($(A)!0.5!(C)$);
-    % \draw[->, thick, red] ($(A)!0.5!(C)$) -- ($(A)!0.5!(D)$);
-    % \draw[->, thick, red] ($(A)!0.5!(D)$) -- ($(A)!0.5!(F)$);
-    % \draw[->, thick, red] ($(A)!0.5!(F)$) -- ($(A)!0.5!(B)$);
   \end{tikzpicture}

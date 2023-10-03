@@ -1,100 +1,44 @@
 \definecolor{green}{RGB}{0,128,0}
   \begin{tikzpicture}
     % Define the points
-    \coordinate (A) at (4,0);
-    \coordinate (B) at (6,1);
-    \coordinate (C) at (5.5, 2);
-    \coordinate (D) at (6, 5.5);
-    \coordinate (E) at (4.5, 5);
-    \coordinate (F) at (2.5, 4.0);
-    \coordinate (G) at (0.5, 5.5);
-    \coordinate (H) at (0.5, 1.5);
+    \coordinate (A) at (0,0);
+    \coordinate (B) at (3,0);
+    \coordinate (C) at (4, 1);
+    \coordinate (D) at (4,3);
+    \coordinate (E) at (2,4);
+    \coordinate (F) at (0,3);
+    \coordinate (G) at (2.5,2.5);
     
     % Draw the points
-    \foreach \point in {A,B,C,D,E,F,G,H}
+    \foreach \point in {A,B,C,D,E,F,G}
       \fill (\point) circle (2pt);
 
-    % Mark the pivot point
-    \onslide<2->{
-    \draw[fill=green] (A) circle (3pt);
-    \node[above left, green] at (A) {Pivot};
-    }
+    \onslide<2->{\draw[thick] (A) -- (B) -- (C) -- (D) -- (E) -- (F) -- cycle;}
 
     % Draw a dashed line between the pivot and the points
-    \onslide<3-4>{
+    \onslide<3->{
         \draw[dashed] (A) -- (B);
         \draw[dashed] (A) -- (C);
         \draw[dashed] (A) -- (D);
         \draw[dashed] (A) -- (E);
         \draw[dashed] (A) -- (F);
-        \draw[dashed] (A) -- (G);
-        \draw[dashed] (A) -- (H);
+    }
+
+    
+    \onslide<4-> {\draw[fill=red] (G) circle (3pt);}
+    \onslide<5->{
+        \draw[dashed] (G) -- (A);
+        \draw[dashed] (G) -- (D);
+        \draw[dashed] (G) -- (E);
     }
     
     % Label the points
-    \onslide<4->{
-        \node[above right] at (A) {0};
-        \node[above right] at (B) {1};
-        \node[above right] at (C) {2};
-        \node[above right] at (D) {3};
-        \node[above right] at (E) {4};
-        \node[above right] at (F) {5};
-        \node[above right] at (G) {6};
-        \node[above right] at (H) {7};
-    }
+    \node[above right] at (A) {A};
+    \node[above right] at (B) {B};
+    \node[above right] at (C) {C};
+    \node[above right] at (D) {D};
+    \node[above right] at (E) {E};
+    \node[above right] at (F) {F};
+    \node[above right] at (G) {G};
 
-    \onslide<5->{
-        \draw[thick] (A) -- (B);
-    }
-
-    \onslide<6-7>{
-        \draw[thick] (B) -- (C);
-    }
-
-    \onslide<7>{
-        \draw[thick] (C) -- (D);
-    }
-
-    \onslide<8->{
-        \draw[thick] (B) -- (D);
-    }
-
-    \onslide<9-10>{
-        \draw[thick] (D) -- (E);
-        \draw[thick] (E) -- (F);
-    }
-
-    \onslide<10>{
-        \draw[thick] (F) -- (G);
-    }
-
-    \onslide<11>{
-        \draw[thick] (D) -- (E);
-        \draw[thick] (E) -- (G);
-    }
-
-    \onslide<12->{
-        \draw[thick] (D) -- (G);
-    }
-
-    \onslide<13->{
-        \draw[thick] (G) -- (H);
-    }
-
-    \onslide<14->{
-        \draw[thick] (H) -- (A);
-    }
-
-
-    
-    % Draw the convex hull
-    
-    % Draw the convex hull
-    % \draw[thick] (A) -- (C) -- (D) -- (F) -- (B) -- cycle;
-    
-    % Arrows indicating the convex hull construction
-    % \draw[->, thick, red] ($(A)!0.5!(B)$) -- ($(A)!0.5!(C)$);
-    % \draw[->, thick, red] ($(A)!0.5!(C)$) -- ($(A)!0.5!(D)$);
-    % \draw[->, thick, red] ($(A)!0.5!(D)$) -- ($(A)!0.5!(F)$);
-    % \draw[->, thick, red] ($(A)!0.5!(F)$) -- ($(A)!0.5!(B)$);
-  \end{tikzpicture}
+    \end{tikzpicture}
