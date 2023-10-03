@@ -4,8 +4,9 @@
 \usetheme{default}  % You can choose any other theme you prefer
 
 \title{05 - Algoritmos}
+\subtitle{Algoritmos de Triangulação}
 \author{Mateus Oliveira de Figueiredo}
-\date{02/10/2023}
+\date{03/10/2023}
 
 \usepackage{tikz}
 \usetikzlibrary{matrix}
@@ -95,14 +96,14 @@
     \begin{column}{0.5\textwidth}
         \begin{itemize}
           \onslide<6->{ \item 0 $\rightarrow$ 0, 1, 2 }
-          \onslide<7->{ \item 1 $\rightarrow$ 0, 3, 2 }
-          \onslide<8->{ \item 2 $\rightarrow$ 1, 3, 2 }
-          \onslide<9->{ \item 3 $\rightarrow$ 0, 4, 3 }
-          \onslide<10->{ \item 4 $\rightarrow$ 0, 5, 4 }
-          \onslide<11->{ \item 5 $\rightarrow$ 0, 6, 5 }
-          \onslide<12->{ \item 6 $\rightarrow$ 5, 6, 4 }
-          \onslide<13->{ \item 7 $\rightarrow$ 5, 6, 4 }
-          \onslide<14->{ \item 8 $\rightarrow$ 0, 7, 6 }  
+          \onslide<7->{ \item 1 $\rightarrow$ 0, 2, 3 }
+          \onslide<8->{ \item 2 $\rightarrow$ 1, 2, 3 }
+          \onslide<9->{ \item 3 $\rightarrow$ 0, 3, 4 }
+          \onslide<10->{ \item 4 $\rightarrow$ 0, 4, 5 }
+          \onslide<11->{ \item 5 $\rightarrow$ 0, 5, 6 }
+          \onslide<12->{ \item 6 $\rightarrow$ 4, 5, 6 }
+          \onslide<13->{ \item 7 $\rightarrow$ 3, 4, 6 }
+          \onslide<14->{ \item 8 $\rightarrow$ 0, 6, 7 }  
         \end{itemize}
     \end{column}
   \end{columns}
