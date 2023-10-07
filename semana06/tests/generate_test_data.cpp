@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "intersection_detection.h"
 #include "random_points.h"
-#include "segment_detection.h"
 
 int main() {
     int n = 10;

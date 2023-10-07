@@ -3,8 +3,8 @@
 
 #include <vector>
 
+#include "intersection_detection.h"
 #include "point.h"
-#include "segment_detection.h"
 
 using namespace std;
 // Demonstrate some basic assertions.

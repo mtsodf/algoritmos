@@ -1,4 +1,4 @@
-add_library(segment_detection segment_detection.cpp)
-target_link_libraries(segment_detection graham)
+add_library(intersect_detection intersect_detection.cpp)
+target_link_libraries(intersect_detection graham)
 
 add_subdirectory(tests)
