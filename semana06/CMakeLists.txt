@@ -1,0 +1,4 @@
+add_library(segment_detection segment_detection.cpp)
+target_link_libraries(segment_detection graham)
+
+add_subdirectory(tests)
