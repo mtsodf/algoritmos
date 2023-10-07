@@ -1,8 +1,8 @@
 add_executable(intersection_test intersection_test.cpp)
-target_link_libraries(intersection_test gtest_main segment_detection)
+target_link_libraries(intersection_test gtest_main intersect_detection)
 
 add_test(intersection_test intersection_test)
 
 add_executable(generate_test_data generate_test_data.cpp)
-target_link_libraries(generate_test_data gtest_main segment_detection)
+target_link_libraries(generate_test_data gtest_main intersect_detection)
 add_test(generate_test_data generate_test_data)
