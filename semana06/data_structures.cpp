@@ -76,3 +76,59 @@ Segment *SegmentVector::first() {
     }
     return nullptr;
 }
+void UnorderedList::add(Segment *s) {
+    segments.push_back(s);
+}
+
+Segment *UnorderedList::next(Segment *s) {
+    int next_pos = -1;
+    double cur_diff = INFINITY;
+    for (int i = 0; i < size(); i++) {
+        if (s->id == segments[i]->id) break;
+        double y_diff = segments[i]->y_value(s->start->x) - s->start->y;
+        if (y_diff >= 0 && y_diff < cur_diff) {
+            next_pos = i;
+        }
+    }
+    if (next_pos >= 0) {
+        return segments[next_pos];
+    } else {
+        return nullptr;
+    }
+}
+
+Segment *UnorderedList::prev(Segment *s) {
+    int prev_pos = -1;
+    double cur_diff = INFINITY;
+    for (int i = 0; i < size(); i++) {
+        if (s->id == segments[i]->id) break;
+        double y_diff = s->start->y - segments[i]->y_value(s->start->x);
+        if (y_diff >= 0 && y_diff < cur_diff) {
+            prev_pos = i;
+        }
+    }
+    if (prev_pos >= 0) {
+        return segments[prev_pos];
+    } else {
+        return nullptr;
+    }
+}
+
+Segment *UnorderedList::first() {
+    if (size() == 0) return nullptr;
+
+    int first_pos = 0;
+    double first_y = segments[first_pos]->start->y;
+    double first_x = segments[first_pos]->start->x;
+
+    for (int i = 1; i < size(); i++) {
+        double cur_y = segments[i]->y_value(first_x);
+        if (cur_y < first_y) {
+            first_pos = i;
+            first_y = segments[first_pos]->start->y;
+            first_x = segments[first_pos]->start->x;
+        }
+    }
+
+    return segments[first_pos];
+}

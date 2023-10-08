@@ -54,18 +54,27 @@ TEST(Intersections, SegmentIntersection) {
     start.push_back(new Point(4, 0.5));
     end.push_back(new Point(5, 3.5));
 
-    pair<int, int> intersection_pair;
-    bool found = segment_intersection(start, end, intersection_pair);
-    cout << "Found = " << found << endl;
-    cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
-    EXPECT_EQ(intersection_pair.first, 2);
-    EXPECT_EQ(intersection_pair.second, 1);
+    // Test segment_intersection with list and unordered_list
+    // Iterate over all container types
+    for (int i = 0; i < 2; i++) {
+        string container_type = i == 0 ? "list" : "unordered_list";
+        pair<int, int> intersection_pair;
+        bool found = segment_intersection(start, end, intersection_pair, container_type);
+        cout << "Found = " << found << endl;
+        cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
+        EXPECT_EQ(intersection_pair.first, 2);
+        EXPECT_EQ(intersection_pair.second, 1);
+    }
 
     start.push_back(new Point(3.4, 1));
     end.push_back(new Point(0.5, 2));
-    found = segment_intersection(start, end, intersection_pair);
-    cout << "Found = " << found << endl;
-    cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
-    EXPECT_EQ(intersection_pair.first, 0);
-    EXPECT_EQ(intersection_pair.second, 3);
+    for (int i = 0; i < 2; i++) {
+        string container_type = i == 0 ? "list" : "unordered_list";
+        pair<int, int> intersection_pair;
+        bool found = segment_intersection(start, end, intersection_pair, container_type);
+        cout << "Found = " << found << endl;
+        cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
+        EXPECT_EQ(intersection_pair.first, 0);
+        EXPECT_EQ(intersection_pair.second, 3);
+    }
 }

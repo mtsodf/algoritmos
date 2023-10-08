@@ -17,14 +17,14 @@ int main() {
     end.push_back(new Point(5, 3.5));
 
     pair<int, int> intersection_pair;
-    bool found = segment_intersection(start, end, intersection_pair);
+    bool found = segment_intersection(start, end, intersection_pair, "list");
     cout << "Found = " << found << endl;
     cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
 
     start.push_back(new Point(3.4, 1));
     end.push_back(new Point(0.5, 2));
 
-    found = segment_intersection(start, end, intersection_pair);
+    found = segment_intersection(start, end, intersection_pair, "list");
     cout << "Found = " << found << endl;
     cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
 }

@@ -12,8 +12,8 @@ int main(int argc, char const *argv[]) {
     po::options_description desc("Allowed options");
     desc.add_options()("help", "produce help message")("random_points", po::value<int>(), "Generate random points");
     desc.add_options()("output", po::value<string>()->default_value("output.json"), "Output file");
-    desc.add_options()("event", po::value<string>()->default_value(""), "Output event file");
-    desc.add_options()("alg", po::value<string>()->default_value("std"), "Algorithm to sort points");
+    desc.add_options()("events", po::value<string>()->default_value(""), "Output events file");
+    desc.add_options()("container", po::value<string>()->default_value("list"), "Container type");
     desc.add_options()("circle", po::value<int>()->default_value(0), "Generate points in a circle");
     desc.add_options()("comma", po::value<int>()->default_value(0), "File with comma separated points");
     desc.add_options()("length", po::value<double>()->default_value(0.1), "Mean of segment lenghts");
@@ -24,7 +24,11 @@ int main(int argc, char const *argv[]) {
     po::notify(vm);
 
     string output_filepath = vm["output"].as<string>();
-    string event_filepath = vm["event"].as<string>();
+    string event_filepath = vm["events"].as<string>();
+    string container_type = vm["container"].as<string>();
+
+    cout << "Output = " << output_filepath << endl;
+    cout << "Event = " << event_filepath << endl;
 
     vector<Segment *> segments;
     int n = -1;
@@ -43,7 +47,7 @@ int main(int argc, char const *argv[]) {
     double cpu_time_used;
 
     start = clock();
-    if (segment_intersection(segments, intersection_pair, "events.csv"))
+    if (segment_intersection(segments, intersection_pair, container_type, event_filepath))
         intersections.push_back(intersection_pair);
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;

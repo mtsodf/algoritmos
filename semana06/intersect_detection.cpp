@@ -102,7 +102,7 @@ void log_ids(SegmentContainer *segments, fstream &events_file) {
     events_file << "];";
 }
 
-bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair, const string &events_filename) {
+bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair, const string &container_type, const string &events_filename) {
     bool verbose = false;
 
     fstream events_file;
@@ -124,8 +124,15 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
         }
         return a->x < b->x;
     });
-
-    SegmentContainer *segment_container = new SegmentVector();
+    SegmentContainer *segment_container;
+    if (container_type == "list")
+        segment_container = new SegmentVector();
+    else if (container_type == "unordered_list") {
+        segment_container = new UnorderedList();
+    } else {
+        cout << "Invalid container type " << container_type << endl;
+        exit(1);
+    }
 
     for (int i = 0; i < events.size(); i++) {
         Segment *cur_seg = events[i]->seg;
@@ -194,12 +201,12 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
     return false;
 }
 
-bool segment_intersection(vector<Point *> &start, vector<Point *> &end, pair<int, int> &intersection_pair) {
+bool segment_intersection(vector<Point *> &start, vector<Point *> &end, pair<int, int> &intersection_pair, const string &container_type) {
     int n = start.size();
     vector<Segment *> segments;
     segments.reserve(n);
     for (int i = 0; i < start.size(); i++) {
         segments.push_back(new Segment(start[i], end[i], i));
     }
-    return segment_intersection(segments, intersection_pair);
+    return segment_intersection(segments, intersection_pair, container_type);
 }
