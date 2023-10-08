@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "data_structures.hpp"
 #include "intersection_detection.h"
 #include "point.h"
 
@@ -77,4 +78,19 @@ TEST(Intersections, SegmentIntersection) {
         EXPECT_EQ(intersection_pair.first, 0);
         EXPECT_EQ(intersection_pair.second, 3);
     }
+}
+
+TEST(Intersections, BinaryTreeTest) {
+    BinaryTree tree;
+    int id = 0;
+
+    Segment *s = new Segment(new Point(0, 0), new Point(1, 0), id++);
+    tree.add(s);
+
+    vector<Segment *> nodes;
+    tree.ordered_vec(tree.root, nodes);
+    for (int i = 0; i < nodes.size(); i++)
+        cout << nodes[i]->id << endl;
+
+    nodes.clear();
 }

@@ -13,7 +13,13 @@ class Segment {
     Point *end;
     int id;
     Segment(Point *p0, Point *p1, int id);
-    double y_value(double x);
+    double y_value(double x) const;
+    // Override comparison operator <
+    bool operator<(const Segment &other) const {
+        double cur_y = this->start->y;
+        double other_y = other.y_value(this->start->x);
+        return cur_y < other_y;
+    }
 };
 bool intersect(Point *a, Point *b, Point *c, Point *d);
 bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<pair<int, int>> &intersections);

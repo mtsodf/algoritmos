@@ -19,7 +19,7 @@ Segment::Segment(Point *p0, Point *p1, int id) {
     this->id = id;
 }
 
-double Segment::y_value(double x) {
+double Segment::y_value(double x) const {
     double m = (end->y - start->y) / (end->x - start->x);
     double b = start->y - m * start->x;
     return m * x + b;
