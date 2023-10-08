@@ -1,4 +1,4 @@
-add_library(intersect_detection intersect_detection.cpp)
+add_library(intersect_detection intersect_detection.cpp data_structures.cpp)
 target_link_libraries(intersect_detection graham)
 
 add_subdirectory(tests)

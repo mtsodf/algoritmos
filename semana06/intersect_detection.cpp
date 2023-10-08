@@ -1,3 +1,4 @@
+#include <fstream>
 #include <iostream>
 #include <random>
 
@@ -90,15 +91,22 @@ bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, ve
     return intersections.size() > 0;
 }
 
-void log_ids(vector<Segment *> &segments) {
-    cout << "[";
+void log_ids(vector<Segment *> &segments, fstream &events_file) {
+    events_file << "[";
     for (int j = 0; j < segments.size(); j++) {
-        cout << segments[j]->id << ", ";
+        events_file << segments[j]->id << ", ";
     }
-    cout << "];";
+    events_file << "];";
 }
 
-bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair, bool verbose) {
+bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair, const string &events_filename) {
+    bool verbose = false;
+
+    fstream events_file;
+    if (!events_filename.empty()) {
+        events_file.open(events_filename, ios::out);
+        verbose = true;
+    }
     int n = segments.size();
     vector<Event *> events;
     events.reserve(2 * n);
@@ -119,43 +127,50 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
     for (int i = 0; i < events.size(); i++) {
         Segment *cur_seg = events[i]->seg;
         if (events[i]->type == SEGMENT_START) {
-            active_segments.push_back(cur_seg);
-
             if (verbose) {
-                cout << "Start;  " << cur_seg->id << "; ";
-                log_ids(active_segments);
+                events_file << "Start;  " << cur_seg->id << "; ";
+                log_ids(active_segments, events_file);
             }
+            active_segments.push_back(cur_seg);
 
             double cur_x = cur_seg->start->x;
             double cur_y = cur_seg->start->y;
             int seg_pos;
             for (seg_pos = active_segments.size() - 1; seg_pos >= 1; seg_pos--) {
-                if (cur_y > active_segments[seg_pos - 1]->y_value(cur_x)) {
+                if (cur_y < active_segments[seg_pos - 1]->y_value(cur_x)) {
                     swap(active_segments[seg_pos], active_segments[seg_pos - 1]);
                 } else {
                     break;
                 }
             }
             if (verbose) {
-                log_ids(active_segments);
-                cout << endl;
+                log_ids(active_segments, events_file);
             }
             if (seg_pos > 0) {
+                if (verbose) events_file << cur_seg->id << " == " << active_segments[seg_pos - 1]->id << ";";
                 if (intersect(cur_seg, active_segments[seg_pos - 1])) {
+                    if (verbose) events_file << "true; ";
                     intersection_pair = {cur_seg->id, active_segments[seg_pos - 1]->id};
                     return true;
+                } else {
+                    if (verbose) events_file << "false; ";
                 }
             }
             if (seg_pos < active_segments.size() - 1) {
+                if (verbose) events_file << cur_seg->id << " == " << active_segments[seg_pos + 1]->id << ";";
                 if (intersect(cur_seg, active_segments[seg_pos + 1])) {
+                    if (verbose) events_file << "true; ";
                     intersection_pair = {cur_seg->id, active_segments[seg_pos + 1]->id};
                     return true;
+                } else {
+                    if (verbose) events_file << "false; ";
                 }
             }
+            if (verbose) events_file << endl;
         } else if (events[i]->type == SEGMENT_END) {
             if (verbose) {
-                cout << "End;  " << cur_seg->id << "; ";
-                log_ids(active_segments);
+                events_file << "End;  " << cur_seg->id << "; ";
+                log_ids(active_segments, events_file);
             }
             int seg_pos;
             for (seg_pos = 0; seg_pos < active_segments.size(); seg_pos++) {
@@ -163,24 +178,28 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
             }
 
             if (seg_pos > 0 && seg_pos < active_segments.size() - 1) {
+                if (verbose) events_file << active_segments[seg_pos - 1]->id << " == " << active_segments[seg_pos + 1]->id << ";";
                 if (intersect(active_segments[seg_pos - 1], active_segments[seg_pos + 1])) {
+                    if (verbose) events_file << "true; ";
                     intersection_pair = {active_segments[seg_pos - 1]->id,
                                          active_segments[seg_pos + 1]->id};
                     return true;
+                } else {
+                    if (verbose) events_file << "false; ";
                 }
             }
             for (int j = seg_pos; j < active_segments.size() - 1; j++) {
                 swap(active_segments[j], active_segments[j + 1]);
             }
-            if (verbose) {
-                cout << "End;  " << cur_seg->id << "; ";
-                log_ids(active_segments);
-                cout << endl;
-            }
-
             active_segments.pop_back();
+            if (verbose) {
+                log_ids(active_segments, events_file);
+                events_file << endl;
+            }
         }
     }
+
+    if (verbose) events_file.close();
 
     return false;
 }

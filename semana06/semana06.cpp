@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 
+#include "data_structures.hpp"
 #include "intersection_detection.h"
 
 namespace po = boost::program_options;
@@ -34,7 +35,7 @@ int main(int argc, char const *argv[]) {
     pair<int, int> intersection_pair;
     vector<pair<int, int>> intersections;
 
-    if (segment_intersection(segments, intersection_pair, true))
+    if (segment_intersection(segments, intersection_pair, "events.csv"))
         intersections.push_back(intersection_pair);
 
     // Write segments and intersections on json file
