@@ -17,5 +17,5 @@ class Segment {
 bool intersect(Point *a, Point *b, Point *c, Point *d);
 bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<pair<int, int>> &intersections);
 bool segment_intersection(vector<Point *> &start, vector<Point *> &end, pair<int, int> &intersection_pair);
-bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair);
+bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair, bool verbose = false);
 void generate_segments(int n, double length_mean, double length_std, vector<Segment *> &segments);

@@ -34,7 +34,7 @@ int main(int argc, char const *argv[]) {
     pair<int, int> intersection_pair;
     vector<pair<int, int>> intersections;
 
-    if (segment_intersection(segments, intersection_pair))
+    if (segment_intersection(segments, intersection_pair, true))
         intersections.push_back(intersection_pair);
 
     // Write segments and intersections on json file
