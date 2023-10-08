@@ -1,33 +1,53 @@
 #include <iostream>
+#include <random>
 
 #include "graham.h"
+#include "intersection_detection.h"
 
 using namespace std;
 
-class Segment {
-   public:
-    Point *start;
-    Point *end;
-    int id;
-    Segment(Point *p0, Point *p1, int id) {
-        if (p0->x < p1->x || (p0->x == p1->x && p0->y < p1->y)) {
-            this->start = p0;
-            this->end = p1;
-        } else {
-            this->start = p1;
-            this->end = p0;
-        }
-        this->start = start;
-        this->end = end;
-        this->id = id;
+Segment::Segment(Point *p0, Point *p1, int id) {
+    if (p0->x < p1->x || (p0->x == p1->x && p0->y < p1->y)) {
+        this->start = p0;
+        this->end = p1;
+    } else {
+        this->start = p1;
+        this->end = p0;
     }
+    this->id = id;
+}
 
-    double y_value(double x) {
-        double m = (end->y - start->y) / (end->x - start->x);
-        double b = start->y - m * start->x;
-        return m * x + b;
+double Segment::y_value(double x) {
+    double m = (end->y - start->y) / (end->x - start->x);
+    double b = start->y - m * start->x;
+    return m * x + b;
+}
+
+void generate_segments(int n, double length_mean, double length_std, vector<Segment *> &segments) {
+    // Create a random number generator engine
+    random_device rd;                                                  // Seed the random number generator
+    mt19937 gen(rd());                                                 // Mersenne Twister PRNG
+    normal_distribution<double> length_dist(length_mean, length_std);  // Specify mean and standard deviation
+    uniform_real_distribution<double> theta_dist(-M_PI, M_PI);
+    uniform_real_distribution<double> point_dist(0, 1);
+
+    int id = segments.size();
+    for (int i = 0; i < n; i++) {
+        // Generate a random normal value
+        double random_length = length_dist(gen);
+
+        if (random_length < 0) random_length = 0.0;
+        double theta = theta_dist(gen);
+
+        double x0 = point_dist(gen), y0 = point_dist(gen);
+        double x1, y1;
+
+        x1 = x0 + random_length * cos(theta);
+        y1 = y0 + random_length * sin(theta);
+
+        segments.push_back(new Segment(new Point(x0, y0), new Point(x1, y1), 0));
     }
-};
+}
 
 bool intersect(Point *a, Point *b, Point *c, Point *d) {
     return ccw_or_collinear(a, b, c) != ccw_or_collinear(a, b, d) &&
@@ -66,16 +86,12 @@ bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, ve
             }
         }
     }
+
+    return intersections.size() > 0;
 }
 
-bool segment_intersection(vector<Point *> &start, vector<Point *> &end, pair<int, int> &intersection_pair) {
-    int n = start.size();
-    vector<Segment *> segments;
-    segments.reserve(n);
-    for (int i = 0; i < start.size(); i++) {
-        segments.push_back(new Segment(start[i], end[i], i));
-    }
-
+bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair) {
+    int n = segments.size();
     vector<Event *> events;
     events.reserve(2 * n);
     for (int i = 0; i < n; i++) {
@@ -141,4 +157,14 @@ bool segment_intersection(vector<Point *> &start, vector<Point *> &end, pair<int
     }
 
     return false;
+}
+
+bool segment_intersection(vector<Point *> &start, vector<Point *> &end, pair<int, int> &intersection_pair) {
+    int n = start.size();
+    vector<Segment *> segments;
+    segments.reserve(n);
+    for (int i = 0; i < start.size(); i++) {
+        segments.push_back(new Segment(start[i], end[i], i));
+    }
+    return segment_intersection(segments, intersection_pair);
 }
