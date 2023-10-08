@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 
+#include "data_structures.hpp"
 #include "graham.h"
 #include "intersection_detection.h"
 
@@ -91,10 +92,12 @@ bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, ve
     return intersections.size() > 0;
 }
 
-void log_ids(vector<Segment *> &segments, fstream &events_file) {
+void log_ids(SegmentContainer *segments, fstream &events_file) {
     events_file << "[";
-    for (int j = 0; j < segments.size(); j++) {
-        events_file << segments[j]->id << ", ";
+    Segment *current = segments->first();
+    while (current != nullptr) {
+        events_file << current->id << ", ";
+        current = segments->next(current);
     }
     events_file << "];";
 }
@@ -122,45 +125,37 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
         return a->x < b->x;
     });
 
-    vector<Segment *> active_segments;
+    SegmentContainer *segment_container = new SegmentVector();
 
     for (int i = 0; i < events.size(); i++) {
         Segment *cur_seg = events[i]->seg;
         if (events[i]->type == SEGMENT_START) {
             if (verbose) {
                 events_file << "Start;  " << cur_seg->id << "; ";
-                log_ids(active_segments, events_file);
+                log_ids(segment_container, events_file);
             }
-            active_segments.push_back(cur_seg);
+            segment_container->add(cur_seg);
 
-            double cur_x = cur_seg->start->x;
-            double cur_y = cur_seg->start->y;
-            int seg_pos;
-            for (seg_pos = active_segments.size() - 1; seg_pos >= 1; seg_pos--) {
-                if (cur_y < active_segments[seg_pos - 1]->y_value(cur_x)) {
-                    swap(active_segments[seg_pos], active_segments[seg_pos - 1]);
-                } else {
-                    break;
-                }
-            }
             if (verbose) {
-                log_ids(active_segments, events_file);
+                log_ids(segment_container, events_file);
             }
-            if (seg_pos > 0) {
-                if (verbose) events_file << cur_seg->id << " == " << active_segments[seg_pos - 1]->id << ";";
-                if (intersect(cur_seg, active_segments[seg_pos - 1])) {
+            Segment *prev = segment_container->prev(cur_seg);
+            if (prev != nullptr) {
+                if (verbose) events_file << cur_seg->id << " == " << prev->id << ";";
+                if (intersect(cur_seg, prev)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pair = {cur_seg->id, active_segments[seg_pos - 1]->id};
+                    intersection_pair = {cur_seg->id, prev->id};
                     return true;
                 } else {
                     if (verbose) events_file << "false; ";
                 }
             }
-            if (seg_pos < active_segments.size() - 1) {
-                if (verbose) events_file << cur_seg->id << " == " << active_segments[seg_pos + 1]->id << ";";
-                if (intersect(cur_seg, active_segments[seg_pos + 1])) {
+            Segment *next = segment_container->next(cur_seg);
+            if (next != nullptr) {
+                if (verbose) events_file << cur_seg->id << " == " << next->id << ";";
+                if (intersect(cur_seg, next)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pair = {cur_seg->id, active_segments[seg_pos + 1]->id};
+                    intersection_pair = {cur_seg->id, next->id};
                     return true;
                 } else {
                     if (verbose) events_file << "false; ";
@@ -170,30 +165,25 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
         } else if (events[i]->type == SEGMENT_END) {
             if (verbose) {
                 events_file << "End;  " << cur_seg->id << "; ";
-                log_ids(active_segments, events_file);
-            }
-            int seg_pos;
-            for (seg_pos = 0; seg_pos < active_segments.size(); seg_pos++) {
-                if (cur_seg->id == active_segments[seg_pos]->id) break;
+                log_ids(segment_container, events_file);
             }
 
-            if (seg_pos > 0 && seg_pos < active_segments.size() - 1) {
-                if (verbose) events_file << active_segments[seg_pos - 1]->id << " == " << active_segments[seg_pos + 1]->id << ";";
-                if (intersect(active_segments[seg_pos - 1], active_segments[seg_pos + 1])) {
+            Segment *prev = segment_container->prev(cur_seg);
+            Segment *next = segment_container->next(cur_seg);
+
+            if (prev != nullptr && next != nullptr) {
+                if (verbose) events_file << prev->id << " == " << next->id << ";";
+                if (intersect(prev, next)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pair = {active_segments[seg_pos - 1]->id,
-                                         active_segments[seg_pos + 1]->id};
+                    intersection_pair = {prev->id, next->id};
                     return true;
                 } else {
                     if (verbose) events_file << "false; ";
                 }
             }
-            for (int j = seg_pos; j < active_segments.size() - 1; j++) {
-                swap(active_segments[j], active_segments[j + 1]);
-            }
-            active_segments.pop_back();
+            segment_container->remove(cur_seg);
             if (verbose) {
-                log_ids(active_segments, events_file);
+                log_ids(segment_container, events_file);
                 events_file << endl;
             }
         }
