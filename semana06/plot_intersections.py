@@ -61,6 +61,7 @@ def main():
     parser.add_argument("json_file", help="File with the intersections")
     parser.add_argument("--events", "-e", help="File with all events")
     parser.add_argument("--output", "-o", default="./", help="File with all events")
+    parser.add_argument("--show", "-s", action="store_true", help="Show the plot")
     args = parser.parse_args()
 
     fig, ax = plt.subplots(1, 1, figsize=(7, 7))
@@ -73,6 +74,8 @@ def main():
     plot_segments(segments, ax)
     plot_intersections(segments, intersections, ax)
 
+    if args.show:
+        plt.show()
     plt.savefig(os.path.join(args.output, "base.png"))
 
     if args.events:
