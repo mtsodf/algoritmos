@@ -59,6 +59,7 @@ class BinaryTree : public SegmentContainer {
     int qtd_nodes;
     TreeNode *find(Segment *s);
     TreeNode *minimum(TreeNode *x);
+    TreeNode *maximum(TreeNode *x);
 
    public:
     TreeNode *root;
@@ -69,7 +70,9 @@ class BinaryTree : public SegmentContainer {
     void add(Segment *s);
     void remove(Segment *s);
     Segment *next(Segment *s);
+    TreeNode *next_node(Segment *s);
     Segment *prev(Segment *s);
+    TreeNode *prev_node(Segment *s);
     Segment *get_segment(int id);
     Segment *first();
     void swap(Segment *s1, Segment *s2);

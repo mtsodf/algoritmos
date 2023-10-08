@@ -9,10 +9,8 @@
 int main() {
     BinaryTree tree;
     int id = 0;
-
     Segment *s0 = new Segment(new Point(0, 0), new Point(1, 0), id++);
     tree.add(s0);
-
     vector<Segment *> nodes;
     tree.ordered_vec(tree.root, nodes);
     for (int i = 0; i < nodes.size(); i++)
@@ -25,6 +23,7 @@ int main() {
     tree.add(s1);
     tree.add(s2);
     tree.add(s3);
+    if (tree.next(s1) == nullptr) cout << "EH NULL!!!!" << endl;
 
     nodes.clear();
 
@@ -37,4 +36,9 @@ int main() {
     cout << "id = " << tree.next(s2)->id << endl;
     cout << "id = " << tree.next(s3)->id << endl;
     cout << "id = " << tree.next(s1) << endl;
+
+    cout << "id = " << tree.prev(s0)->id << endl;
+    cout << "id = " << tree.prev(s2) << endl;
+    cout << "id = " << tree.prev(s3)->id << endl;
+    cout << "id = " << tree.prev(s1)->id << endl;
 }

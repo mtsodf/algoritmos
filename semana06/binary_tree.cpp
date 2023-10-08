@@ -5,13 +5,27 @@
 
 using namespace std;
 
+bool is_left_son(TreeNode *x) {
+    TreeNode *parent = x->parent;
+    if (parent == nullptr || parent->left == nullptr) return false;
+
+    return x->segment->id == parent->left->segment->id;
+}
+
+bool is_right_son(TreeNode *x) {
+    TreeNode *parent = x->parent;
+    if (parent == nullptr || parent->right == nullptr) return false;
+
+    return x->segment->id == parent->right->segment->id;
+}
+
 void BinaryTree::add(Segment *s) {
     TreeNode *z = new TreeNode(s);
     TreeNode *y = nullptr;
     TreeNode *x = root;
     while (x != nullptr) {
         y = x;
-        if ((*z->segment) < (*x->segment)) {
+        if (*(z->segment) < *(x->segment)) {
             x = x->left;
         } else {
             x = x->right;
@@ -20,7 +34,7 @@ void BinaryTree::add(Segment *s) {
     z->parent = y;
     if (y == nullptr)
         root = z;
-    else if ((*z->segment) < (*y->segment)) {
+    else if (*(z->segment) < *(y->segment)) {
         y->left = z;
     } else {
         y->right = z;
@@ -32,21 +46,43 @@ void BinaryTree::remove(Segment *s) {
     qtd_nodes--;
     return;
 }
-Segment *BinaryTree::next(Segment *s) {
+
+TreeNode *BinaryTree::next_node(Segment *s) {
     TreeNode *x = find(s);
     if (x->right != nullptr) {
-        return minimum(x->right)->segment;
+        return minimum(x->right);
     }
     TreeNode *y = x->parent;
-    while (y != nullptr && x->segment->id == y->right->segment->id) {
+    while (y != nullptr && is_right_son(x)) {
         x = y;
         y = y->parent;
     }
     if (y == nullptr) return nullptr;
-    return y->segment;
+    return y;
 }
+Segment *BinaryTree::next(Segment *s) {
+    TreeNode *x = next_node(s);
+    if (x == nullptr) return nullptr;
+    return x->segment;
+}
+
+TreeNode *BinaryTree::prev_node(Segment *s) {
+    TreeNode *x = find(s);
+    if (x->left != nullptr) return maximum(x->left);
+
+    TreeNode *y = x->parent;
+    while (y != nullptr && is_left_son(x)) {
+        x = y;
+        y = y->parent;
+    }
+    if (y == nullptr) return nullptr;
+    return y;
+}
+
 Segment *BinaryTree::prev(Segment *s) {
-    return nullptr;
+    TreeNode *x = prev_node(s);
+    if (x == nullptr) return nullptr;
+    return x->segment;
 }
 
 TreeNode *BinaryTree::find(Segment *s) {
@@ -76,11 +112,7 @@ int BinaryTree::size() {
 
 Segment *BinaryTree::first() {
     if (root == nullptr) return nullptr;
-    TreeNode *x = root;
-    while (x->left != nullptr) {
-        x = x->left;
-    }
-    return x->segment;
+    return minimum(root)->segment;
 }
 
 TreeNode *BinaryTree::minimum(TreeNode *x) {
@@ -89,6 +121,14 @@ TreeNode *BinaryTree::minimum(TreeNode *x) {
         min = min->left;
     }
     return min;
+}
+
+TreeNode *BinaryTree::maximum(TreeNode *x) {
+    TreeNode *max = x;
+    while (max->right != nullptr) {
+        max = max->right;
+    }
+    return max;
 }
 
 void BinaryTree::ordered_vec(TreeNode *x, vector<Segment *> &segments) {

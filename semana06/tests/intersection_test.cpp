@@ -83,14 +83,45 @@ TEST(Intersections, SegmentIntersection) {
 TEST(Intersections, BinaryTreeTest) {
     BinaryTree tree;
     int id = 0;
-
-    Segment *s = new Segment(new Point(0, 0), new Point(1, 0), id++);
-    tree.add(s);
-
+    Segment *s0 = new Segment(new Point(0, 0), new Point(1, 0), id++);
+    tree.add(s0);
     vector<Segment *> nodes;
     tree.ordered_vec(tree.root, nodes);
-    for (int i = 0; i < nodes.size(); i++)
-        cout << nodes[i]->id << endl;
 
+    EXPECT_EQ(tree.size(), 1);
+
+    Segment *s1 = new Segment(new Point(0, 1), new Point(1, 1), id++);
+    Segment *s2 = new Segment(new Point(0, -1), new Point(1, -1), id++);
+    Segment *s3 = new Segment(new Point(0, -0.5), new Point(1, -0.5), id++);
+    tree.add(s1);
+    tree.add(s2);
+    tree.add(s3);
+
+    nodes.clear();
+
+    tree.ordered_vec(tree.root, nodes);
+    for (int i = 0; i < nodes.size(); i++)
+        cout << nodes[i]->id << " ";
+    cout << endl;
+
+    EXPECT_EQ(tree.prev(s1)->id, 0);
+    EXPECT_EQ(tree.prev(s0)->id, 3);
+    EXPECT_EQ(tree.prev(s3)->id, 2);
+    EXPECT_TRUE(tree.prev(s2) == nullptr);
+
+    EXPECT_EQ(tree.next(s0)->id, 1);
+    EXPECT_EQ(tree.next(s2)->id, 3);
+    EXPECT_EQ(tree.next(s3)->id, 0);
+    EXPECT_TRUE(tree.next(s1) == nullptr);
+
+    cout << "id = " << tree.next(s0)->id << endl;
+    cout << "id = " << tree.next(s2)->id << endl;
+    cout << "id = " << tree.next(s3)->id << endl;
+    cout << "id = " << tree.next(s1) << endl;
+
+    cout << "id = " << tree.prev(s0)->id << endl;
+    cout << "id = " << tree.prev(s2) << endl;
+    cout << "id = " << tree.prev(s3)->id << endl;
+    cout << "id = " << tree.prev(s1)->id << endl;
     nodes.clear();
 }
