@@ -5,3 +5,5 @@ add_subdirectory(tests)
 
 add_executable(semana06 semana06.cpp)
 target_link_libraries(semana06 intersect_detection ${Boost_LIBRARIES})
+
+configure_file(run_experiments.sh run_experiments.sh COPYONLY)

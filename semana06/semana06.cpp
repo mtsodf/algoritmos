@@ -30,11 +30,14 @@ int main(int argc, char const *argv[]) {
     cout << "Output = " << output_filepath << endl;
     cout << "Event = " << event_filepath << endl;
 
+    double length_mean = vm["length"].as<double>();
+    double length_std = vm["length_std"].as<double>();
+
     vector<Segment *> segments;
     int n = -1;
     if (vm.count("random_points")) {
         n = vm["random_points"].as<int>();
-        generate_segments(n, vm["length"].as<double>(), vm["length_std"].as<double>(), segments);
+        generate_segments(n, length_mean, length_std, segments);
     } else {
         std::cout << "No input file was given\n";
         return 1;
@@ -58,8 +61,14 @@ int main(int argc, char const *argv[]) {
     // Generate filename with i with 2 digits
     json_file.open(output_filepath, ios::out);
     json_file << "{\n";
+    json_file << "\"n\":" << segments.size() << ",\n";
     json_file << "\"time\":" << std::scientific << std::setprecision(8) << cpu_time_used << ",\n";
+    json_file << "\"container\":"
+              << "\"" << container_type << "\",\n";
+    json_file << "\"length\":" << length_mean << ",\n";
+    json_file << "\"length_std\":" << length_std;
     if (n < 10000) {
+        json_file << ",\n";
         json_file << "  \"segments\": [\n";
         for (int i = 0; i < segments.size(); i++) {
             json_file << "    [" << segments[i]->start->x << ", " << segments[i]->start->y << ", " << segments[i]->end->x << ", " << segments[i]->end->y << "]";
@@ -77,7 +86,7 @@ int main(int argc, char const *argv[]) {
             }
             json_file << "\n";
         }
-        json_file << "  ]\n";
+        json_file << "  ]";
     }
-    json_file << "}\n";
+    json_file << "\n}\n";
 }
