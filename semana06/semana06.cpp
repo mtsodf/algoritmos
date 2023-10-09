@@ -11,6 +11,7 @@ using namespace std;
 int main(int argc, char const *argv[]) {
     po::options_description desc("Allowed options");
     desc.add_options()("help", "produce help message")("random_points", po::value<int>(), "Generate random points");
+    desc.add_options()("no_intersect", po::value<int>(), "Generate no intersections segments");
     desc.add_options()("output", po::value<string>()->default_value("output.json"), "Output file");
     desc.add_options()("events", po::value<string>()->default_value(""), "Output events file");
     desc.add_options()("container", po::value<string>()->default_value("list"), "Container type");
@@ -38,6 +39,9 @@ int main(int argc, char const *argv[]) {
     if (vm.count("random_points")) {
         n = vm["random_points"].as<int>();
         generate_segments(n, length_mean, length_std, segments);
+    } else if (vm.count("no_intersect")) {
+        n = vm["no_intersect"].as<int>();
+        generate_segments_no_intersect(n, segments);
     } else {
         std::cout << "No input file was given\n";
         return 1;

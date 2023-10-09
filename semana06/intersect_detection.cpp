@@ -25,6 +25,25 @@ double Segment::y_value(double x) const {
     return m * x + b;
 }
 
+void generate_segments_no_intersect(int n, vector<Segment *> &segments) {
+    int n_sqrt = sqrt(n);
+    random_device rd;   // Seed the random number generator
+    mt19937 gen(rd());  // Mersenne Twister PRNG
+
+    double delta = 1.0 / n_sqrt;
+    for (int i = 0; i < n_sqrt; i++) {
+        for (int j = 0; j < n_sqrt; j++) {
+            double x0 = i * delta, y0 = j * delta;
+            double x1 = (i + 1) * delta, y1 = (j + 1) * delta;
+            uniform_real_distribution<double> x_rand(x0, x1);
+            uniform_real_distribution<double> y_rand(y0, y1);
+            Point *p0 = new Point(x_rand(gen), y_rand(gen));
+            Point *p1 = new Point(x_rand(gen), y_rand(gen));
+            segments.push_back(new Segment(p0, p1, segments.size()));
+        }
+    }
+}
+
 void generate_segments(int n, double length_mean, double length_std, vector<Segment *> &segments) {
     // Create a random number generator engine
     random_device rd;                                                  // Seed the random number generator

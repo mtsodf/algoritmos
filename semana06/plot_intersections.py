@@ -62,6 +62,10 @@ def main():
     parser.add_argument("--events", "-e", help="File with all events")
     parser.add_argument("--output", "-o", default="./", help="File with all events")
     parser.add_argument("--show", "-s", action="store_true", help="Show the plot")
+    # Extension selection of plots outputs
+    parser.add_argument(
+        "--extension", "-x", default="png", help="Extension of the output"
+    )
     args = parser.parse_args()
 
     fig, ax = plt.subplots(1, 1, figsize=(7, 7))
@@ -74,9 +78,9 @@ def main():
     plot_segments(segments, ax)
     plot_intersections(segments, intersections, ax)
 
+    plt.savefig(os.path.join(args.output, f"base.{args.extension}"))
     if args.show:
         plt.show()
-    plt.savefig(os.path.join(args.output, "base.png"))
 
     if args.events:
         # Read events from args.events csv file
@@ -101,8 +105,13 @@ def main():
                     ax.plot([xa], [ya], color="red", marker="o")
 
                 plt.plot([xa, xa], [0, 1], color="black", linestyle="--")
-                ax.text(xa, 1, event[3])
-                plt.savefig(os.path.join(args.output, f"event_{png_count}.png"))
+                for value in event[::-1]:
+                    if value.strip().startswith("["):
+                        ax.text(xa, 1, value)
+                        break
+                plt.savefig(
+                    os.path.join(args.output, f"event_{png_count}.{args.extension}")
+                )
                 png_count += 1
 
                 ax.plot([xa, xa], [0, 1], color="black", linestyle="--")
@@ -114,7 +123,9 @@ def main():
                         ax.plot(segments[id0][0::2], segments[id0][1::2], color="red")
                         ax.plot(segments[id1][0::2], segments[id1][1::2], color="red")
                 if found:
-                    plt.savefig(os.path.join(args.output, f"event_{png_count}.png"))
+                    plt.savefig(
+                        os.path.join(args.output, f"event_{png_count}.{args.extension}")
+                    )
                     png_count += 1
                 plt.close()
 
