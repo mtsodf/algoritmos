@@ -43,6 +43,22 @@ void BinaryTree::add(Segment *s) {
 }
 
 void BinaryTree::remove(Segment *s) {
+    TreeNode *z = find(s);
+    if (z->left == nullptr) {
+        transplant(z, z->right);
+    } else if (z->right == nullptr) {
+        transplant(z, z->left);
+    } else {
+        TreeNode *y = minimum(z->right);
+        // TODO olhar comparação
+        if (y->parent->segment->id != z->segment->id) {
+            transplant(y, y->right);
+            y->right->parent = y;
+        }
+        transplant(z, y);
+        y->left = z->left;
+        y->left->parent = y;
+    }
     qtd_nodes--;
     return;
 }
@@ -136,5 +152,18 @@ void BinaryTree::ordered_vec(TreeNode *x, vector<Segment *> &segments) {
         ordered_vec(x->left, segments);
         segments.push_back(x->segment);
         ordered_vec(x->right, segments);
+    }
+}
+
+void BinaryTree::transplant(TreeNode *u, TreeNode *v) {
+    if (u->parent == nullptr) {
+        root = v;
+    } else if (is_left_son(u)) {
+        u->parent->left = v;
+    } else {
+        u->parent->right = v;
+    }
+    if (v != nullptr) {
+        v->parent = u->parent;
     }
 }

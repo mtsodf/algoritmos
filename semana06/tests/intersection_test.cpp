@@ -114,14 +114,10 @@ TEST(Intersections, BinaryTreeTest) {
     EXPECT_EQ(tree.next(s3)->id, 0);
     EXPECT_TRUE(tree.next(s1) == nullptr);
 
-    cout << "id = " << tree.next(s0)->id << endl;
-    cout << "id = " << tree.next(s2)->id << endl;
-    cout << "id = " << tree.next(s3)->id << endl;
-    cout << "id = " << tree.next(s1) << endl;
+    tree.remove(s3);
+    EXPECT_EQ(tree.size(), 3);
+    EXPECT_EQ(tree.next(s2)->id, 0);
+    EXPECT_EQ(tree.prev(s0)->id, 2);
 
-    cout << "id = " << tree.prev(s0)->id << endl;
-    cout << "id = " << tree.prev(s2) << endl;
-    cout << "id = " << tree.prev(s3)->id << endl;
-    cout << "id = " << tree.prev(s1)->id << endl;
     nodes.clear();
 }

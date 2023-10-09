@@ -60,6 +60,7 @@ class BinaryTree : public SegmentContainer {
     TreeNode *find(Segment *s);
     TreeNode *minimum(TreeNode *x);
     TreeNode *maximum(TreeNode *x);
+    void transplant(TreeNode *u, TreeNode *v);
 
    public:
     TreeNode *root;
