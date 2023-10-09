@@ -25,6 +25,19 @@ double Segment::y_value(double x) const {
     return m * x + b;
 }
 
+void read_segments_from_file(string input_file, vector<Segment *> &segments) {
+    fstream file;
+    file.open(input_file, ios::in);
+    int id = 0;
+
+    // Get next double
+    double x0, y0, x1, y1;
+    while (file >> x0 >> y0 >> x1 >> y1) {
+        segments.push_back(new Segment(new Point(x0, y0), new Point(x1, y1), id++));
+    }
+
+    file.close();
+}
 void generate_segments_no_intersect(int n, vector<Segment *> &segments) {
     int n_sqrt = sqrt(n);
     random_device rd;   // Seed the random number generator

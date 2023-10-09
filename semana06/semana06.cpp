@@ -13,6 +13,7 @@ int main(int argc, char const *argv[]) {
     desc.add_options()("help", "produce help message")("random_points", po::value<int>(), "Generate random points");
     desc.add_options()("no_intersect", po::value<int>(), "Generate no intersections segments");
     desc.add_options()("output", po::value<string>()->default_value("output.json"), "Output file");
+    desc.add_options()("input", po::value<string>()->default_value(""), "Input file");
     desc.add_options()("events", po::value<string>()->default_value(""), "Output events file");
     desc.add_options()("container", po::value<string>()->default_value("list"), "Container type");
     desc.add_options()("circle", po::value<int>()->default_value(0), "Generate points in a circle");
@@ -42,6 +43,10 @@ int main(int argc, char const *argv[]) {
     } else if (vm.count("no_intersect")) {
         n = vm["no_intersect"].as<int>();
         generate_segments_no_intersect(n, segments);
+    } else if (vm.count("input")) {
+        string input_file = vm["input"].as<string>();
+        cout << "Input file: " << input_file << "\n";
+        read_segments_from_file(input_file, segments);
     } else {
         std::cout << "No input file was given\n";
         return 1;
