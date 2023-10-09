@@ -57,6 +57,23 @@ void generate_segments_no_intersect(int n, vector<Segment *> &segments) {
     }
 }
 
+void generate_big_segments_no_intersect(int n, vector<Segment *> &segments) {
+    random_device rd;   // Seed the random number generator
+    mt19937 gen(rd());  // Mersenne Twister PRNG
+    uniform_real_distribution<double> x0_rand(0, 100);
+    uniform_real_distribution<double> x1_rand(900, 1000);
+
+    double delta = 1000.0 / n;
+    for (int i = 0; i < n; i++) {
+        double y0 = i * delta;
+        double y1 = (i + 1) * delta;
+        uniform_real_distribution<double> y_rand(y0, y1);
+        Point *p0 = new Point(x0_rand(gen), y_rand(gen));
+        Point *p1 = new Point(x1_rand(gen), y_rand(gen));
+        segments.push_back(new Segment(p0, p1, segments.size()));
+    }
+}
+
 void generate_segments(int n, double length_mean, double length_std, vector<Segment *> &segments) {
     // Create a random number generator engine
     random_device rd;                                                  // Seed the random number generator

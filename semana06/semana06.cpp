@@ -12,12 +12,11 @@ int main(int argc, char const *argv[]) {
     po::options_description desc("Allowed options");
     desc.add_options()("help", "produce help message")("random_points", po::value<int>(), "Generate random points");
     desc.add_options()("no_intersect", po::value<int>(), "Generate no intersections segments");
+    desc.add_options()("no_intersect_big", po::value<int>(), "Generate no intersections segments");
     desc.add_options()("output", po::value<string>()->default_value("output.json"), "Output file");
     desc.add_options()("input", po::value<string>()->default_value(""), "Input file");
     desc.add_options()("events", po::value<string>()->default_value(""), "Output events file");
     desc.add_options()("container", po::value<string>()->default_value("list"), "Container type");
-    desc.add_options()("circle", po::value<int>()->default_value(0), "Generate points in a circle");
-    desc.add_options()("comma", po::value<int>()->default_value(0), "File with comma separated points");
     desc.add_options()("length", po::value<double>()->default_value(0.1), "Mean of segment lenghts");
     desc.add_options()("length_std", po::value<double>()->default_value(0.01), "Mean of segment lenghts");
 
@@ -38,18 +37,29 @@ int main(int argc, char const *argv[]) {
     vector<Segment *> segments;
     int n = -1;
     if (vm.count("random_points")) {
+        cout << __FILE__ << " " << __LINE__ << endl;
         n = vm["random_points"].as<int>();
         generate_segments(n, length_mean, length_std, segments);
     } else if (vm.count("no_intersect")) {
+        cout << __FILE__ << " " << __LINE__ << endl;
         n = vm["no_intersect"].as<int>();
         generate_segments_no_intersect(n, segments);
-    } else if (vm.count("input")) {
+    } else if (vm.count("no_intersect_big")) {
+        cout << __FILE__ << " " << __LINE__ << endl;
+        n = vm["no_intersect_big"].as<int>();
+        generate_big_segments_no_intersect(n, segments);
+    } else if (vm["input"].as<string>() != "") {
+        cout << __FILE__ << " " << __LINE__ << endl;
         string input_file = vm["input"].as<string>();
         cout << "Input file: " << input_file << "\n";
         read_segments_from_file(input_file, segments);
     } else {
-        std::cout << "No input file was given\n";
-        return 1;
+        cout << __FILE__ << " " << __LINE__ << endl;
+        n = 10;
+        container_type = "binary_tree";
+        generate_big_segments_no_intersect(n, segments);
+        // std::cout << "No input file was given\n";
+        // return 1;
     }
 
     pair<int, int> intersection_pair;

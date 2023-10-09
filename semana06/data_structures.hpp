@@ -76,6 +76,7 @@ class BinaryTree : public SegmentContainer {
     TreeNode *prev_node(Segment *s);
     Segment *get_segment(int id);
     Segment *first();
+    void print(TreeNode *x);
     void swap(Segment *s1, Segment *s2);
     int size();
     void ordered_vec(TreeNode *x, vector<Segment *> &segments);

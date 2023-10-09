@@ -6,6 +6,7 @@
 using namespace std;
 
 bool is_left_son(TreeNode *x) {
+    if (x == nullptr) return false;
     TreeNode *parent = x->parent;
     if (parent == nullptr || parent->left == nullptr) return false;
 
@@ -13,6 +14,7 @@ bool is_left_son(TreeNode *x) {
 }
 
 bool is_right_son(TreeNode *x) {
+    if (x == nullptr) return false;
     TreeNode *parent = x->parent;
     if (parent == nullptr || parent->right == nullptr) return false;
 
@@ -51,8 +53,9 @@ void BinaryTree::remove(Segment *s) {
     } else {
         TreeNode *y = minimum(z->right);
         // TODO olhar comparação
-        if (y->parent->segment->id != z->segment->id) {
+        if ((y->parent != nullptr) && y->parent->segment->id != z->segment->id) {
             transplant(y, y->right);
+            y->right = z->right;
             y->right->parent = y;
         }
         transplant(z, y);
@@ -106,7 +109,7 @@ TreeNode *BinaryTree::find(Segment *s) {
     while (x != nullptr) {
         if (s->id == x->segment->id) {
             return x;
-        } else if ((*s) < (*x->segment)) {
+        } else if (*(s) < *(x->segment)) {
             x = x->left;
         } else {
             x = x->right;
@@ -152,6 +155,14 @@ void BinaryTree::ordered_vec(TreeNode *x, vector<Segment *> &segments) {
         ordered_vec(x->left, segments);
         segments.push_back(x->segment);
         ordered_vec(x->right, segments);
+    }
+}
+
+void BinaryTree::print(TreeNode *x) {
+    if (x != nullptr) {
+        print(x->left);
+        cout << x->segment->id << " ";
+        print(x->right);
     }
 }
 
