@@ -175,9 +175,9 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
     });
     SegmentContainer *segment_container;
     if (container_type == "list")
-        segment_container = new SegmentVector();
+        segment_container = new SegmentVector(n);
     else if (container_type == "unordered_list") {
-        segment_container = new UnorderedList();
+        segment_container = new UnorderedList(n);
     } else if (container_type == "binary_tree") {
         cout << "USING BINARY TREE!" << endl;
         segment_container = new BinaryTree();

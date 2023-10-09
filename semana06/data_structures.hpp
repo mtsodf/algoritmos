@@ -18,7 +18,7 @@ class SegmentVector : public SegmentContainer {
     vector<Segment *> segments;
 
    public:
-    SegmentVector() {}
+    SegmentVector(int n) { segments.reserve(2 * n); }
     void add(Segment *s);
     void remove(Segment *s);
     Segment *next(Segment *s);
@@ -33,7 +33,7 @@ class SegmentVector : public SegmentContainer {
 class UnorderedList : public SegmentVector {
    private:
    public:
-    UnorderedList() {}
+    UnorderedList(int n) : SegmentVector(2 * n){};
     void add(Segment *s);
     Segment *next(Segment *s);
     Segment *prev(Segment *s);
