@@ -33,6 +33,7 @@ def plot_segments(segments, ax):
             str(i),
             horizontalalignment="center",
             verticalalignment="center",
+            fontsize=14,
         )
 
 
@@ -78,6 +79,10 @@ def main():
     plot_segments(segments, ax)
     plot_intersections(segments, intersections, ax)
 
+    coord_array = np.array(segments)
+    min_y = np.min(coord_array[:, 1::2])
+    max_y = np.max(coord_array[:, 1::2])
+
     plt.savefig(os.path.join(args.output, f"base.{args.extension}"))
     if args.show:
         plt.show()
@@ -104,17 +109,16 @@ def main():
                     ya = segments[seg_id][3]
                     ax.plot([xa], [ya], color="red", marker="o")
 
-                plt.plot([xa, xa], [0, 1], color="black", linestyle="--")
+                ax.plot([xa, xa], [min_y, max_y], color="black", linestyle="--")
                 for value in event[::-1]:
                     if value.strip().startswith("["):
-                        ax.text(xa, 1, value)
+                        ax.text(xa, max_y, value, fontsize=16)
                         break
                 plt.savefig(
                     os.path.join(args.output, f"event_{png_count}.{args.extension}")
                 )
                 png_count += 1
 
-                ax.plot([xa, xa], [0, 1], color="black", linestyle="--")
                 found = False
                 for j, value in enumerate(event):
                     if "==" in value:
