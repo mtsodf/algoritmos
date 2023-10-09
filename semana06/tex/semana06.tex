@@ -1,0 +1,66 @@
+\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
+
+
+\usetheme{default}  % You can choose any other theme you prefer
+
+\title{05 - Algoritmos}
+\subtitle{Algoritmos de Triangulação}
+\author{Mateus Oliveira de Figueiredo}
+\date{03/10/2023}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usepackage{multicol}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath} % for "pmatrix" environment  
+
+\usepackage{pgfplots}
+\DeclareUnicodeCharacter{2212}{−}
+\usepgfplotslibrary{groupplots,dateplot}
+\usetikzlibrary{patterns,shapes.arrows, positioning}
+\pgfplotsset{compat=newest}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\foreach \n in {0,...,10} {
+\begin{frame}
+  % Create a for to generate each slide with event_0, event_1, ..., event_5
+\frametitle{Algoritmos de Interseção de Segmentos}
+      \begin{figure}
+        \includegraphics[width=0.5\textwidth]{figs/event_\n.pdf}
+      \end{figure}
+\end{frame}
+
+}
+
+\end{document}
+
+  % \begin{overprint}
+  % \onslide<1> {Slide 01}
+  % \onslide<2> {Slide 02}
+  % \onslide<3> {Slide 03}
+  % \onslide<4> {Slide 04}
+  % \onslide<5> {Slide 05}
+  % \onslide<6> {Slide 06}
+  % \onslide<7> {Slide 07}
+  % \onslide<8> {Slide 08}
+  % \onslide<9> {Slide 09}
+  % \onslide<10> {Slide 10}
+  % \onslide<11> {Slide 11}
+  % \onslide<12> {Slide 12}
+  % \onslide<13> {Slide 13}
+  % \onslide<14> {Slide 14}
+  % \onslide<15> {Slide 15}
+  % \onslide<16> {Slide 16}
+  % \onslide<17> {Slide 17}
+  % \onslide<18> {Slide 18}
+  % \onslide<19> {Slide 19}
+  % \end{overprint}
