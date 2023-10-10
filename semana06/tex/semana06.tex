@@ -3,10 +3,10 @@
 
 \usetheme{default}  % You can choose any other theme you prefer
 
-\title{05 - Algoritmos}
-\subtitle{Algoritmos de Triangulação}
+\title{06 - Algoritmos}
+\subtitle{Interseção de Segmentos}
 \author{Mateus Oliveira de Figueiredo}
-\date{03/10/2023}
+\date{10/10/2023}
 
 \usepackage{tikz}
 \usetikzlibrary{matrix}
@@ -30,27 +30,40 @@
 \titlepage
 \end{frame}
 
+\begin{frame}
+\frametitle{Algoritmos Implementados}
+\vfill
+\begin{itemize}
+  \item Força Bruta ({\it{Naive}})
+  \item Algoritmo de Bentley-Ottmann
+\end{itemize}
+\vfill
+\end{frame}
+
 \foreach \n in {0,...,14} {
 \begin{frame}
-\frametitle{Algoritmos de Interseção de Segmentos}
-      \begin{figure}
-        \includegraphics[width=0.5\textwidth]{figs/event_\n.pdf}
-      \end{figure}
+\frametitle{Algoritmo de Bentley-Ottmann}
+    \begin{figure}
+      \includegraphics[width=0.6\textwidth]{figs/event_\n.pdf}
+    \end{figure}
 \end{frame}
 
 }
 
 \begin{frame}{Estruturas de Dados}
   
+  \vfill
   Para guardar os segmentos que estão ativos:
   \begin{itemize}
     \item Lista Ordenada
     \item Lista Não Ordenada
-    \item Árvore Binária Desbalanceada
+    \item Árvore Binária
   \end{itemize}
 
-  Para a lista de eventos no caso de detecção de interseção é necessário utilizar
+  \vfill
+  Lista de eventos no caso de detecção de interseção foi usado uma lista.
 
+  \vfill
 \end{frame}
 
 \begin{frame}{Exemplos Randomizados}
@@ -80,7 +93,7 @@
     \end{column}
     \begin{column}{0.65\textwidth}
       \begin{figure}
-        \includegraphics[width=0.9\textwidth]{figs/tests_big_segments.pdf}
+        \onslide<2>\includegraphics[width=0.9\textwidth]{figs/tests_big_segments.pdf}
       \end{figure}
     \end{column}
   \end{columns}
@@ -97,10 +110,18 @@
     \end{column}
     \begin{column}{0.65\textwidth}
       \begin{figure}
-        \includegraphics[width=0.9\textwidth]{figs/tests_box.pdf}
+        \onslide<2>\includegraphics[width=0.9\textwidth]{figs/tests_box.pdf}
       \end{figure}
     \end{column}
   \end{columns}
 \end{frame}
+
+\begin{frame}{Comparação dos Pequenos x Grandes}
+  % Two columns
+  \begin{figure}
+    \includegraphics[width=0.7\textwidth]{figs/comp_cases.pdf}
+  \end{figure}
+\end{frame}
+
 
 \end{document}
