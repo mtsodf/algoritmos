@@ -43,11 +43,12 @@ void generate_segments_no_intersect(int n, vector<Segment *> &segments) {
     random_device rd;   // Seed the random number generator
     mt19937 gen(rd());  // Mersenne Twister PRNG
 
-    double delta = 1.0 / n_sqrt;
+    double delta = 1000.0 / n_sqrt;
+    double epsilon = delta / 100;
     for (int i = 0; i < n_sqrt; i++) {
         for (int j = 0; j < n_sqrt; j++) {
-            double x0 = i * delta, y0 = j * delta;
-            double x1 = (i + 1) * delta, y1 = (j + 1) * delta;
+            double x0 = i * delta + epsilon, y0 = j * delta + epsilon;
+            double x1 = (i + 1) * delta - epsilon, y1 = (j + 1) * delta - epsilon;
             uniform_real_distribution<double> x_rand(x0, x1);
             uniform_real_distribution<double> y_rand(y0, y1);
             Point *p0 = new Point(x_rand(gen), y_rand(gen));
@@ -128,6 +129,18 @@ class Event {
         }
     }
 };
+
+bool naive_segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersections) {
+    for (int i = 0; i < segments.size(); i++) {
+        for (int j = i + 1; j < segments.size(); j++) {
+            if (intersect(segments[i], segments[j])) {
+                intersections.push_back(make_pair(i, j));
+                return true;
+            }
+        }
+    }
+    return intersections.size() > 0;
+}
 
 bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<pair<int, int>> &intersections) {
     for (int i = 0; i < start.size(); i++) {

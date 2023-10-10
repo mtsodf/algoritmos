@@ -27,6 +27,7 @@ int main(int argc, char const *argv[]) {
     string output_filepath = vm["output"].as<string>();
     string event_filepath = vm["events"].as<string>();
     string container_type = vm["container"].as<string>();
+    string sort_case = "";
 
     cout << "Output = " << output_filepath << endl;
     cout << "Event = " << event_filepath << endl;
@@ -37,19 +38,19 @@ int main(int argc, char const *argv[]) {
     vector<Segment *> segments;
     int n = -1;
     if (vm.count("random_points")) {
-        cout << __FILE__ << " " << __LINE__ << endl;
+        sort_case = "random_points";
         n = vm["random_points"].as<int>();
         generate_segments(n, length_mean, length_std, segments);
     } else if (vm.count("no_intersect")) {
-        cout << __FILE__ << " " << __LINE__ << endl;
+        sort_case = "box";
         n = vm["no_intersect"].as<int>();
         generate_segments_no_intersect(n, segments);
     } else if (vm.count("no_intersect_big")) {
-        cout << __FILE__ << " " << __LINE__ << endl;
+        sort_case = "big_segments";
         n = vm["no_intersect_big"].as<int>();
         generate_big_segments_no_intersect(n, segments);
     } else if (vm["input"].as<string>() != "") {
-        cout << __FILE__ << " " << __LINE__ << endl;
+        sort_case = "input";
         string input_file = vm["input"].as<string>();
         cout << "Input file: " << input_file << "\n";
         read_segments_from_file(input_file, segments);
@@ -69,8 +70,13 @@ int main(int argc, char const *argv[]) {
     double cpu_time_used;
 
     start = clock();
-    if (segment_intersection(segments, intersection_pair, container_type, event_filepath))
-        intersections.push_back(intersection_pair);
+    if (container_type == "naive") {
+        naive_segment_intersection(segments, intersections);
+    } else {
+        if (segment_intersection(segments, intersection_pair, container_type, event_filepath))
+            intersections.push_back(intersection_pair);
+    }
+
     end = clock();
     cpu_time_used = ((double)(end - start)) / CLOCKS_PER_SEC;
     cout << "Time: " << scientific << setprecision(8) << cpu_time_used << endl;
@@ -82,12 +88,13 @@ int main(int argc, char const *argv[]) {
     json_file << "{\n";
     json_file << "\"n\":" << segments.size() << ",\n";
     json_file << "\"time\":" << std::scientific << std::setprecision(8) << cpu_time_used << ",\n";
+    json_file << "\"sort_case\":"
+              << "\"" << sort_case << "\",\n";
     json_file << "\"container\":"
               << "\"" << container_type << "\",\n";
     json_file << "\"length\":" << length_mean << ",\n";
-    json_file << "\"length_std\":" << length_std;
+    json_file << "\"length_std\":" << length_std << ",\n";
     if (n < 10000) {
-        json_file << ",\n";
         json_file << "  \"segments\": [\n";
         for (int i = 0; i < segments.size(); i++) {
             json_file << "    [" << segments[i]->start->x << ", " << segments[i]->start->y << ", " << segments[i]->end->x << ", " << segments[i]->end->y << "]";
@@ -97,15 +104,15 @@ int main(int argc, char const *argv[]) {
             json_file << "\n";
         }
         json_file << "  ],\n";
-        json_file << "  \"intersections\": [\n";
-        for (int i = 0; i < intersections.size(); i++) {
-            json_file << "    [" << intersections[i].first << ", " << intersections[i].second << "]";
-            if (i < intersections.size() - 1) {
-                json_file << ",";
-            }
-            json_file << "\n";
-        }
-        json_file << "  ]";
     }
+    json_file << "  \"intersections\": [\n";
+    for (int i = 0; i < intersections.size(); i++) {
+        json_file << "    [" << intersections[i].first << ", " << intersections[i].second << "]";
+        if (i < intersections.size() - 1) {
+            json_file << ",";
+        }
+        json_file << "\n";
+    }
+    json_file << "  ]";
     json_file << "\n}\n";
 }

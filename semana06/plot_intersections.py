@@ -26,7 +26,7 @@ def plot_segments(segments, ax):
         ym = np.mean(segment[1::2])
         a = np.array([segment[2] - segment[0], segment[3] - segment[1]])
         perp_vec = np.array([-a[1], a[0]])
-        perp_vec = (perp_vec / np.linalg.norm(perp_vec)) * 0.02
+        perp_vec = (perp_vec / np.linalg.norm(perp_vec)) * 20
         ax.text(
             xm + perp_vec[0],
             ym + perp_vec[1],
@@ -62,6 +62,7 @@ def main():
     parser.add_argument("json_file", help="File with the intersections")
     parser.add_argument("--events", "-e", help="File with all events")
     parser.add_argument("--output", "-o", default="./", help="File with all events")
+    parser.add_argument("--custom", "-c", action="store_true", help="Big grid")
     parser.add_argument("--show", "-s", action="store_true", help="Show the plot")
     # Extension selection of plots outputs
     parser.add_argument(
@@ -82,6 +83,23 @@ def main():
     coord_array = np.array(segments)
     min_y = np.min(coord_array[:, 1::2])
     max_y = np.max(coord_array[:, 1::2])
+
+    if args.custom:
+        n = len(segments)
+        y = np.linspace(0, 1000, n + 1)
+        for i in range(n + 1):
+            ax.plot([0, 1000], [y[i], y[i]], color="black", linestyle="--")
+
+        ## Add two rectangles with transparency from 0 to 100 and from 900 to 1000
+        ax.fill_between([0, 100], 0, 1000, color="pink", alpha=0.4)
+        ax.fill_between([900, 1000], 0, 1000, color="pink", alpha=0.4)
+
+        # n_sqrt = int(np.sqrt(n))
+        # x = np.linspace(0, 1000, n_sqrt + 1)
+        # y = np.linspace(0, 1000, n_sqrt + 1)
+        # for i in range(n_sqrt + 1):
+        # ax.plot([x[i], x[i]], [0, 1000], color="black", linestyle="--")
+        # ax.plot([0, 1000], [y[i], y[i]], color="black", linestyle="--")
 
     plt.savefig(os.path.join(args.output, f"base.{args.extension}"))
     if args.show:
