@@ -64,8 +64,8 @@ TEST(Intersections, SegmentIntersection) {
         pair<int, int> intersection_pair = intersection_pairs[0];
         cout << "Found = " << found << endl;
         cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
-        EXPECT_EQ(intersection_pair.first, 2);
-        EXPECT_EQ(intersection_pair.second, 1);
+        EXPECT_EQ(intersection_pair.first, 1);
+        EXPECT_EQ(intersection_pair.second, 2);
     }
 
     start.push_back(new Point(3.4, 1));
@@ -176,4 +176,14 @@ TEST(ListInterserctions, SimpleTests) {
     EXPECT_TRUE(intersections[1] == make_pair<int>(1, 2));
 
     intersections.clear();
+
+    vector<string> container_types = {"list", "binary_tree"};
+
+    for (int i = 0; i < container_types.size(); i++) {
+        intersections.clear();
+        segment_intersection(segments, intersections, container_types[i], "", false);
+        EXPECT_EQ(intersections.size(), 2);
+        EXPECT_TRUE(intersections[0] == make_pair<int>(0, 1));
+        EXPECT_TRUE(intersections[1] == make_pair<int>(1, 2));
+    }
 }

@@ -8,6 +8,15 @@
 
 using namespace std;
 
+void Segment::calc_intersection(const Segment &other, double &x, double &y) {
+    double a0 = (this->end->y - this->start->y) / (this->end->x - this->start->x);
+    double b0 = -a0 * this->start->x + this->start->y;
+    double a1 = (other.end->y - other.start->y) / (other.end->x - other.start->x);
+    double b1 = -a1 * other.start->x + other.start->y;
+    x = (b1 - b0) / (a0 - a1);
+    y = a0 * x + b0;
+}
+
 Segment::Segment(Point *p0, Point *p1, int id) {
     if (p0->x < p1->x || (p0->x == p1->x && p0->y < p1->y)) {
         this->start = p0;
@@ -116,20 +125,59 @@ int SEGMENT_START = 0, SEGMENT_END = 1, INTERSECTION = 2;
 class Event {
    public:
     Segment *seg;
+    Segment *other_seg;
     int type;
     double x;
-    Event(Segment *seg, int type, double x = 0) {
+    double y;
+    Event(Segment *seg, Segment *other_seg, int type, double x = 0, double y = 0) {
         this->seg = seg;
+        this->other_seg = other_seg;
         this->type = type;
+
         if (type == SEGMENT_START) {
             this->x = seg->start->x;
+            this->y = seg->start->y;
         } else if (type == SEGMENT_END) {
             this->x = seg->end->x;
+            this->y = seg->end->y;
         } else {
             this->x = x;
+            this->y = y;
+        }
+    }
+    // override comparison operator <
+    bool operator<(const Event &other) const {
+        if (this->x < other.x) {
+            return true;
+        } else if (this->x > other.x) {
+            return false;
+        } else {
+            return this->y < other.y;
         }
     }
 };
+
+void add_intersection_event(vector<Event *> &events, Segment *s0, Segment *s1) {
+    double x_intersect, y_intersect;
+    s0->calc_intersection(*s1, x_intersect, y_intersect);
+    Event intersect_event(s0, s1, INTERSECTION, x_intersect, y_intersect);
+    events.push_back(&intersect_event);
+    int j = events.size() - 1;
+    for (j = events.size() - 1; j >= 1; j--) {
+        if (events[j]->x < events[j - 1]->x) {
+            std::swap(*events[j], *events[j - 1]);
+        } else {
+            break;
+        }
+    }
+}
+
+void add_intersection(vector<pair<int, int>> &intersections, Segment *s0, Segment *s1) {
+    if (s0->id < s1->id)
+        intersections.push_back({s0->id, s1->id});
+    else
+        intersections.push_back({s1->id, s0->id});
+}
 
 bool naive_segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersections, bool detection) {
     for (int i = 0; i < segments.size(); i++) {
@@ -166,28 +214,7 @@ void log_ids(SegmentContainer *segments, fstream &events_file) {
     events_file << "];";
 }
 
-bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &container_type, const string &events_filename, bool detection) {
-    bool verbose = false;
-
-    fstream events_file;
-    if (!events_filename.empty()) {
-        events_file.open(events_filename, ios::out);
-        verbose = true;
-    }
-    int n = segments.size();
-    vector<Event *> events;
-    events.reserve(2 * n);
-    for (int i = 0; i < n; i++) {
-        events.push_back(new Event(segments[i], SEGMENT_START));
-        events.push_back(new Event(segments[i], SEGMENT_END));
-    }
-
-    sort(events.begin(), events.end(), [](Event *a, Event *b) {
-        if (a->x == b->x) {
-            return a->type < b->type;
-        }
-        return a->x < b->x;
-    });
+SegmentContainer *segment_container_factory(string container_type, int n) {
     SegmentContainer *segment_container;
     if (container_type == "list")
         segment_container = new SegmentVector(n);
@@ -200,6 +227,33 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
         cout << "Invalid container type " << container_type << endl;
         exit(1);
     }
+
+    return segment_container;
+}
+
+bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &container_type, const string &events_filename, bool detection) {
+    bool verbose = false;
+
+    fstream events_file;
+    if (!events_filename.empty()) {
+        events_file.open(events_filename, ios::out);
+        verbose = true;
+    }
+    int n = segments.size();
+    vector<Event *> events;
+    events.reserve(2 * n);
+    for (int i = 0; i < n; i++) {
+        events.push_back(new Event(segments[i], nullptr, SEGMENT_START));
+        events.push_back(new Event(segments[i], nullptr, SEGMENT_END));
+    }
+
+    sort(events.begin(), events.end(), [](Event *a, Event *b) {
+        if (a->x == b->x) {
+            return a->type < b->type;
+        }
+        return a->x < b->x;
+    });
+    SegmentContainer *segment_container = segment_container_factory(container_type, n);
 
     for (int i = 0; i < events.size(); i++) {
         Segment *cur_seg = events[i]->seg;
@@ -219,8 +273,9 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 if (verbose) events_file << cur_seg->id << " == " << prev->id << ";";
                 if (intersect(cur_seg, prev)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pairs.push_back({cur_seg->id, prev->id});
+                    add_intersection(intersection_pairs, cur_seg, prev);
                     if (detection) return true;
+                    add_intersection_event(events, cur_seg, prev);
                 } else {
                     if (verbose) events_file << "false; ";
                 }
@@ -230,8 +285,9 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 if (verbose) events_file << cur_seg->id << " == " << next->id << ";";
                 if (intersect(cur_seg, next)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pairs.push_back({cur_seg->id, next->id});
-                    return true;
+                    add_intersection(intersection_pairs, cur_seg, next);
+                    if (detection) return true;
+                    add_intersection_event(events, cur_seg, next);
                 } else {
                     if (verbose) events_file << "false; ";
                 }
@@ -250,14 +306,22 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 if (verbose) events_file << prev->id << " == " << next->id << ";";
                 if (intersect(prev, next)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pairs.push_back({prev->id, next->id});
+                    add_intersection(intersection_pairs, prev, next);
                     if (detection) return true;
+                    add_intersection_event(events, prev, next);
                 } else {
                     if (verbose) events_file << "false; ";
                 }
             }
             segment_container->remove(cur_seg);
             if (verbose) {
+                log_ids(segment_container, events_file);
+                events_file << endl;
+            }
+        } else if (events[i]->type == INTERSECTION) {
+            segment_container->swap(events[i]->seg, events[i]->other_seg);
+            if (verbose) {
+                events_file << events[i]->seg->id << " intersect " << events[i]->other_seg->id << ";";
                 log_ids(segment_container, events_file);
                 events_file << endl;
             }

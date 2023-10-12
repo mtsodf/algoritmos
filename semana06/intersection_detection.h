@@ -15,6 +15,7 @@ class Segment {
     bool added;
     Segment(Point *p0, Point *p1, int id);
     double y_value(double x) const;
+    void calc_intersection(const Segment &other, double &x, double &y);
     // Override comparison operator <
     bool operator<(const Segment &other) const {
         if (added) {
