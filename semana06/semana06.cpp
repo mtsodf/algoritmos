@@ -13,6 +13,7 @@ int main(int argc, char const *argv[]) {
     desc.add_options()("help", "produce help message")("random_points", po::value<int>(), "Generate random points");
     desc.add_options()("no_intersect", po::value<int>(), "Generate no intersections segments");
     desc.add_options()("no_intersect_big", po::value<int>(), "Generate no intersections segments");
+    desc.add_options()("detection", po::value<int>()->default_value(0), "Set detection or list detection");
     desc.add_options()("output", po::value<string>()->default_value("output.json"), "Output file");
     desc.add_options()("input", po::value<string>()->default_value(""), "Input file");
     desc.add_options()("events", po::value<string>()->default_value(""), "Output events file");
@@ -64,12 +65,12 @@ int main(int argc, char const *argv[]) {
 
     clock_t start, end;
     double cpu_time_used;
-
+    bool detection = vm["detection"].as<int>() != 0;
     start = clock();
     if (container_type == "naive") {
-        naive_segment_intersection(segments, intersections);
+        naive_segment_intersection(segments, intersections, detection);
     } else {
-        segment_intersection(segments, intersections, container_type, event_filepath);
+        segment_intersection(segments, intersections, container_type, event_filepath, detection);
     }
 
     end = clock();

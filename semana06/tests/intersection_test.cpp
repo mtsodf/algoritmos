@@ -34,7 +34,7 @@ TEST(Intersections, NaiveIntersection) {
     start.push_back(new Point(2, 1));
     end.push_back(new Point(1, 2));
 
-    naive_segment_intersection(start, end, intersections);
+    naive_segment_intersection(start, end, intersections, false);
     EXPECT_EQ(intersections.size(), 2);
 
     EXPECT_EQ(intersections[0].first, 0);
@@ -159,4 +159,17 @@ TEST(Intersections, BinaryTreeTest2) {
 
     // cout << "tree root = " << tree.root->segment->id << endl;
     // tree.print(tree.root);
+}
+
+TEST(ListInterserctions, SimpleTests) {
+    vector<Segment *> segments;
+    int id = 0;
+    segments.push_back(new Segment(new Point(1, 1), new Point(7, 4), id++));
+    segments.push_back(new Segment(new Point(2, 3), new Point(6, 1), id++));
+    segments.push_back(new Segment(new Point(4, 1.5), new Point(7, 1.5), id++));
+
+    vector<pair<int, int>> intersections;
+    naive_segment_intersection(segments, intersections, false);
+
+    EXPECT_EQ(intersections.size(), 2);
 }
