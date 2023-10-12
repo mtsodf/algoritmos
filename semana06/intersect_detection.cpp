@@ -165,7 +165,7 @@ void log_ids(SegmentContainer *segments, fstream &events_file) {
     events_file << "];";
 }
 
-bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersection_pair, const string &container_type, const string &events_filename) {
+bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &container_type, const string &events_filename, bool detection) {
     bool verbose = false;
 
     fstream events_file;
@@ -218,7 +218,7 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
                 if (verbose) events_file << cur_seg->id << " == " << prev->id << ";";
                 if (intersect(cur_seg, prev)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pair = {cur_seg->id, prev->id};
+                    intersection_pairs.push_back({cur_seg->id, prev->id});
                     return true;
                 } else {
                     if (verbose) events_file << "false; ";
@@ -229,7 +229,7 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
                 if (verbose) events_file << cur_seg->id << " == " << next->id << ";";
                 if (intersect(cur_seg, next)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pair = {cur_seg->id, next->id};
+                    intersection_pairs.push_back({cur_seg->id, next->id});
                     return true;
                 } else {
                     if (verbose) events_file << "false; ";
@@ -249,7 +249,7 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
                 if (verbose) events_file << prev->id << " == " << next->id << ";";
                 if (intersect(prev, next)) {
                     if (verbose) events_file << "true; ";
-                    intersection_pair = {prev->id, next->id};
+                    intersection_pairs.push_back({prev->id, next->id});
                     return true;
                 } else {
                     if (verbose) events_file << "false; ";
@@ -268,12 +268,12 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
     return false;
 }
 
-bool segment_intersection(vector<Point *> &start, vector<Point *> &end, pair<int, int> &intersection_pair, const string &container_type) {
+bool segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<pair<int, int>> &intersection_pairs, const string &container_type, bool detection) {
     int n = start.size();
     vector<Segment *> segments;
     segments.reserve(n);
     for (int i = 0; i < start.size(); i++) {
         segments.push_back(new Segment(start[i], end[i], i));
     }
-    return segment_intersection(segments, intersection_pair, container_type);
+    return segment_intersection(segments, intersection_pairs, container_type, "", detection = detection);
 }

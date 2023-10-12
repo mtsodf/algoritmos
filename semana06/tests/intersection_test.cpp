@@ -59,8 +59,9 @@ TEST(Intersections, SegmentIntersection) {
     // Iterate over all container types
     for (int i = 0; i < 2; i++) {
         string container_type = i == 0 ? "list" : "unordered_list";
-        pair<int, int> intersection_pair;
-        bool found = segment_intersection(start, end, intersection_pair, container_type);
+        vector<pair<int, int>> intersection_pairs;
+        bool found = segment_intersection(start, end, intersection_pairs, container_type);
+        pair<int, int> intersection_pair = intersection_pairs[0];
         cout << "Found = " << found << endl;
         cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
         EXPECT_EQ(intersection_pair.first, 2);
@@ -71,8 +72,10 @@ TEST(Intersections, SegmentIntersection) {
     end.push_back(new Point(0.5, 2));
     for (int i = 0; i < 2; i++) {
         string container_type = i == 0 ? "list" : "unordered_list";
+        vector<pair<int, int>> intersections_pair;
         pair<int, int> intersection_pair;
-        bool found = segment_intersection(start, end, intersection_pair, container_type);
+        bool found = segment_intersection(start, end, intersections_pair, container_type, true);
+        intersection_pair = intersections_pair[0];
         cout << "Found = " << found << endl;
         cout << "Intersection Segments = " << intersection_pair.first << " " << intersection_pair.second << endl;
         EXPECT_EQ(intersection_pair.first, 0);
