@@ -55,12 +55,8 @@ int main(int argc, char const *argv[]) {
         cout << "Input file: " << input_file << "\n";
         read_segments_from_file(input_file, segments);
     } else {
-        cout << __FILE__ << " " << __LINE__ << endl;
-        n = 10;
-        container_type = "binary_tree";
-        generate_big_segments_no_intersect(n, segments);
-        // std::cout << "No input file was given\n";
-        // return 1;
+        std::cout << "No input file was given\n";
+        return 1;
     }
 
     pair<int, int> intersection_pair;
@@ -73,8 +69,7 @@ int main(int argc, char const *argv[]) {
     if (container_type == "naive") {
         naive_segment_intersection(segments, intersections);
     } else {
-        if (segment_intersection(segments, intersection_pair, container_type, event_filepath))
-            intersections.push_back(intersection_pair);
+        segment_intersection(segments, intersections, container_type, event_filepath);
     }
 
     end = clock();
