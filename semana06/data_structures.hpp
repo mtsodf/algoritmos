@@ -57,13 +57,13 @@ class TreeNode {
 class BinaryTree : public SegmentContainer {
    private:
     int qtd_nodes;
-    TreeNode *find(Segment *s);
     TreeNode *minimum(TreeNode *x);
     TreeNode *maximum(TreeNode *x);
     void transplant(TreeNode *u, TreeNode *v);
 
    public:
     TreeNode *root;
+    TreeNode *find(Segment *s);
     BinaryTree() {
         root = nullptr;
         qtd_nodes = 0;
@@ -76,8 +76,9 @@ class BinaryTree : public SegmentContainer {
     TreeNode *prev_node(Segment *s);
     Segment *get_segment(int id);
     Segment *first();
-    void print(TreeNode *x);
+    void print(TreeNode *x, int indent = 0);
     void swap(Segment *s1, Segment *s2);
     int size();
+    int count(TreeNode *x);
     void ordered_vec(TreeNode *x, vector<Segment *> &segments);
 };

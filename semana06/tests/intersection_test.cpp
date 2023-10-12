@@ -121,3 +121,39 @@ TEST(Intersections, BinaryTreeTest) {
 
     nodes.clear();
 }
+
+TEST(Intersections, BinaryTreeTest2) {
+    BinaryTree tree;
+    int id = 0;
+    int n = 1000;
+    vector<Segment *> segments;
+    segments.reserve(n);
+    for (int i = 0; i < n; i++) {
+        Segment *s = new Segment(new Point(0, i), new Point(1, i), id++);
+        segments.push_back(s);
+    }
+
+    // Shuffle segments
+    random_shuffle(segments.begin(), segments.end());
+
+    for (int i = 0; i < n; i++) {
+        tree.add(segments[i]);
+    }
+
+    random_shuffle(segments.begin(), segments.end());
+
+    for (int i = 0; i < n; i++) {
+        tree.remove(segments[i]);
+        for (int j = 0; j < i + 1; j++) {
+            EXPECT_TRUE(tree.find(segments[j]) == nullptr);
+        }
+        for (int j = i + 1; j < n; j++) {
+            EXPECT_FALSE(tree.find(segments[j]) == nullptr);
+        }
+        EXPECT_EQ(tree.size(), n - i - 1);
+        EXPECT_EQ(tree.count(tree.root), n - i - 1);
+    }
+
+    // cout << "tree root = " << tree.root->segment->id << endl;
+    // tree.print(tree.root);
+}

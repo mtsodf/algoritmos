@@ -1,7 +1,11 @@
+#include <iomanip>
 #include <iostream>
 
 #include "data_structures.hpp"
 #include "intersection_detection.h"
+
+#define debug cout << __FUNCTION__ << " " << __LINE__ << endl;
+#define debug ;
 
 using namespace std;
 
@@ -63,6 +67,14 @@ void BinaryTree::remove(Segment *s) {
         y->left->parent = y;
     }
     qtd_nodes--;
+
+#ifdef DEBUG
+    if (count(root) != qtd_nodes) {
+        cout << "ERROR REMOVING NODE = " << s->id << endl;
+        exit(1);
+    }
+#endif
+
     return;
 }
 
@@ -86,7 +98,15 @@ Segment *BinaryTree::next(Segment *s) {
 }
 
 TreeNode *BinaryTree::prev_node(Segment *s) {
+    if (s == nullptr) return nullptr;
     TreeNode *x = find(s);
+    if (x == nullptr) {
+        cout << "Segment not found" << endl;
+        cout << "id = " << s->id << endl;
+        cout << "size = " << qtd_nodes << endl;
+        // Kill program
+        exit(1);
+    }
     if (x->left != nullptr) return maximum(x->left);
 
     TreeNode *y = x->parent;
@@ -158,11 +178,21 @@ void BinaryTree::ordered_vec(TreeNode *x, vector<Segment *> &segments) {
     }
 }
 
-void BinaryTree::print(TreeNode *x) {
+void BinaryTree::print(TreeNode *x, int indent) {
     if (x != nullptr) {
-        print(x->left);
-        cout << x->segment->id << " ";
-        print(x->right);
+        if (x->right != nullptr) {
+            print(x->right, indent + 4);
+        }
+        if (indent) {
+            std::cout << std::setw(indent) << ' ';
+        }
+        if (x->right != nullptr) std::cout << " /\n"
+                                           << std::setw(indent) << ' ';
+        std::cout << x->segment->id << "\n ";
+        if (x->left != nullptr) {
+            std::cout << std::setw(indent) << ' ' << " \\\n";
+            print(x->left, indent + 4);
+        }
     }
 }
 
@@ -177,4 +207,10 @@ void BinaryTree::transplant(TreeNode *u, TreeNode *v) {
     if (v != nullptr) {
         v->parent = u->parent;
     }
+}
+
+int BinaryTree::count(TreeNode *x) {
+    if (x == nullptr) return 0;
+
+    return 1 + count(x->left) + count(x->right);
 }

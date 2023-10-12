@@ -10,7 +10,7 @@ void SegmentVector::add(Segment *s) {
     int seg_pos;
     for (seg_pos = segments.size() - 1; seg_pos >= 1; seg_pos--) {
         if (cur_y < segments[seg_pos - 1]->y_value(cur_x)) {
-            swap(segments[seg_pos], segments[seg_pos - 1]);
+            std::swap(segments[seg_pos], segments[seg_pos - 1]);
         } else {
             break;
         }
@@ -29,7 +29,7 @@ void SegmentVector::remove(Segment *s) {
     int seg_pos = find_pos(s);
 
     for (int j = seg_pos; j < segments.size() - 1; j++) {
-        swap(segments[j], segments[j + 1]);
+        std::swap(segments[j], segments[j + 1]);
     }
 
     segments.pop_back();

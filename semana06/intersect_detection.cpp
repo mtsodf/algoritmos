@@ -17,6 +17,7 @@ Segment::Segment(Point *p0, Point *p1, int id) {
         this->end = p0;
     }
     this->id = id;
+    this->added = false;
 }
 
 double Segment::y_value(double x) const {
@@ -43,7 +44,7 @@ void generate_segments_no_intersect(int n, vector<Segment *> &segments) {
     random_device rd;   // Seed the random number generator
     mt19937 gen(rd());  // Mersenne Twister PRNG
 
-    double delta = 1000.0 / n_sqrt;
+    double delta = 100000.0 / n_sqrt;
     double epsilon = delta / 100;
     for (int i = 0; i < n_sqrt; i++) {
         for (int j = 0; j < n_sqrt; j++) {
@@ -207,6 +208,7 @@ bool segment_intersection(vector<Segment *> &segments, pair<int, int> &intersect
                 log_ids(segment_container, events_file);
             }
             segment_container->add(cur_seg);
+            cur_seg->added = true;
 
             if (verbose) {
                 log_ids(segment_container, events_file);
