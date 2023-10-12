@@ -172,4 +172,8 @@ TEST(ListInterserctions, SimpleTests) {
     naive_segment_intersection(segments, intersections, false);
 
     EXPECT_EQ(intersections.size(), 2);
+    EXPECT_TRUE(intersections[0] == make_pair<int>(0, 1));
+    EXPECT_TRUE(intersections[1] == make_pair<int>(1, 2));
+
+    intersections.clear();
 }

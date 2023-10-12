@@ -1,12 +1,12 @@
 add_executable(intersection_test intersection_test.cpp)
 target_link_libraries(intersection_test gtest_main intersect_detection)
 
-add_test(intersection_test intersection_test)
+add_test(06_intersection_test intersection_test)
 
 add_executable(generate_test_data generate_test_data.cpp)
 target_link_libraries(generate_test_data intersect_detection)
-add_test(generate_test_data generate_test_data)
+add_test(06_generate_test_data generate_test_data)
 
 add_executable(simple_test simple_test.cpp)
 target_link_libraries(simple_test intersect_detection)
-add_test(simple_test simple_test)
+add_test(06_simple_test simple_test)
