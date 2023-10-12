@@ -15,6 +15,6 @@ int main() {
 
     vector<pair<int, int>> intersections;
 
-    segment_intersection(segments, intersections, "unordered_list", "", false);
+    segment_intersection(segments, intersections, "binary_tree", "", false);
     cout << "FINISHED" << endl;
 }

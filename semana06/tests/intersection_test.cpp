@@ -93,9 +93,13 @@ TEST(Intersections, BinaryTreeTest) {
 
     EXPECT_EQ(tree.size(), 1);
 
+    double current_x = 0;
     Segment *s1 = new Segment(new Point(0, 1), new Point(1, 1), id++);
     Segment *s2 = new Segment(new Point(0, -1), new Point(1, -1), id++);
     Segment *s3 = new Segment(new Point(0, -0.5), new Point(1, -0.5), id++);
+    s1->current_x = &current_x;
+    s2->current_x = &current_x;
+    s3->current_x = &current_x;
     tree.add(s1);
     tree.add(s2);
     tree.add(s3);
@@ -131,8 +135,10 @@ TEST(Intersections, BinaryTreeTest2) {
     int n = 1000;
     vector<Segment *> segments;
     segments.reserve(n);
+    double current_x = 0.0;
     for (int i = 0; i < n; i++) {
         Segment *s = new Segment(new Point(0, i), new Point(1, i), id++);
+        s->current_x = &current_x;
         segments.push_back(s);
     }
 

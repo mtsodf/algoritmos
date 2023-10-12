@@ -42,11 +42,14 @@ def is_inside(xs, ys, x, y, return_intersects=False, closed_polygon=True):
     return ws % 2 == 1
 
 
-def read_polygon(filename, comma_separated=False, invert_x_y=False):
+def read_polygon(filename, comma_separated=False, invert_x_y=False, close_polygon=True):
     xs = []
     ys = []
     with open(filename) as f:
         for line in f:
+            stripped_line = line.strip()
+            if len(stripped_line) == 0:
+                continue
             if "," in line:
                 x, y = [float(value) for value in line.split(",")]
             else:
@@ -54,7 +57,7 @@ def read_polygon(filename, comma_separated=False, invert_x_y=False):
             xs.append(x)
             ys.append(y)
 
-    if xs[0] != xs[-1] or ys[0] != ys[-1]:
+    if close_polygon and (xs[0] != xs[-1] or ys[0] != ys[-1]):
         xs.append(xs[0])
         ys.append(ys[0])
 

@@ -26,7 +26,6 @@ Segment::Segment(Point *p0, Point *p1, int id) {
         this->end = p0;
     }
     this->id = id;
-    this->added = false;
 }
 
 double Segment::y_value(double x) const {
@@ -247,6 +246,11 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
         events.push_back(new Event(segments[i], nullptr, SEGMENT_END));
     }
 
+    double current_x;
+    for (int i = 0; i < n; i++) {
+        segments[i]->current_x = &current_x;
+    }
+
     sort(events.begin(), events.end(), [](Event *a, Event *b) {
         if (a->x == b->x) {
             return a->type < b->type;
@@ -257,13 +261,13 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
 
     for (int i = 0; i < events.size(); i++) {
         Segment *cur_seg = events[i]->seg;
+        current_x = events[i]->x;
         if (events[i]->type == SEGMENT_START) {
             if (verbose) {
                 events_file << "Start;  " << cur_seg->id << "; ";
                 log_ids(segment_container, events_file);
             }
             segment_container->add(cur_seg);
-            cur_seg->added = true;
 
             if (verbose) {
                 log_ids(segment_container, events_file);

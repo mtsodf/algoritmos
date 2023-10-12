@@ -141,7 +141,17 @@ TreeNode *BinaryTree::find(Segment *s) {
 Segment *BinaryTree::get_segment(int id) {
     return nullptr;
 }
-void BinaryTree::swap(Segment *s1, Segment *s2) {
+void BinaryTree::swap(Segment *s0, Segment *s1) {
+    TreeNode *s0_node = find(s0);
+    TreeNode *s1_node = find(s1);
+
+    if (s0_node == nullptr || s1_node == nullptr) {
+        cout << "ERROR SWAPPING NODES" << endl;
+        exit(1);
+    }
+    Segment *aux = s0_node->segment;
+    s0_node->segment = s1_node->segment;
+    s1_node->segment = aux;
     return;
 }
 
