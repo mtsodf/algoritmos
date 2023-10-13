@@ -269,6 +269,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
         if (equal_intersection_events(events[i], last_event)) {
             continue;
         }
+        last_event = events[i];
         Segment *cur_seg = events[i]->seg;
         current_x = events[i]->x;
         if (events[i]->type == SEGMENT_START) {
@@ -278,9 +279,8 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             }
             segment_container->add(cur_seg);
 
-            if (verbose) {
-                log_ids(segment_container, events_file);
-            }
+            if (verbose) log_ids(segment_container, events_file);
+
             Segment *prev = segment_container->prev(cur_seg);
             if (prev != nullptr) {
                 if (verbose) events_file << cur_seg->id << " == " << prev->id << ";";
@@ -347,7 +347,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
 
             if (lower != nullptr && intersect(lower, events[i]->other_seg)) {
                 double x, y;
-                lower->calc_intersection(*events[i]->seg, x, y);
+                lower->calc_intersection(*events[i]->other_seg, x, y);
                 if (x > current_x) {
                     add_intersection(intersection_pairs, lower, events[i]->other_seg);
                     add_intersection_event(events, lower, events[i]->other_seg);
