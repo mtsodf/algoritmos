@@ -1,5 +1,6 @@
 #include <boost/program_options.hpp>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 
 #include "graham.h"

@@ -1,6 +1,9 @@
 #include "points_triangulation.h"
 
+#include <algorithm>
 #include <fstream>
+#include <functional>
+#include <iomanip>
 #include <iostream>
 #include <map>
 #include <string>

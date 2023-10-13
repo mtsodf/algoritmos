@@ -1,6 +1,7 @@
 #include "graham.h"
 
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <vector>
 

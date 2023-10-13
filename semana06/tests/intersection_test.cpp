@@ -1,7 +1,11 @@
 
 #include <gtest/gtest.h>
 
+#include <algorithm>
+#include <chrono>
+#include <random>
 #include <vector>
+
 
 #include "data_structures.hpp"
 #include "intersection_detection.h"
@@ -142,14 +146,18 @@ TEST(Intersections, BinaryTreeTest2) {
         segments.push_back(s);
     }
 
+
+    // obtain a time-based seed:
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+
     // Shuffle segments
-    random_shuffle(segments.begin(), segments.end());
+    shuffle(segments.begin(), segments.end(), std::default_random_engine(seed));
 
     for (int i = 0; i < n; i++) {
         tree.add(segments[i]);
     }
 
-    random_shuffle(segments.begin(), segments.end());
+    shuffle(segments.begin(), segments.end(), std::default_random_engine(seed));
 
     for (int i = 0; i < n; i++) {
         tree.remove(segments[i]);
