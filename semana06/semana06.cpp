@@ -59,6 +59,12 @@ int main(int argc, char const *argv[]) {
         std::cout << "No input file was given\n";
         return 1;
     }
+    fstream segments_file;
+    segments_file.open("segments.txt", ios::out);
+    for (int i = 0; i < segments.size(); i++) {
+        segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+    }
+    segments_file.close();
 
     pair<int, int> intersection_pair;
     vector<pair<int, int>> intersections;
