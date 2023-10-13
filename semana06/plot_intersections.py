@@ -26,10 +26,14 @@ def plot_segments(segments, ax):
         ym = np.mean(segment[1::2])
         a = np.array([segment[2] - segment[0], segment[3] - segment[1]])
         perp_vec = np.array([-a[1], a[0]])
-        perp_vec = (perp_vec / np.linalg.norm(perp_vec)) * 20
+        y0, y1 = ax.get_ylim()
+        x0, x1 = ax.get_xlim()
+        dx = (x1 - x0) / 100
+        dy = (y1 - y0) / 100
+        perp_vec = perp_vec / np.linalg.norm(perp_vec)
         ax.text(
-            xm + perp_vec[0],
-            ym + perp_vec[1],
+            xm + perp_vec[0] * dx,
+            ym + perp_vec[1] * dy,
             str(i),
             horizontalalignment="center",
             verticalalignment="center",
