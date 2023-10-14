@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <fstream>
 #include <random>
 #include <vector>
 
@@ -233,9 +234,9 @@ TEST(ListSegments, NaiveComparisonRandom) {
     // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
     string root_folder = ROOT_SOURCE_FOLDER;
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10000; i++) {
         vector<Segment *> segments;
-        generate_segments(10, 0.5, 0.5, segments);
+        generate_segments(10, 0.5, 0.05, segments);
 
         vector<pair<int, int>> intersections_naive;
         naive_segment_intersection(segments, intersections_naive, false);
@@ -245,6 +246,19 @@ TEST(ListSegments, NaiveComparisonRandom) {
         segment_intersection(segments, intersections_list, "list", "", false);
 
         EXPECT_EQ(intersections_naive.size(), intersections_list.size());
+
+        if (intersections_naive.size() != intersections_list.size()) {
+            cout << "Naive size = " << intersections_naive.size() << endl;
+            cout << "List size = " << intersections_list.size() << endl;
+            fstream segments_file;
+            segments_file.open("segments_error.txt", ios::out);
+            for (int i = 0; i < segments.size(); i++) {
+                segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+            }
+            segments_file.close();
+
+            return;
+        }
 
         sort(intersections_naive.begin(), intersections_naive.end());
         sort(intersections_list.begin(), intersections_list.end());
