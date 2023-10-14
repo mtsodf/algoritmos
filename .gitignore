@@ -4,6 +4,7 @@
 main.pdf
 .vscode/
 build/
+build*/
 *.aux
 *.log
 *.out
