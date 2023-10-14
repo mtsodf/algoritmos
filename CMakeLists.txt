@@ -12,6 +12,8 @@ message(STATUS "Boost include dir: ${Boost_INCLUDE_DIRS}")
 message(STATUS "Boost libraries: ${Boost_LIBRARIES}")
 include_directories(${Boost_INCLUDE_DIRS})
 
+add_definitions(-DROOT_SOURCE_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}")
+
 include(FetchContent)
 FetchContent_Declare(
   googletest
