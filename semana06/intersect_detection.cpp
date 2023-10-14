@@ -353,14 +353,10 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             Segment *lower = segment_container->prev(events[i]->other_seg);
 
             if (upper != nullptr && intersect(upper, events[i]->seg)) {
-                double x, y;
-                upper->calc_intersection(*events[i]->seg, x, y);
                 intersection_found(events, events[i]->seg, upper, current_x);
             }
 
             if (lower != nullptr && intersect(lower, events[i]->other_seg)) {
-                double x, y;
-                lower->calc_intersection(*events[i]->other_seg, x, y);
                 intersection_found(events, lower, events[i]->other_seg, current_x);
             }
 
