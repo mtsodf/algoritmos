@@ -188,30 +188,19 @@ TEST(ListInterserctions, SimpleTests) {
     EXPECT_EQ(intersections.size(), 2);
     EXPECT_TRUE(intersections[0] == make_pair<int>(0, 1));
     EXPECT_TRUE(intersections[1] == make_pair<int>(1, 2));
-
-    intersections.clear();
-
-    vector<string> container_types = {"list"};  //, "binary_tree"};
-
-    for (int i = 0; i < container_types.size(); i++) {
-        intersections.clear();
-        segment_intersection(segments, intersections, container_types[i], "", false);
-        EXPECT_EQ(intersections.size(), 2);
-        EXPECT_TRUE(intersections[0] == make_pair<int>(0, 1));
-        EXPECT_TRUE(intersections[1] == make_pair<int>(1, 2));
-    }
 }
 
 TEST(ListSegments, NaiveComparisonExamples) {
     // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
     string root_folder = ROOT_SOURCE_FOLDER;
 
-    vector<string> containers = {"list",
+    vector<string> containers = {"unordered_list",
+                                 "list",
                                  "binary_tree"};
 
     for (int i = 0; i < containers.size(); i++) {
         string container_type = containers[i];
-        for (int i = 3; i <= 8; i++) {
+        for (int i = 2; i <= 8; i++) {
             string example_path = root_folder + "/semana06/data/ex" + to_string(i) + ".txt";
 
             cout << "RUNNING " << container_type << " " << example_path << endl;
@@ -242,8 +231,10 @@ TEST(ListSegments, NaiveComparisonRandom) {
     // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
     string root_folder = ROOT_SOURCE_FOLDER;
 
-    vector<string> containers = {"list",
+    vector<string> containers = {"unordered_list",
+                                 "list",
                                  "binary_tree"};
+
     for (int i = 0; i < containers.size(); i++) {
         string container_type = containers[i];
         for (int i = 0; i < 100; i++) {

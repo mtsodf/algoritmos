@@ -82,11 +82,11 @@ void UnorderedList::add(Segment *s) {
 
 Segment *UnorderedList::next(Segment *s) {
     int next_pos = -1;
-    double cur_diff = INFINITY;
     for (int i = 0; i < size(); i++) {
-        if (s->id == segments[i]->id) break;
-        double y_diff = segments[i]->y_value(s->start->x) - s->start->y;
-        if (y_diff >= 0 && y_diff < cur_diff) {
+        if (s->id == segments[i]->id) continue;
+        if (*segments[i] < *s) continue;
+
+        if (next_pos < 0 || *segments[i] < *segments[next_pos]) {
             next_pos = i;
         }
     }
@@ -99,11 +99,11 @@ Segment *UnorderedList::next(Segment *s) {
 
 Segment *UnorderedList::prev(Segment *s) {
     int prev_pos = -1;
-    double cur_diff = INFINITY;
     for (int i = 0; i < size(); i++) {
-        if (s->id == segments[i]->id) break;
-        double y_diff = s->start->y - segments[i]->y_value(s->start->x);
-        if (y_diff >= 0 && y_diff < cur_diff) {
+        if (s->id == segments[i]->id) continue;
+        if (*s < *segments[i]) continue;
+
+        if (prev_pos < 0 || *segments[prev_pos] < *segments[i]) {
             prev_pos = i;
         }
     }
