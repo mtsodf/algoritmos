@@ -171,6 +171,14 @@ void add_intersection_event(vector<Event *> &events, Segment *s0, Segment *s1) {
     }
 }
 
+void intersection_found(vector<Event *> &events, Segment *s0, Segment *s1, double current_x) {
+    double x_intersect, y_intersect;
+    s0->calc_intersection(*s1, x_intersect, y_intersect);
+    if (x_intersect > current_x) {
+        add_intersection_event(events, s0, s1);
+    }
+}
+
 void add_intersection(vector<pair<int, int>> &intersections, Segment *s0, Segment *s1) {
     if (s0->id < s1->id)
         intersections.push_back({s0->id, s1->id});
@@ -287,9 +295,11 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 if (verbose) events_file << cur_seg->id << " == " << prev->id << ";";
                 if (intersect(cur_seg, prev)) {
                     if (verbose) events_file << "true; ";
-                    add_intersection(intersection_pairs, cur_seg, prev);
-                    if (detection) return true;
-                    add_intersection_event(events, prev, cur_seg);
+                    if (detection) {
+                        add_intersection(intersection_pairs, cur_seg, prev);
+                        return true;
+                    }
+                    intersection_found(events, prev, cur_seg, current_x);
                 } else {
                     if (verbose) events_file << "false; ";
                 }
@@ -299,9 +309,11 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 if (verbose) events_file << cur_seg->id << " == " << next->id << ";";
                 if (intersect(cur_seg, next)) {
                     if (verbose) events_file << "true; ";
-                    add_intersection(intersection_pairs, cur_seg, next);
-                    if (detection) return true;
-                    add_intersection_event(events, cur_seg, next);
+                    if (detection) {
+                        add_intersection(intersection_pairs, cur_seg, next);
+                        return true;
+                    }
+                    intersection_found(events, cur_seg, next, current_x);
                 } else {
                     if (verbose) events_file << "false; ";
                 }
@@ -320,9 +332,11 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 if (verbose) events_file << prev->id << " == " << next->id << ";";
                 if (intersect(prev, next)) {
                     if (verbose) events_file << "true; ";
-                    add_intersection(intersection_pairs, prev, next);
-                    if (detection) return true;
-                    add_intersection_event(events, prev, next);
+                    if (detection) {
+                        add_intersection(intersection_pairs, prev, next);
+                        return true;
+                    }
+                    intersection_found(events, prev, next, current_x);
                 } else {
                     if (verbose) events_file << "false; ";
                 }
@@ -333,6 +347,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 events_file << endl;
             }
         } else if (events[i]->type == INTERSECTION) {
+            add_intersection(intersection_pairs, events[i]->seg, events[i]->other_seg);
             segment_container->swap(events[i]->seg, events[i]->other_seg);
             Segment *upper = segment_container->next(events[i]->seg);
             Segment *lower = segment_container->prev(events[i]->other_seg);
@@ -340,19 +355,13 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             if (upper != nullptr && intersect(upper, events[i]->seg)) {
                 double x, y;
                 upper->calc_intersection(*events[i]->seg, x, y);
-                if (x > current_x) {
-                    add_intersection(intersection_pairs, upper, events[i]->seg);
-                    add_intersection_event(events, upper, events[i]->seg);
-                }
+                intersection_found(events, events[i]->seg, upper, current_x);
             }
 
             if (lower != nullptr && intersect(lower, events[i]->other_seg)) {
                 double x, y;
                 lower->calc_intersection(*events[i]->other_seg, x, y);
-                if (x > current_x) {
-                    add_intersection(intersection_pairs, lower, events[i]->other_seg);
-                    add_intersection_event(events, lower, events[i]->other_seg);
-                }
+                intersection_found(events, lower, events[i]->other_seg, current_x);
             }
 
             if (verbose) {
