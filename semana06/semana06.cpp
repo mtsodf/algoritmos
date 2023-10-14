@@ -14,6 +14,7 @@ int main(int argc, char const *argv[]) {
     desc.add_options()("help", "produce help message")("random_points", po::value<int>(), "Generate random points");
     desc.add_options()("no_intersect", po::value<int>(), "Generate no intersections segments");
     desc.add_options()("no_intersect_big", po::value<int>(), "Generate no intersections segments");
+    desc.add_options()("grid", po::value<int>(), "Generate grid segments");
     desc.add_options()("detection", po::value<int>()->default_value(0), "Set detection or list detection");
     desc.add_options()("output", po::value<string>()->default_value("output.json"), "Output file");
     desc.add_options()("input", po::value<string>()->default_value(""), "Input file");
@@ -51,6 +52,10 @@ int main(int argc, char const *argv[]) {
         sort_case = "big_segments";
         n = vm["no_intersect_big"].as<int>();
         generate_big_segments_no_intersect(n, segments);
+    } else if (vm.count("grid")) {
+        sort_case = "grid";
+        n = vm["grid"].as<int>();
+        generate_grid(n, segments);
     } else if (vm["input"].as<string>() != "") {
         sort_case = "input";
         string input_file = vm["input"].as<string>();
