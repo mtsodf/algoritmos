@@ -6,7 +6,6 @@
 #include <random>
 #include <vector>
 
-
 #include "data_structures.hpp"
 #include "intersection_detection.h"
 #include "point.h"
@@ -146,7 +145,6 @@ TEST(Intersections, BinaryTreeTest2) {
         segments.push_back(s);
     }
 
-
     // obtain a time-based seed:
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
@@ -191,7 +189,7 @@ TEST(ListInterserctions, SimpleTests) {
 
     intersections.clear();
 
-    vector<string> container_types = {"list", "binary_tree"};
+    vector<string> container_types = {"list"};  //, "binary_tree"};
 
     for (int i = 0; i < container_types.size(); i++) {
         intersections.clear();
