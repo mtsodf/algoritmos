@@ -60,8 +60,9 @@ TEST(Intersections, SegmentIntersection) {
 
     // Test segment_intersection with list and unordered_list
     // Iterate over all container types
-    for (int i = 0; i < 2; i++) {
-        string container_type = i == 0 ? "list" : "unordered_list";
+    vector<string> containers = {"list", "unordered_list", "binary_tree"};
+    for (int i = 0; i < containers.size(); i++) {
+        string container_type = containers[i];
         vector<pair<int, int>> intersection_pairs;
         bool found = segment_intersection(start, end, intersection_pairs, container_type);
         pair<int, int> intersection_pair = intersection_pairs[0];
@@ -73,8 +74,8 @@ TEST(Intersections, SegmentIntersection) {
 
     start.push_back(new Point(3.4, 1));
     end.push_back(new Point(0.5, 2));
-    for (int i = 0; i < 2; i++) {
-        string container_type = i == 0 ? "list" : "unordered_list";
+    for (int i = 0; i < containers.size(); i++) {
+        string container_type = containers[i];
         vector<pair<int, int>> intersections_pair;
         pair<int, int> intersection_pair;
         bool found = segment_intersection(start, end, intersections_pair, container_type, true);
