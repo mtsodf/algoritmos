@@ -228,7 +228,6 @@ SegmentContainer *segment_container_factory(string container_type, int n) {
     else if (container_type == "unordered_list") {
         segment_container = new UnorderedList(n);
     } else if (container_type == "binary_tree") {
-        cout << "USING BINARY TREE!" << endl;
         segment_container = new BinaryTree();
     } else {
         cout << "Invalid container type " << container_type << endl;
@@ -275,13 +274,12 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
 
     Event *last_event = nullptr;
     for (int i = 0; i < events.size(); i++) {
-        if (equal_intersection_events(events[i], last_event)) {
-            continue;
-        }
+        if (equal_intersection_events(events[i], last_event)) continue;
+
         last_event = events[i];
         Segment *cur_seg = events[i]->seg;
-        current_x = events[i]->x;
         if (events[i]->type == SEGMENT_START) {
+            current_x = events[i]->x;
             if (verbose) {
                 events_file << "Start;  " << cur_seg->id << "; ";
                 log_ids(segment_container, events_file);
@@ -320,6 +318,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             }
             if (verbose) events_file << endl;
         } else if (events[i]->type == SEGMENT_END) {
+            current_x = events[i]->x;
             if (verbose) {
                 events_file << "End;  " << cur_seg->id << "; ";
                 log_ids(segment_container, events_file);
@@ -347,10 +346,12 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
                 events_file << endl;
             }
         } else if (events[i]->type == INTERSECTION) {
+            current_x = (events[i]->x + current_x) / 2;
             add_intersection(intersection_pairs, events[i]->seg, events[i]->other_seg);
+            Segment *upper = segment_container->next(events[i]->other_seg);
+            Segment *lower = segment_container->prev(events[i]->seg);
             segment_container->swap(events[i]->seg, events[i]->other_seg);
-            Segment *upper = segment_container->next(events[i]->seg);
-            Segment *lower = segment_container->prev(events[i]->other_seg);
+            current_x = events[i]->x;
 
             if (upper != nullptr && intersect(upper, events[i]->seg)) {
                 intersection_found(events, events[i]->seg, upper, current_x);

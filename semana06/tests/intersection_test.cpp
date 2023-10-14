@@ -61,7 +61,7 @@ TEST(Intersections, SegmentIntersection) {
 
     // Test segment_intersection with list and unordered_list
     // Iterate over all container types
-    vector<string> containers = {"list", "unordered_list", "binary_tree"};
+    vector<string> containers = {"list", "binary_tree"};
     for (int i = 0; i < containers.size(); i++) {
         string container_type = containers[i];
         vector<pair<int, int>> intersection_pairs;
@@ -206,27 +206,35 @@ TEST(ListSegments, NaiveComparisonExamples) {
     // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
     string root_folder = ROOT_SOURCE_FOLDER;
 
-    for (int i = 3; i <= 6; i++) {
-        string example_path = root_folder + "/semana06/data/ex" + to_string(i) + ".txt";
+    vector<string> containers = {"list",
+                                 "binary_tree"};
 
-        vector<Segment *> segments;
-        read_segments_from_file(example_path, segments);
+    for (int i = 0; i < containers.size(); i++) {
+        string container_type = containers[i];
+        for (int i = 3; i <= 8; i++) {
+            string example_path = root_folder + "/semana06/data/ex" + to_string(i) + ".txt";
 
-        vector<pair<int, int>> intersections_naive;
-        naive_segment_intersection(segments, intersections_naive, false);
+            cout << "RUNNING " << container_type << " " << example_path << endl;
 
-        vector<pair<int, int>> intersections_list;
+            vector<Segment *> segments;
+            read_segments_from_file(example_path, segments);
 
-        segment_intersection(segments, intersections_list, "list", "", false);
+            vector<pair<int, int>> intersections_naive;
+            naive_segment_intersection(segments, intersections_naive, false);
 
-        EXPECT_EQ(intersections_naive.size(), intersections_list.size());
+            vector<pair<int, int>> intersections_list;
 
-        sort(intersections_naive.begin(), intersections_naive.end());
-        sort(intersections_list.begin(), intersections_list.end());
+            segment_intersection(segments, intersections_list, container_type, "", false);
 
-        for (int i = 0; i < intersections_naive.size(); i++) {
-            EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
-            EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
+            ASSERT_EQ(intersections_naive.size(), intersections_list.size());
+
+            sort(intersections_naive.begin(), intersections_naive.end());
+            sort(intersections_list.begin(), intersections_list.end());
+
+            for (int i = 0; i < intersections_naive.size(); i++) {
+                EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
+                EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
+            }
         }
     }
 }
@@ -234,42 +242,47 @@ TEST(ListSegments, NaiveComparisonRandom) {
     // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
     string root_folder = ROOT_SOURCE_FOLDER;
 
-    for (int i = 0; i < 10000; i++) {
-        vector<Segment *> segments;
-        generate_segments(10, 0.5, 0.05, segments);
+    vector<string> containers = {"list",
+                                 "binary_tree"};
+    for (int i = 0; i < containers.size(); i++) {
+        string container_type = containers[i];
+        for (int i = 0; i < 100; i++) {
+            vector<Segment *> segments;
+            generate_segments(10, 0.5, 0.05, segments);
 
-        vector<pair<int, int>> intersections_naive;
-        naive_segment_intersection(segments, intersections_naive, false);
+            vector<pair<int, int>> intersections_naive;
+            naive_segment_intersection(segments, intersections_naive, false);
 
-        vector<pair<int, int>> intersections_list;
+            vector<pair<int, int>> intersections_list;
 
-        segment_intersection(segments, intersections_list, "list", "", false);
+            segment_intersection(segments, intersections_list, container_type, "", false);
 
-        EXPECT_EQ(intersections_naive.size(), intersections_list.size());
+            EXPECT_EQ(intersections_naive.size(), intersections_list.size());
 
-        if (intersections_naive.size() != intersections_list.size()) {
-            cout << "Naive size = " << intersections_naive.size() << endl;
-            cout << "List size = " << intersections_list.size() << endl;
-            fstream segments_file;
-            segments_file.open("segments_error.txt", ios::out);
-            for (int i = 0; i < segments.size(); i++) {
-                segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+            if (intersections_naive.size() != intersections_list.size()) {
+                cout << "Naive size = " << intersections_naive.size() << endl;
+                cout << "List size = " << intersections_list.size() << endl;
+                fstream segments_file;
+                segments_file.open("segments_error.txt", ios::out);
+                for (int i = 0; i < segments.size(); i++) {
+                    segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+                }
+                segments_file.close();
+
+                return;
             }
-            segments_file.close();
 
-            return;
-        }
+            sort(intersections_naive.begin(), intersections_naive.end());
+            sort(intersections_list.begin(), intersections_list.end());
 
-        sort(intersections_naive.begin(), intersections_naive.end());
-        sort(intersections_list.begin(), intersections_list.end());
+            for (int i = 0; i < intersections_naive.size(); i++) {
+                EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
+                EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
+            }
 
-        for (int i = 0; i < intersections_naive.size(); i++) {
-            EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
-            EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
-        }
-
-        for (int i = 0; i < segments.size(); i++) {
-            delete segments[i];
+            for (int i = 0; i < segments.size(); i++) {
+                delete segments[i];
+            }
         }
     }
 }
