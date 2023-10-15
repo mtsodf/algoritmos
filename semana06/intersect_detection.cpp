@@ -167,6 +167,18 @@ bool equal_intersection_events(Event *a, Event *b) {
     return a->type == INTERSECTION && b->type == INTERSECTION && a->seg->id == b->seg->id && a->other_seg->id == b->other_seg->id;
 }
 
+bool test_intersection(Segment *a, Segment *b, vector<Event *> &events, vector<pair<int, int>> &intersections_pairs, double current_x, fstream &events_file) {
+    if (a == nullptr || b == nullptr) return false;
+    if (events_file.is_open()) events_file << a->id << " == " << b->id << ";";
+    if (intersect(a, b)) {
+        if (events_file.is_open()) events_file << "true; ";
+        intersection_found(events, a, b, current_x);
+    } else {
+        if (events_file.is_open()) events_file << "false; ";
+    }
+    return false;
+}
+
 bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &container_type, const string &events_filename, bool detection) {
     bool verbose = false;
 
@@ -213,33 +225,13 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             if (verbose) log_ids(segment_container, events_file);
 
             Segment *prev = segment_container->prev(cur_seg);
-            if (prev != nullptr) {
-                if (verbose) events_file << cur_seg->id << " == " << prev->id << ";";
-                if (intersect(cur_seg, prev)) {
-                    if (verbose) events_file << "true; ";
-                    if (detection) {
-                        add_intersection(intersection_pairs, cur_seg, prev);
-                        return true;
-                    }
-                    intersection_found(events, prev, cur_seg, current_x);
-                } else {
-                    if (verbose) events_file << "false; ";
-                }
-            }
+            if (test_intersection(prev, cur_seg, events, intersection_pairs, current_x, events_file) && detection) {
+                return true;
+            };
             Segment *next = segment_container->next(cur_seg);
-            if (next != nullptr) {
-                if (verbose) events_file << cur_seg->id << " == " << next->id << ";";
-                if (intersect(cur_seg, next)) {
-                    if (verbose) events_file << "true; ";
-                    if (detection) {
-                        add_intersection(intersection_pairs, cur_seg, next);
-                        return true;
-                    }
-                    intersection_found(events, cur_seg, next, current_x);
-                } else {
-                    if (verbose) events_file << "false; ";
-                }
-            }
+            if (test_intersection(cur_seg, next, events, intersection_pairs, current_x, events_file) && detection) {
+                return true;
+            };
             if (verbose) events_file << endl;
         } else if (events[i]->type == SEGMENT_END) {
             current_x = events[i]->x;
@@ -250,20 +242,10 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
 
             Segment *prev = segment_container->prev(cur_seg);
             Segment *next = segment_container->next(cur_seg);
+            if (test_intersection(prev, next, events, intersection_pairs, current_x, events_file) && detection) {
+                return true;
+            };
 
-            if (prev != nullptr && next != nullptr) {
-                if (verbose) events_file << prev->id << " == " << next->id << ";";
-                if (intersect(prev, next)) {
-                    if (verbose) events_file << "true; ";
-                    if (detection) {
-                        add_intersection(intersection_pairs, prev, next);
-                        return true;
-                    }
-                    intersection_found(events, prev, next, current_x);
-                } else {
-                    if (verbose) events_file << "false; ";
-                }
-            }
             segment_container->remove(cur_seg);
             if (verbose) {
                 log_ids(segment_container, events_file);
@@ -277,13 +259,8 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             segment_container->swap(events[i]->seg, events[i]->other_seg);
             current_x = events[i]->x;
 
-            if (upper != nullptr && intersect(upper, events[i]->seg)) {
-                intersection_found(events, events[i]->seg, upper, current_x);
-            }
-
-            if (lower != nullptr && intersect(lower, events[i]->other_seg)) {
-                intersection_found(events, lower, events[i]->other_seg, current_x);
-            }
+            test_intersection(events[i]->seg, upper, events, intersection_pairs, current_x, events_file);
+            test_intersection(lower, events[i]->other_seg, events, intersection_pairs, current_x, events_file);
 
             if (verbose) {
                 events_file << events[i]->seg->id << " intersect " << events[i]->other_seg->id << ";";
