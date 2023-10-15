@@ -132,3 +132,29 @@ Segment *UnorderedList::first() {
 
     return segments[first_pos];
 }
+
+void EventContainerList::add(Event *e) {
+    events.push_back(e);
+}
+
+Event *EventContainerList::pop() {
+    Event *back = events.back();
+    events.pop_back();
+    return back;
+}
+int EventContainerList::size() {
+    return events.size();
+}
+
+void EventContainerList::initialize() {
+    // Decreasing order sort events
+    sort(events.begin(), events.end(), [](Event *e1, Event *e2) {
+        if (e1->x > e2->x) {
+            return true;
+        } else if (e1->x < e2->x) {
+            return false;
+        } else {
+            return e1->y > e2->y;
+        }
+    });
+}

@@ -4,36 +4,12 @@
 #include <random>
 
 #include "data_structures.hpp"
+#include "event.hpp"
 #include "graham.h"
 #include "intersection_detection.h"
+#include "segment.hpp"
 
 using namespace std;
-
-void Segment::calc_intersection(const Segment &other, double &x, double &y) {
-    double a0 = (this->end->y - this->start->y) / (this->end->x - this->start->x);
-    double b0 = -a0 * this->start->x + this->start->y;
-    double a1 = (other.end->y - other.start->y) / (other.end->x - other.start->x);
-    double b1 = -a1 * other.start->x + other.start->y;
-    x = (b1 - b0) / (a0 - a1);
-    y = a0 * x + b0;
-}
-
-Segment::Segment(Point *p0, Point *p1, int id) {
-    if (p0->x < p1->x || (p0->x == p1->x && p0->y < p1->y)) {
-        this->start = p0;
-        this->end = p1;
-    } else {
-        this->start = p1;
-        this->end = p0;
-    }
-    this->id = id;
-}
-
-double Segment::y_value(double x) const {
-    double m = (end->y - start->y) / (end->x - start->x);
-    double b = start->y - m * start->x;
-    return m * x + b;
-}
 
 bool intersect(Point *a, Point *b, Point *c, Point *d) {
     return ccw_or_collinear(a, b, c) != ccw_or_collinear(a, b, d) &&
@@ -43,43 +19,6 @@ bool intersect(Point *a, Point *b, Point *c, Point *d) {
 bool intersect(Segment *a, Segment *b) {
     return intersect(a->start, a->end, b->start, b->end);
 }
-
-int SEGMENT_START = 0, SEGMENT_END = 1, INTERSECTION = 2;
-
-class Event {
-   public:
-    Segment *seg;
-    Segment *other_seg;
-    int type;
-    double x;
-    double y;
-    Event(Segment *seg, Segment *other_seg, int type, double x = 0, double y = 0) {
-        this->seg = seg;
-        this->other_seg = other_seg;
-        this->type = type;
-
-        if (type == SEGMENT_START) {
-            this->x = seg->start->x;
-            this->y = seg->start->y;
-        } else if (type == SEGMENT_END) {
-            this->x = seg->end->x;
-            this->y = seg->end->y;
-        } else {
-            this->x = x;
-            this->y = y;
-        }
-    }
-    // override comparison operator <
-    bool operator<(const Event &other) const {
-        if (this->x < other.x) {
-            return true;
-        } else if (this->x > other.x) {
-            return false;
-        } else {
-            return this->y < other.y;
-        }
-    }
-};
 
 void add_intersection_event(vector<Event *> &events, Segment *s0, Segment *s1) {
     double x_intersect, y_intersect;

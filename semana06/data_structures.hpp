@@ -1,5 +1,30 @@
 #pragma once
-#include "intersection_detection.h"
+#include <vector>
+
+#include "event.hpp"
+#include "segment.hpp"
+using namespace std;
+
+class EventContainer {
+   public:
+    virtual void add(Segment *s) = 0;
+    virtual Event *pop(Segment *s) = 0;
+    virtual int size() = 0;
+    virtual void initialize() = 0;
+};
+
+class EventContainerList : public EventContainer {
+   private:
+    vector<Event *> events;
+
+   public:
+    EventContainerList(int n) { events.reserve(2 * n); }
+    void add(Event *e);
+    Event *pop();
+    int size();
+    void initialize();
+};
+
 // Create abstract class of container of segments
 class SegmentContainer {
    public:

@@ -1,4 +1,4 @@
-add_library(intersect_detection intersect_detection.cpp data_structures.cpp binary_tree.cpp generate_cases.cpp)
+add_library(intersect_detection intersect_detection.cpp data_structures.cpp binary_tree.cpp generate_cases.cpp event.cpp segment.cpp)
 target_link_libraries(intersect_detection graham)
 
 add_subdirectory(tests)

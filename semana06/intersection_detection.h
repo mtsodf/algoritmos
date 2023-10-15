@@ -3,24 +3,12 @@
 #include <string>
 #include <vector>
 
+#include "event.hpp"
 #include "point.h"
+#include "segment.hpp"
 
 using namespace std;
 
-class Segment {
-   public:
-    Point *start;
-    Point *end;
-    int id;
-    double *current_x;
-    Segment(Point *p0, Point *p1, int id);
-    double y_value(double x) const;
-    void calc_intersection(const Segment &other, double &x, double &y);
-    // Override comparison operator <
-    bool operator<(const Segment &other) const {
-        return this->y_value(*current_x) < other.y_value(*current_x);
-    }
-};
 bool intersect(Point *a, Point *b, Point *c, Point *d);
 bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<pair<int, int>> &intersections, bool detection = true);
 bool naive_segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersections, bool detection = true);
