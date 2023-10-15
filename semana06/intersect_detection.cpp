@@ -5,11 +5,23 @@
 
 #include "data_structures.hpp"
 #include "event.hpp"
-#include "graham.h"
 #include "intersection_detection.h"
 #include "segment.hpp"
 
 using namespace std;
+
+double EPSILON = 1e-12;
+
+bool ccw_or_collinear(Point *a, Point *b, Point *c) {
+    double cross = (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x);
+    if (cross > EPSILON) {
+        return true;
+    } else if (cross < -EPSILON) {
+        return false;
+    } else {
+        return a->dist(b) < a->dist(c);
+    }
+}
 
 bool intersect(Point *a, Point *b, Point *c, Point *d) {
     return ccw_or_collinear(a, b, c) != ccw_or_collinear(a, b, d) &&
@@ -18,6 +30,26 @@ bool intersect(Point *a, Point *b, Point *c, Point *d) {
 
 bool intersect(Segment *a, Segment *b) {
     return intersect(a->start, a->end, b->start, b->end);
+
+    double x, y;
+    a->calc_intersection(*b, x, y);
+    double xa_max = max(a->start->x, a->end->x);
+    double xb_max = max(b->start->x, b->end->x);
+    if (x > xa_max || x > xb_max) return false;
+
+    double xa_min = min(a->start->x, a->end->x);
+    double xb_min = min(b->start->x, b->end->x);
+    if (x < xa_min || x < xb_min) return false;
+
+    double ya_max = max(a->start->y, a->end->y);
+    double yb_max = max(b->start->y, b->end->y);
+    if (y > ya_max || y > yb_max) return false;
+
+    double ya_min = min(a->start->y, a->end->y);
+    double yb_min = min(b->start->y, b->end->y);
+    if (y < ya_min || y < yb_min) return false;
+
+    return true;
 }
 
 void add_intersection_event(EventContainer &events, Segment *s0, Segment *s1) {
@@ -114,6 +146,7 @@ bool test_intersection(Segment *a, Segment *b, EventContainer &events, vector<pa
     if (intersect(a, b)) {
         if (events_file.is_open()) events_file << "true; ";
         intersection_found(events, a, b, current_x);
+        return true;
     } else {
         if (events_file.is_open()) events_file << "false; ";
     }
@@ -164,10 +197,12 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
 
             Segment *prev = segment_container->prev(cur_seg);
             if (test_intersection(prev, cur_seg, *events, intersection_pairs, current_x, events_file) && detection) {
+                add_intersection(intersection_pairs, prev, cur_seg);
                 return true;
             };
             Segment *next = segment_container->next(cur_seg);
             if (test_intersection(cur_seg, next, *events, intersection_pairs, current_x, events_file) && detection) {
+                add_intersection(intersection_pairs, cur_seg, next);
                 return true;
             };
             if (verbose) events_file << endl;
@@ -181,6 +216,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             Segment *prev = segment_container->prev(cur_seg);
             Segment *next = segment_container->next(cur_seg);
             if (test_intersection(prev, next, *events, intersection_pairs, current_x, events_file) && detection) {
+                add_intersection(intersection_pairs, prev, next);
                 return true;
             };
 
