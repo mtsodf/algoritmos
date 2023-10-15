@@ -8,9 +8,7 @@ using namespace std;
 class EventContainer {
    public:
     virtual void add(Event *s) = 0;
-    void add_no_initialize(Event *s) {
-        add(s);
-    }
+    virtual void add_no_initialize(Event *s) = 0;
     virtual Event *pop() = 0;
     virtual int size() = 0;
     virtual void initialize() = 0;
