@@ -8,14 +8,33 @@ import csv
 
 
 def find_point_intersection(xa, ya, xb, yb):
-    a0 = (ya[1] - ya[0]) / (xa[1] - xa[0])
+    dx0 = xa[1] - xa[0]
+    dy0 = ya[1] - ya[0]
+
+    dx1 = xb[1] - xb[0]
+    dy1 = yb[1] - yb[0]
+    if dx0 == 0 and dx1 == 0:
+        raise ValueError("Both segments are vertical")
+    if dx0 == 0:
+        a1 = dy1 / dx1
+        b1 = -a1 * xb[0] + yb[0]
+        x = xa[0]
+        y = a1 * x + b1
+        return x, y
+    if dx1 == 0:
+        a0 = dy0 / dx0
+        b0 = -a0 * xa[0] + ya[0]
+        x = xb[0]
+        y = a0 * x + b0
+        return x, y
+
+    a0 = dy0 / dx0
     b0 = -a0 * xa[0] + ya[0]
-
-    a1 = (yb[1] - yb[0]) / (xb[1] - xb[0])
+    a1 = dy1 / dx1
     b1 = -a1 * xb[0] + yb[0]
-
     x = (b1 - b0) / (a0 - a1)
     y = a0 * x + b0
+
     return x, y
 
 

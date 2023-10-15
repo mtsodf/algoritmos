@@ -6,6 +6,24 @@
 
 using namespace std;
 
+void generate_vert_grid(int nx, int ny, vector<Segment *> &segments) {
+    double deltax = 1000.0 / nx;
+    double deltay = 1000.0 / ny;
+    for (int i = 0; i < nx; i++) {
+        double x0 = (i + 0.5) * deltax;
+        double y0 = 0;
+        double x1 = (i + 0.5) * deltax;
+        double y1 = 1000.0;
+        segments.push_back(new Segment(new Point(x0, y0), new Point(x1, y1), segments.size()));
+    }
+    for (int i = 0; i < ny; i++) {
+        double x0 = 0;
+        double y0 = (i + 0.5) * deltay;
+        double x1 = 1000.0;
+        double y1 = (i + 0.5) * deltay;
+        segments.push_back(new Segment(new Point(x0, y0), new Point(x1, y1), segments.size()));
+    }
+}
 void generate_grid(int n, vector<Segment *> &segments) {
     double delta = 1000.0 / (n / 2);
     for (int i = 0; i < n / 2; i++) {
