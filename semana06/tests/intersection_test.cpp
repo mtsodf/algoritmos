@@ -48,6 +48,13 @@ TEST(Intersections, NaiveIntersection) {
     EXPECT_EQ(intersections[1].second, 3);
 }
 
+TEST(Intersections, SimpleIntersectionDetection) {
+    Segment *s0 = new Segment(new Point(3.5, 3.5), new Point(5.5, 2), 0);
+    Segment *s1 = new Segment(new Point(4, 0.5), new Point(5, 3.5), 1);
+
+    EXPECT_TRUE(intersect(s0, s1));
+}
+
 TEST(Intersections, SegmentIntersection) {
     vector<Point *> start, end;
     start.push_back(new Point(1, 1));
@@ -208,6 +215,24 @@ void compare_intersections(vector<Segment *> &segments, string container_type) {
     }
 }
 
+TEST(ListSegments, GridVertComparison) {
+    GTEST_SKIP();  // Not working with verticla segments
+    // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
+    string root_folder = ROOT_SOURCE_FOLDER;
+
+    vector<string> containers = {"list"};
+
+    for (int i = 0; i < containers.size(); i++) {
+        string container_type = containers[i];
+        for (int i = 2; i <= 2; i += 1) {
+            cout << "RUNNING GRID VERT " << container_type << " n = " << i << endl;
+            vector<Segment *> segments;
+            generate_vert_grid(i, i, segments);
+            compare_intersections(segments, container_type);
+        }
+    }
+}
+
 TEST(ListSegments, GridComparison) {
     // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
     string root_folder = ROOT_SOURCE_FOLDER;
@@ -237,7 +262,7 @@ TEST(ListSegments, NaiveComparisonExamples) {
 
     for (int i = 0; i < containers.size(); i++) {
         string container_type = containers[i];
-        for (int i = 2; i <= 8; i++) {
+        for (int i = 1; i <= 8; i++) {
             string example_path = root_folder + "/semana06/data/ex" + to_string(i) + ".txt";
 
             cout << "RUNNING " << container_type << " " << example_path << endl;
