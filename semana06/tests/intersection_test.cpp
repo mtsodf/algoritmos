@@ -190,6 +190,43 @@ TEST(ListInterserctions, SimpleTests) {
     EXPECT_TRUE(intersections[1] == make_pair<int>(1, 2));
 }
 
+void compare_intersections(vector<Segment *> &segments, string container_type) {
+    vector<pair<int, int>> intersections_naive;
+    naive_segment_intersection(segments, intersections_naive, false);
+
+    vector<pair<int, int>> intersections_list;
+    segment_intersection(segments, intersections_list, container_type, "", false);
+
+    ASSERT_EQ(intersections_naive.size(), intersections_list.size());
+
+    sort(intersections_naive.begin(), intersections_naive.end());
+    sort(intersections_list.begin(), intersections_list.end());
+
+    for (int i = 0; i < intersections_naive.size(); i++) {
+        EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
+        EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
+    }
+}
+
+TEST(ListSegments, GridComparison) {
+    // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
+    string root_folder = ROOT_SOURCE_FOLDER;
+
+    vector<string> containers = {"unordered_list",
+                                 "list",
+                                 "binary_tree"};
+
+    for (int i = 0; i < containers.size(); i++) {
+        string container_type = containers[i];
+        for (int i = 10; i <= 100; i += 10) {
+            cout << "RUNNING GRID " << container_type << " n = " << i << endl;
+            vector<Segment *> segments;
+            generate_grid(i, segments);
+            compare_intersections(segments, container_type);
+        }
+    }
+}
+
 TEST(ListSegments, NaiveComparisonExamples) {
     // Open example from relative path semana06/data/ex3.txt from ROOT_SOURCE_FOLDER
     string root_folder = ROOT_SOURCE_FOLDER;
@@ -207,23 +244,7 @@ TEST(ListSegments, NaiveComparisonExamples) {
 
             vector<Segment *> segments;
             read_segments_from_file(example_path, segments);
-
-            vector<pair<int, int>> intersections_naive;
-            naive_segment_intersection(segments, intersections_naive, false);
-
-            vector<pair<int, int>> intersections_list;
-
-            segment_intersection(segments, intersections_list, container_type, "", false);
-
-            ASSERT_EQ(intersections_naive.size(), intersections_list.size());
-
-            sort(intersections_naive.begin(), intersections_naive.end());
-            sort(intersections_list.begin(), intersections_list.end());
-
-            for (int i = 0; i < intersections_naive.size(); i++) {
-                EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
-                EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
-            }
+            compare_intersections(segments, container_type);
         }
     }
 }
