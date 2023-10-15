@@ -155,7 +155,8 @@ bool test_intersection(Segment *a, Segment *b, EventContainer &events, vector<pa
     return false;
 }
 
-bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, vector<int> *active_segments_size, const string &segments_container_type, const string &event_container_type, const string &events_filename, bool detection) {
+bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, vector<int> *active_segments_size,
+                          const string &segments_container_type, const string &event_container_type, const string &events_filename, bool detection) {
     bool verbose = false;
 
     fstream events_file;

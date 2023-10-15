@@ -224,3 +224,7 @@ int BinaryTree::count(TreeNode *x) {
 
     return 1 + count(x->left) + count(x->right);
 }
+
+int BinaryTree::balance() {
+    return count(root->right) - count(root->left);
+}

@@ -120,5 +120,6 @@ class BinaryTree : public SegmentContainer {
     void swap(Segment *s1, Segment *s2);
     int size();
     int count(TreeNode *x);
+    int balance();
     void ordered_vec(TreeNode *x, vector<Segment *> &segments);
 };

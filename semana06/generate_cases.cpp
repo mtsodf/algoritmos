@@ -24,19 +24,25 @@ void generate_vert_grid(int nx, int ny, vector<Segment *> &segments) {
         segments.push_back(new Segment(new Point(x0, y0), new Point(x1, y1), segments.size()));
     }
 }
-void generate_grid(int n, vector<Segment *> &segments) {
+void generate_grid(int n, vector<Segment *> &segments, bool random_start) {
     double delta = 1000.0 / (n / 2);
+    random_device rd;   // Seed the random number generator
+    mt19937 gen(rd());  // Mersenne Twister PRNG
+    uniform_real_distribution<double> x0_rand(0, 0.1 * delta);
+    uniform_real_distribution<double> x1_rand(1000 - 0.1 * delta, 1000.0);
     for (int i = 0; i < n / 2; i++) {
-        double x0 = i * delta;
+        double x0 = (i + 0.1) * delta;
         double y0 = 0;
-        double x1 = (i + 1) * delta;
+        double x1 = (i + 0.9) * delta;
         double y1 = 1000.0;
         segments.push_back(new Segment(new Point(x0, y0), new Point(x1, y1), segments.size()));
     }
     for (int i = 0; i < n / 2; i++) {
         double x0 = 0;
+        if (random_start) x0 = x0_rand(gen);
         double y0 = (i + 0.5) * delta;
         double x1 = 1000.0;
+        if (random_start) x1 = x1_rand(gen);
         double y1 = (i + 0.5) * delta;
         segments.push_back(new Segment(new Point(x0, y0), new Point(x1, y1), segments.size()));
     }
