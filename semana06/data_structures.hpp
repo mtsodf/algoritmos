@@ -27,6 +27,19 @@ class EventContainerList : public EventContainer {
     void initialize();
 };
 
+class EventContainerHeap : public EventContainer {
+   private:
+    vector<Event *> events;
+
+   public:
+    EventContainerHeap(int n) { events.reserve(2 * n); }
+    void add(Event *e);
+    void add_no_initialize(Event *e);
+    Event *pop();
+    int size();
+    void initialize();
+};
+
 // Create abstract class of container of segments
 class SegmentContainer {
    public:

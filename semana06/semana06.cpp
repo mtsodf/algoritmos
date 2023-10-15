@@ -15,11 +15,13 @@ int main(int argc, char const *argv[]) {
     desc.add_options()("no_intersect", po::value<int>(), "Generate no intersections segments");
     desc.add_options()("no_intersect_big", po::value<int>(), "Generate no intersections segments");
     desc.add_options()("grid", po::value<int>(), "Generate grid segments");
+    desc.add_options()("grid_vert", po::value<int>(), "Generate grid with vertical segments");
     desc.add_options()("detection", po::value<int>()->default_value(0), "Set detection or list detection");
     desc.add_options()("output", po::value<string>()->default_value("output.json"), "Output file");
     desc.add_options()("input", po::value<string>()->default_value(""), "Input file");
     desc.add_options()("events", po::value<string>()->default_value(""), "Output events file");
-    desc.add_options()("container", po::value<string>()->default_value("list"), "Container type");
+    desc.add_options()("container", po::value<string>()->default_value("list"), "Segment Container type");
+    desc.add_options()("container_event", po::value<string>()->default_value("heap"), "Event Container type");
     desc.add_options()("length", po::value<double>()->default_value(0.1), "Mean of segment lenghts");
     desc.add_options()("length_std", po::value<double>()->default_value(0.01), "Mean of segment lenghts");
 
@@ -30,6 +32,7 @@ int main(int argc, char const *argv[]) {
     string output_filepath = vm["output"].as<string>();
     string event_filepath = vm["events"].as<string>();
     string container_type = vm["container"].as<string>();
+    string event_container_type = vm["container_event"].as<string>();
     string sort_case = "";
 
     cout << "Output = " << output_filepath << endl;
@@ -56,6 +59,11 @@ int main(int argc, char const *argv[]) {
         sort_case = "grid";
         n = vm["grid"].as<int>();
         generate_grid(n, segments);
+    } else if (vm.count("grid_vert")) {
+        sort_case = "grid_vert";
+        n = vm["grid_vert"].as<int>();
+        int nsqrt = sqrt(n);
+        generate_vert_grid(nsqrt, nsqrt, segments);
     } else if (vm["input"].as<string>() != "") {
         sort_case = "input";
         string input_file = vm["input"].as<string>();
@@ -65,12 +73,14 @@ int main(int argc, char const *argv[]) {
         std::cout << "No input file was given\n";
         return 1;
     }
-    fstream segments_file;
-    segments_file.open("segments.txt", ios::out);
-    for (int i = 0; i < segments.size(); i++) {
-        segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+    if (segments.size() < 10000) {
+        fstream segments_file;
+        segments_file.open("segments.txt", ios::out);
+        for (int i = 0; i < segments.size(); i++) {
+            segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+        }
+        segments_file.close();
     }
-    segments_file.close();
 
     pair<int, int> intersection_pair;
     vector<pair<int, int>> intersections;
@@ -82,7 +92,7 @@ int main(int argc, char const *argv[]) {
     if (container_type == "naive") {
         naive_segment_intersection(segments, intersections, detection);
     } else {
-        segment_intersection(segments, intersections, container_type, event_filepath, detection);
+        segment_intersection(segments, intersections, container_type, event_container_type, event_filepath, detection);
     }
 
     end = clock();

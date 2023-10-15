@@ -10,7 +10,7 @@
 
 using namespace std;
 
-double EPSILON = 1e-12;
+double EPSILON = 0;
 
 bool ccw_or_collinear(Point *a, Point *b, Point *c) {
     double cross = (b->x - a->x) * (c->y - a->y) - (b->y - a->y) * (c->x - a->x);
@@ -127,6 +127,8 @@ EventContainer *event_container_factory(string container_type, int n) {
     EventContainer *event_container;
     if (container_type == "list") {
         event_container = new EventContainerList(n);
+    } else if (container_type == "heap") {
+        event_container = new EventContainerHeap(n);
     } else {
         cout << "Invalid container type " << container_type << endl;
         exit(1);
@@ -153,7 +155,7 @@ bool test_intersection(Segment *a, Segment *b, EventContainer &events, vector<pa
     return false;
 }
 
-bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &container_type, const string &events_filename, bool detection) {
+bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &segments_container_type, const string &event_container_type, const string &events_filename, bool detection) {
     bool verbose = false;
 
     fstream events_file;
@@ -162,7 +164,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
         verbose = true;
     }
     int n = segments.size();
-    EventContainer *events = event_container_factory("list", n);
+    EventContainer *events = event_container_factory(event_container_type, n);
 
     for (int i = 0; i < n; i++) {
         events->add_no_initialize(new Event(segments[i], nullptr, SEGMENT_START));
@@ -175,7 +177,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
         segments[i]->current_x = &current_x;
     }
 
-    SegmentContainer *segment_container = segment_container_factory(container_type, n);
+    SegmentContainer *segment_container = segment_container_factory(segments_container_type, n);
 
     Event *last_event = nullptr;
     Event *cur_event;
@@ -256,5 +258,5 @@ bool segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<p
     for (int i = 0; i < start.size(); i++) {
         segments.push_back(new Segment(start[i], end[i], i));
     }
-    return segment_intersection(segments, intersection_pairs, container_type, "", detection = detection);
+    return segment_intersection(segments, intersection_pairs, container_type, "heap", "", detection = detection);
 }

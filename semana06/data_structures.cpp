@@ -170,3 +170,31 @@ void EventContainerList::initialize() {
         }
     });
 }
+
+void EventContainerHeap::add(Event *e) {
+    events.push_back(e);
+    push_heap(events.begin(), events.end(), function<bool(Event *, Event *)>([](Event *e1, Event *e2) {
+                  return *e2 < *e1;
+              }));
+}
+
+void EventContainerHeap::add_no_initialize(Event *e) {
+    add(e);
+}
+
+Event *EventContainerHeap::pop() {
+    Event *next_event = events.front();
+    pop_heap(events.begin(), events.end(), function<bool(Event *, Event *)>([](Event *e1, Event *e2) {
+                 return *e2 < *e1;
+             }));
+    events.pop_back();
+    return next_event;
+}
+
+int EventContainerHeap::size() {
+    return events.size();
+}
+
+void EventContainerHeap::initialize() {
+    return;
+}

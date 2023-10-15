@@ -202,7 +202,7 @@ void compare_intersections(vector<Segment *> &segments, string container_type) {
     naive_segment_intersection(segments, intersections_naive, false);
 
     vector<pair<int, int>> intersections_list;
-    segment_intersection(segments, intersections_list, container_type, "", false);
+    segment_intersection(segments, intersections_list, container_type, "heap", "", false);
 
     ASSERT_EQ(intersections_naive.size(), intersections_list.size());
 
@@ -280,48 +280,54 @@ TEST(ListSegments, NaiveComparisonRandom) {
     vector<string> containers = {"unordered_list",
                                  "list",
                                  "binary_tree"};
+    vector<string> event_containers = {"heap",
+                                       "list"};
 
     int size = 100;
     for (int i = 0; i < containers.size(); i++) {
         string container_type = containers[i];
-        cout << "Running container: " << container_type << endl;
-        for (int i = 0; i < 10; i++) {
-            cout << "\tRandom " << i << endl;
-            vector<Segment *> segments;
-            generate_segments(size, 0.5, 0.05, segments);
+        for (int i = 0; i < event_containers.size(); i++) {
+            string event_container_type = event_containers[i];
+            cout << "Running segment container:  " << container_type << " - " << event_container_type << endl;
 
-            vector<pair<int, int>> intersections_naive;
-            naive_segment_intersection(segments, intersections_naive, false);
+            for (int i = 0; i < 10; i++) {
+                cout << "\tRandom " << i << endl;
+                vector<Segment *> segments;
+                generate_segments(size, 0.5, 0.05, segments);
 
-            vector<pair<int, int>> intersections_list;
+                vector<pair<int, int>> intersections_naive;
+                naive_segment_intersection(segments, intersections_naive, false);
 
-            segment_intersection(segments, intersections_list, container_type, "", false);
+                vector<pair<int, int>> intersections_list;
 
-            EXPECT_EQ(intersections_naive.size(), intersections_list.size());
+                segment_intersection(segments, intersections_list, container_type, event_container_type, "", false);
 
-            if (intersections_naive.size() != intersections_list.size()) {
-                cout << "Naive size = " << intersections_naive.size() << endl;
-                cout << "List size = " << intersections_list.size() << endl;
-                fstream segments_file;
-                segments_file.open("segments_error.txt", ios::out);
-                for (int i = 0; i < segments.size(); i++) {
-                    segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+                EXPECT_EQ(intersections_naive.size(), intersections_list.size());
+
+                if (intersections_naive.size() != intersections_list.size()) {
+                    cout << "Naive size = " << intersections_naive.size() << endl;
+                    cout << "List size = " << intersections_list.size() << endl;
+                    fstream segments_file;
+                    segments_file.open("segments_error.txt", ios::out);
+                    for (int i = 0; i < segments.size(); i++) {
+                        segments_file << segments[i]->start->x << " " << segments[i]->start->y << " " << segments[i]->end->x << " " << segments[i]->end->y << "\n";
+                    }
+                    segments_file.close();
+
+                    return;
                 }
-                segments_file.close();
 
-                return;
-            }
+                sort(intersections_naive.begin(), intersections_naive.end());
+                sort(intersections_list.begin(), intersections_list.end());
 
-            sort(intersections_naive.begin(), intersections_naive.end());
-            sort(intersections_list.begin(), intersections_list.end());
+                for (int i = 0; i < intersections_naive.size(); i++) {
+                    EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
+                    EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
+                }
 
-            for (int i = 0; i < intersections_naive.size(); i++) {
-                EXPECT_EQ(intersections_naive[i].first, intersections_list[i].first);
-                EXPECT_EQ(intersections_naive[i].second, intersections_list[i].second);
-            }
-
-            for (int i = 0; i < segments.size(); i++) {
-                delete segments[i];
+                for (int i = 0; i < segments.size(); i++) {
+                    delete segments[i];
+                }
             }
         }
     }
