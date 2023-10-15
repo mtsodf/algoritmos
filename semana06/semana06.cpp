@@ -110,6 +110,8 @@ int main(int argc, char const *argv[]) {
               << "\"" << sort_case << "\",\n";
     json_file << "\"container\":"
               << "\"" << container_type << "\",\n";
+    json_file << "\"event_container\":"
+              << "\"" << event_container_type << "\",\n";
     json_file << "\"length\":" << length_mean << ",\n";
     json_file << "\"length_std\":" << length_std << ",\n";
     if (n < 10000) {
