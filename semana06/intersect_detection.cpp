@@ -155,7 +155,7 @@ bool test_intersection(Segment *a, Segment *b, EventContainer &events, vector<pa
     return false;
 }
 
-bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &segments_container_type, const string &event_container_type, const string &events_filename, bool detection) {
+bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, vector<int> *active_segments_size, const string &segments_container_type, const string &event_container_type, const string &events_filename, bool detection) {
     bool verbose = false;
 
     fstream events_file;
@@ -182,6 +182,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
     Event *last_event = nullptr;
     Event *cur_event;
     while (events->size() > 0) {
+        if (active_segments_size != nullptr) active_segments_size->push_back(segment_container->size());
         cur_event = events->pop();
         if (equal_intersection_events(cur_event, last_event)) continue;
 
@@ -258,5 +259,5 @@ bool segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<p
     for (int i = 0; i < start.size(); i++) {
         segments.push_back(new Segment(start[i], end[i], i));
     }
-    return segment_intersection(segments, intersection_pairs, container_type, "heap", "", detection = detection);
+    return segment_intersection(segments, intersection_pairs, nullptr, container_type, "heap", "", detection = detection);
 }

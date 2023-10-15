@@ -15,7 +15,8 @@ bool intersect(Segment *a, Segment *b);
 bool naive_segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<pair<int, int>> &intersections, bool detection = true);
 bool naive_segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersections, bool detection = true);
 bool segment_intersection(vector<Point *> &start, vector<Point *> &end, vector<pair<int, int>> &intersection_pairs, const string &container_type, bool detection = true);
-bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, const string &segment_container_type, const string &event_container_type = "heap", const string &events_filename = "", bool detection = true);
+bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, vector<int> *active_segments_size, const string &segment_container_type, const string &event_container_type = "heap", const string &events_filename = "", bool detection = true);
+
 void generate_segments(int n, double length_mean, double length_std, vector<Segment *> &segments);
 void generate_grid(int n, vector<Segment *> &segments);
 void generate_vert_grid(int nx, int ny, vector<Segment *> &segments);

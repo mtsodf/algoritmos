@@ -19,6 +19,6 @@ int main() {
 
     vector<pair<int, int>> intersections;
 
-    segment_intersection(segments, intersections, "list", "heap", "", false);
+    segment_intersection(segments, intersections, nullptr, "list", "heap", "", false);
     cout << "FINISHED" << endl;
 }

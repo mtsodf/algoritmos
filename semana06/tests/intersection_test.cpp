@@ -202,7 +202,7 @@ void compare_intersections(vector<Segment *> &segments, string container_type) {
     naive_segment_intersection(segments, intersections_naive, false);
 
     vector<pair<int, int>> intersections_list;
-    segment_intersection(segments, intersections_list, container_type, "heap", "", false);
+    segment_intersection(segments, intersections_list, nullptr, container_type, "heap", "", false);
 
     ASSERT_EQ(intersections_naive.size(), intersections_list.size());
 
@@ -300,7 +300,7 @@ TEST(ListSegments, NaiveComparisonRandom) {
 
                 vector<pair<int, int>> intersections_list;
 
-                segment_intersection(segments, intersections_list, container_type, event_container_type, "", false);
+                segment_intersection(segments, intersections_list, nullptr, container_type, event_container_type, "", false);
 
                 EXPECT_EQ(intersections_naive.size(), intersections_list.size());
 

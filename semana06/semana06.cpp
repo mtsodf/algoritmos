@@ -84,6 +84,8 @@ int main(int argc, char const *argv[]) {
 
     pair<int, int> intersection_pair;
     vector<pair<int, int>> intersections;
+    vector<int> active_segments_size;
+    active_segments_size.reserve(n);
 
     clock_t start, end;
     double cpu_time_used;
@@ -92,7 +94,7 @@ int main(int argc, char const *argv[]) {
     if (container_type == "naive") {
         naive_segment_intersection(segments, intersections, detection);
     } else {
-        segment_intersection(segments, intersections, container_type, event_container_type, event_filepath, detection);
+        segment_intersection(segments, intersections, &active_segments_size, container_type, event_container_type, event_filepath, detection);
     }
 
     end = clock();
@@ -122,6 +124,15 @@ int main(int argc, char const *argv[]) {
                 json_file << ",";
             }
             json_file << "\n";
+        }
+        json_file << "  ],\n";
+        json_file << "  \"active_elements_size\": [\n";
+        for (int i = 0; i < active_segments_size.size(); i++) {
+            json_file << active_segments_size[i];
+            if (i < active_segments_size.size() - 1) {
+                json_file << ",";
+            }
+            if (i % 10 == 9) json_file << "\n";
         }
         json_file << "  ],\n";
     }
