@@ -7,8 +7,11 @@ using namespace std;
 
 class EventContainer {
    public:
-    virtual void add(Segment *s) = 0;
-    virtual Event *pop(Segment *s) = 0;
+    virtual void add(Event *s) = 0;
+    void add_no_initialize(Event *s) {
+        add(s);
+    }
+    virtual Event *pop() = 0;
     virtual int size() = 0;
     virtual void initialize() = 0;
 };
@@ -20,6 +23,7 @@ class EventContainerList : public EventContainer {
    public:
     EventContainerList(int n) { events.reserve(2 * n); }
     void add(Event *e);
+    void add_no_initialize(Event *e);
     Event *pop();
     int size();
     void initialize();

@@ -133,8 +133,20 @@ Segment *UnorderedList::first() {
     return segments[first_pos];
 }
 
+void EventContainerList::add_no_initialize(Event *e) {
+    events.push_back(e);
+}
+
 void EventContainerList::add(Event *e) {
     events.push_back(e);
+    int j = events.size() - 1;
+    for (j = events.size() - 1; j >= 1; j--) {
+        if (events[j - 1]->x < events[j]->x) {
+            std::swap(*events[j], *events[j - 1]);
+        } else {
+            break;
+        }
+    }
 }
 
 Event *EventContainerList::pop() {
