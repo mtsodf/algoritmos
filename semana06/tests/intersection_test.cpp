@@ -281,11 +281,14 @@ TEST(ListSegments, NaiveComparisonRandom) {
                                  "list",
                                  "binary_tree"};
 
+    int size = 100;
     for (int i = 0; i < containers.size(); i++) {
         string container_type = containers[i];
-        for (int i = 0; i < 100; i++) {
+        cout << "Running container: " << container_type << endl;
+        for (int i = 0; i < 10; i++) {
+            cout << "\tRandom " << i << endl;
             vector<Segment *> segments;
-            generate_segments(10, 0.5, 0.05, segments);
+            generate_segments(size, 0.5, 0.05, segments);
 
             vector<pair<int, int>> intersections_naive;
             naive_segment_intersection(segments, intersections_naive, false);
