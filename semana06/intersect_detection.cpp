@@ -183,13 +183,13 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
     Event *last_event = nullptr;
     Event *cur_event;
     while (events->size() > 0) {
-        if (active_segments_size != nullptr) active_segments_size->push_back(segment_container->size());
         cur_event = events->pop();
         if (equal_intersection_events(cur_event, last_event)) continue;
 
         last_event = cur_event;
         Segment *cur_seg = cur_event->seg;
         if (cur_event->type == SEGMENT_START) {
+            if (active_segments_size != nullptr) active_segments_size->push_back(segment_container->size());
             current_x = cur_event->x;
             if (verbose) {
                 events_file << "Start;  " << cur_seg->id << "; ";
@@ -211,6 +211,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             };
             if (verbose) events_file << endl;
         } else if (cur_event->type == SEGMENT_END) {
+            if (active_segments_size != nullptr) active_segments_size->push_back(segment_container->size());
             current_x = cur_event->x;
             if (verbose) {
                 events_file << "End;  " << cur_seg->id << "; ";
@@ -247,6 +248,8 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             }
         }
     }
+
+    if (active_segments_size != nullptr) active_segments_size->push_back(segment_container->size());
 
     if (verbose) events_file.close();
 

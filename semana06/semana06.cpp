@@ -62,13 +62,13 @@ int main(int argc, char const *argv[]) {
     } else if (vm.count("grid_vert")) {
         sort_case = "grid_vert";
         n = vm["grid_vert"].as<int>();
-        int nsqrt = sqrt(n);
-        generate_vert_grid(nsqrt, nsqrt, segments);
+        generate_vert_grid(n / 2, n / 2, segments);
     } else if (vm["input"].as<string>() != "") {
         sort_case = "input";
         string input_file = vm["input"].as<string>();
         cout << "Input file: " << input_file << "\n";
         read_segments_from_file(input_file, segments);
+        n = segments.size();
     } else {
         std::cout << "No input file was given\n";
         return 1;
