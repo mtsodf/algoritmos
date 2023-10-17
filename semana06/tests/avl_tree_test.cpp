@@ -1,7 +1,57 @@
-
 #include <gtest/gtest.h>
 
+#include <random>
+
 #include "data_structures.hpp"
+
+using namespace std;
+
+TEST(BinaryTree, HeightTrackTest) {
+    BinaryTree *tree = new BinaryTree();
+    BinaryTree *ref_tree = new BinaryTree();
+    int id = 0;
+    double current_x = 0.5;
+    int n = 10;
+    vector<int> order;
+
+    for (int i = 0; i < n; i++) {
+        order.push_back(i);
+    }
+
+    for (int cases = 0; cases < 100; cases++) {
+        vector<Segment *> segments;
+        for (int i = 0; i < n; i++) {
+            Segment *s = new Segment(new Point(0, i), new Point(1, i), id++);
+            s->current_x = &current_x;
+            segments.push_back(s);
+        }
+
+        // shuffle segments
+        shuffle(order.begin(), order.end(), mt19937(random_device()()));
+
+        for (int i = 0; i < n; i++) {
+            Segment *s = segments[order[i]];
+            cout << "Adding " << s->id << endl;
+            tree->add(s);
+            ref_tree->add(s);
+        }
+
+        ref_tree->recalculate_height(ref_tree->root);
+
+        for (int i = 0; i < n; i++) {
+            EXPECT_EQ(tree->find(segments[i])->height, ref_tree->find(segments[i])->height);
+        }
+
+        shuffle(segments.begin(), segments.end(), mt19937(random_device()()));
+        for (int i = 0; i < n - 1; i++) {
+            tree->remove(segments[order[i]]);
+            ref_tree->remove(segments[order[i]]);
+            ref_tree->recalculate_height(ref_tree->root);
+            for (int j = i + 1; j < n; j++)
+                EXPECT_EQ(tree->find(segments[order[j]])->height, ref_tree->find(segments[order[j]])->height);
+        }
+    }
+}
 
 TEST(AvlTree, AvlTreeTest) {
     AvlTree *tree = new AvlTree();

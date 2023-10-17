@@ -46,34 +46,50 @@ void BinaryTree::add(Segment *s) {
         y->right = z;
     }
     qtd_nodes++;
-    TreeNode *p = z->parent;
+    update_ancestors_height(z);
+}
+
+void BinaryTree::update_ancestors_height(TreeNode *x) {
+    if (x == nullptr) return;
+    TreeNode *p = x;
     while (p != nullptr) {
-        int height_left = 0;
-        if (p->left != nullptr) height_left = p->left->height;
-        int height_right = 0;
-        if (p->right != nullptr) height_right = p->right->height;
-        p->height = max(height_left, height_right) + 1;
+        update_height(p);
         p = p->parent;
     }
+}
+
+bool BinaryTree::update_height(TreeNode *x) {
+    if (x == nullptr) return false;
+    int new_height = max(height(x->left), height(x->right)) + 1;
+    if (x->height == new_height) return false;
+    x->height = new_height;
+    return true;
 }
 
 void BinaryTree::remove(Segment *s) {
     TreeNode *z = find(s);
     if (z->left == nullptr) {
         transplant(z, z->right);
+        update_ancestors_height(z->parent);
     } else if (z->right == nullptr) {
         transplant(z, z->left);
+        update_ancestors_height(z->parent);
     } else {
         TreeNode *y = minimum(z->right);
         // TODO olhar comparação
+        TreeNode *y_parent = nullptr;
         if ((y->parent != nullptr) && y->parent->segment->id != z->segment->id) {
+            y_parent = y->parent;
             transplant(y, y->right);
+            TreeNode *y_right = y->right;
             y->right = z->right;
             y->right->parent = y;
         }
         transplant(z, y);
         y->left = z->left;
         y->left->parent = y;
+        update_ancestors_height(y);
+        update_ancestors_height(y_parent);
     }
     qtd_nodes--;
 
@@ -195,6 +211,12 @@ void BinaryTree::ordered_vec(TreeNode *x, vector<Segment *> &segments) {
         segments.push_back(x->segment);
         ordered_vec(x->right, segments);
     }
+}
+
+int BinaryTree::recalculate_height(TreeNode *x) {
+    if (x == nullptr) return 0;
+    x->height = 1 + max(recalculate_height(x->left), recalculate_height(x->right));
+    return x->height;
 }
 
 int BinaryTree::height(TreeNode *N) {

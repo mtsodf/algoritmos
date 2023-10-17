@@ -258,7 +258,7 @@ TEST(ListSegments, NaiveComparisonExamples) {
 
     vector<string> containers = {"unordered_list",
                                  "list",
-                                 "binary_tree"};
+                                 "binary_tree", "avl"};
 
     for (int i = 0; i < containers.size(); i++) {
         string container_type = containers[i];

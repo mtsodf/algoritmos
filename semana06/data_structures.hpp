@@ -111,6 +111,8 @@ class BinaryTree : public SegmentContainer {
         qtd_nodes = 0;
     }
     void add(Segment *s);
+    bool update_height(TreeNode *x);
+    void update_ancestors_height(TreeNode *x);
     void remove(Segment *s);
     Segment *next(Segment *s);
     TreeNode *next_node(Segment *s);
@@ -125,6 +127,7 @@ class BinaryTree : public SegmentContainer {
     int balance(TreeNode *x);
     int height(TreeNode *x);
     void ordered_vec(TreeNode *x, vector<Segment *> &segments);
+    int recalculate_height(TreeNode *x);
 };
 
 class AvlTree : public BinaryTree {
