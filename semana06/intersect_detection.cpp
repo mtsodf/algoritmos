@@ -116,6 +116,8 @@ SegmentContainer *segment_container_factory(string container_type, int n) {
         segment_container = new UnorderedList(n);
     } else if (container_type == "binary_tree") {
         segment_container = new BinaryTree();
+    } else if (container_type == "avl") {
+        segment_container = new AvlTree();
     } else {
         cout << "Invalid container type " << container_type << endl;
         exit(1);

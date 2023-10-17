@@ -7,3 +7,8 @@ add_test(06_intersection_test intersection_test)
 add_executable(simple_test simple_test.cpp)
 target_link_libraries(simple_test intersect_detection)
 add_test(06_simple_test simple_test)
+
+
+add_executable(avl_tree_test avl_tree_test.cpp)
+target_link_libraries(avl_tree_test gtest_main intersect_detection)
+add_test(06_avl_tree_test avl_tree_test)

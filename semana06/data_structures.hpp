@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <vector>
 
 #include "event.hpp"
@@ -86,6 +87,7 @@ class TreeNode {
     TreeNode *left;
     TreeNode *right;
     TreeNode *parent;
+    int height = 1;
     TreeNode(Segment *s) {
         left = nullptr;
         right = nullptr;
@@ -95,7 +97,7 @@ class TreeNode {
 };
 
 class BinaryTree : public SegmentContainer {
-   private:
+   protected:
     int qtd_nodes;
     TreeNode *minimum(TreeNode *x);
     TreeNode *maximum(TreeNode *x);
@@ -120,6 +122,19 @@ class BinaryTree : public SegmentContainer {
     void swap(Segment *s1, Segment *s2);
     int size();
     int count(TreeNode *x);
-    int balance();
+    int balance(TreeNode *x);
+    int height(TreeNode *x);
     void ordered_vec(TreeNode *x, vector<Segment *> &segments);
+};
+
+class AvlTree : public BinaryTree {
+   private:
+   public:
+    AvlTree() {
+    }
+    void add(Segment *s);
+    TreeNode *insert(TreeNode *x, Segment *s);
+    // void remove(Segment *s);
+    TreeNode *left_rotate(TreeNode *x);
+    TreeNode *right_rotate(TreeNode *x);
 };

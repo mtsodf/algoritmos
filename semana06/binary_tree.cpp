@@ -46,6 +46,15 @@ void BinaryTree::add(Segment *s) {
         y->right = z;
     }
     qtd_nodes++;
+    TreeNode *p = z->parent;
+    while (p != nullptr) {
+        int height_left = 0;
+        if (p->left != nullptr) height_left = p->left->height;
+        int height_right = 0;
+        if (p->right != nullptr) height_right = p->right->height;
+        p->height = max(height_left, height_right) + 1;
+        p = p->parent;
+    }
 }
 
 void BinaryTree::remove(Segment *s) {
@@ -188,6 +197,11 @@ void BinaryTree::ordered_vec(TreeNode *x, vector<Segment *> &segments) {
     }
 }
 
+int BinaryTree::height(TreeNode *N) {
+    if (N == nullptr) return 0;
+    return N->height;
+}
+
 void BinaryTree::print(TreeNode *x, int indent) {
     if (x != nullptr) {
         if (x->right != nullptr) {
@@ -225,6 +239,7 @@ int BinaryTree::count(TreeNode *x) {
     return 1 + count(x->left) + count(x->right);
 }
 
-int BinaryTree::balance() {
-    return count(root->right) - count(root->left);
+int BinaryTree::balance(TreeNode *node) {
+    if (node == nullptr) return 0;
+    return height(node->left) - height(node->right);
 }

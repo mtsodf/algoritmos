@@ -15,4 +15,11 @@ class Segment {
     bool operator<(const Segment &other) const {
         return this->y_value(*current_x) < other.y_value(*current_x);
     }
+    // Override comparison operator ==
+    bool operator==(const Segment &other) const {
+        return this->id == other.id;
+    }
+    bool operator>(const Segment &other) const {
+        return (!(*this == other)) && (!(*this < other));
+    }
 };
