@@ -127,26 +127,26 @@ void AvlTree::remove(Segment *s) {
         update_ancestors_height(y);
         update_ancestors_height(y_parent);
 
-        while (w != nullptr) {
-            update_height(w);
-            int balance_value = balance(w);
-            if (balance_value > 1) {
-                if (balance(w->left) >= 0) {
-                    w = right_rotate(w);
-                } else {
-                    w->left = left_rotate(w->left);
-                    w = right_rotate(w);
-                }
-            } else if (balance_value < -1) {
-                if (balance(w->right) <= 0) {
-                    w = left_rotate(w);
-                } else {
-                    w->right = right_rotate(w->right);
-                    w = left_rotate(w);
-                }
+    }
+    while (w != nullptr) {
+        update_height(w);
+        int balance_value = balance(w);
+        if (balance_value > 1) {
+            if (balance(w->left) >= 0) {
+                w = right_rotate(w);
+            } else {
+                w->left = left_rotate(w->left);
+                w = right_rotate(w);
             }
-            w = w->parent;
+        } else if (balance_value < -1) {
+            if (balance(w->right) <= 0) {
+                w = left_rotate(w);
+            } else {
+                w->right = right_rotate(w->right);
+                w = left_rotate(w);
+            }
         }
+        w = w->parent;
     }
     qtd_nodes--;
 
