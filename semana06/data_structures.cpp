@@ -1,4 +1,6 @@
 #include "data_structures.hpp"
+#include <functional>
+#include <algorithm>
 
 #include "intersection_detection.h"
 

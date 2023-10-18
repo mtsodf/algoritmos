@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <algorithm>
 #include <random>
 
 #include "data_structures.hpp"
@@ -181,7 +182,6 @@ TEST(AvlTree, AvlTreeTest3) {
         tree->add(segments[i]);
     }
 
-    // EXPECT_EQ(tree->root->height, 4);
     for (int i = 0; i < segments.size(); i++) {
         TreeNode *node = tree->find(segments[i]);
         EXPECT_TRUE(node != nullptr);
