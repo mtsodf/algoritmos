@@ -99,6 +99,67 @@ TreeNode *AvlTree::insert(TreeNode *node, Segment *key) {
     return node;
 }
 
+void AvlTree::remove(Segment *s) {
+    TreeNode *z = find(s);
+    TreeNode *w = z->parent;
+    if (z->left == nullptr) {
+        transplant(z, z->right);
+        update_ancestors_height(z->parent);
+    } else if (z->right == nullptr) {
+        transplant(z, z->left);
+        update_ancestors_height(z->parent);
+    } else {
+        TreeNode *y = minimum(z->right);
+        // TODO olhar comparação
+        TreeNode *y_parent = nullptr;
+        if ((y->parent != nullptr) && y->parent->segment->id != z->segment->id) {
+            y_parent = y->parent;
+            w = y->parent;
+            transplant(y, y->right);
+            TreeNode *y_right = y->right;
+            y->right = z->right;
+            y->right->parent = y;
+        }
+
+        transplant(z, y);
+        y->left = z->left;
+        y->left->parent = y;
+        update_ancestors_height(y);
+        update_ancestors_height(y_parent);
+
+        while (w != nullptr) {
+            update_height(w);
+            int balance_value = balance(w);
+            if (balance_value > 1) {
+                if (balance(w->left) >= 0) {
+                    w = right_rotate(w);
+                } else {
+                    w->left = left_rotate(w->left);
+                    w = right_rotate(w);
+                }
+            } else if (balance_value < -1) {
+                if (balance(w->right) <= 0) {
+                    w = left_rotate(w);
+                } else {
+                    w->right = right_rotate(w->right);
+                    w = left_rotate(w);
+                }
+            }
+            w = w->parent;
+        }
+    }
+    qtd_nodes--;
+
+#ifdef DEBUG
+    if (count(root) != qtd_nodes) {
+        cout << "ERROR REMOVING NODE = " << s->id << endl;
+        exit(1);
+    }
+#endif
+
+    return;
+}
+
 TreeNode *BinaryTree::left_rotate(TreeNode *x) {
     if (x == nullptr || x->right == nullptr) return nullptr;
     bool x_is_left_son = is_left_son(x);
