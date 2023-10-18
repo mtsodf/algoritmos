@@ -5,8 +5,47 @@ using namespace std;
 // AVL tree implementation in C++
 
 void AvlTree::add(Segment *s) {
-    root = insert(root, s);
+    TreeNode *z = new TreeNode(s);
+    TreeNode *y = nullptr;
+    TreeNode *x = root;
+    while (x != nullptr) {
+        y = x;
+        if (*(z->segment) < *(x->segment)) {
+            x = x->left;
+        } else {
+            x = x->right;
+        }
+    }
+    z->parent = y;
+    if (y == nullptr)
+        root = z;
+    else if (*(z->segment) < *(y->segment)) {
+        y->left = z;
+    } else {
+        y->right = z;
+    }
     qtd_nodes++;
+    TreeNode *p = z;
+    while (p != nullptr) {
+        update_height(p);
+        int balance_value = balance(p);
+        if (balance_value > 1) {
+            if (balance(p->left) >= 0) {
+                p = right_rotate(p);
+            } else {
+                p->left = left_rotate(p->left);
+                p = right_rotate(p);
+            }
+        } else if (balance_value < -1) {
+            if (balance(p->right) <= 0) {
+                p = left_rotate(p);
+            } else {
+                p->right = right_rotate(p->right);
+                p = left_rotate(p);
+            }
+        }
+        p = p->parent;
+    }
 }
 
 TreeNode *AvlTree::insert(TreeNode *node, Segment *key) {
@@ -60,7 +99,9 @@ TreeNode *AvlTree::insert(TreeNode *node, Segment *key) {
     return node;
 }
 
-TreeNode *AvlTree::left_rotate(TreeNode *x) {
+TreeNode *BinaryTree::left_rotate(TreeNode *x) {
+    if (x == nullptr || x->right == nullptr) return nullptr;
+    bool x_is_left_son = is_left_son(x);
     TreeNode *x_parent = x->parent;
     TreeNode *y = x->right;
     TreeNode *T2 = y->left;
@@ -68,11 +109,19 @@ TreeNode *AvlTree::left_rotate(TreeNode *x) {
     // Perform rotation
     y->left = x;
     x->right = T2;
+    if (T2 != nullptr) T2->parent = x;
 
     x->parent = y;
     y->parent = x_parent;
     if (x_parent == nullptr) {
         root = y;
+
+    } else {
+        if (x_is_left_son) {
+            x_parent->left = y;
+        } else {
+            x_parent->right = y;
+        }
     }
 
     // Update heights
@@ -87,7 +136,9 @@ TreeNode *AvlTree::left_rotate(TreeNode *x) {
     return y;
 }
 
-TreeNode *AvlTree::right_rotate(TreeNode *y) {
+TreeNode *BinaryTree::right_rotate(TreeNode *y) {
+    if (y == nullptr || y->left == nullptr) return nullptr;
+    bool y_is_left_son = is_left_son(y);
     TreeNode *y_parent = y->parent;
     TreeNode *x = y->left;
     TreeNode *T2 = x->right;
@@ -95,11 +146,18 @@ TreeNode *AvlTree::right_rotate(TreeNode *y) {
     // Perform rotation
     x->right = y;
     y->left = T2;
+    if (T2 != nullptr) T2->parent = y;
 
     y->parent = x;
     x->parent = y_parent;
     if (y_parent == nullptr) {
         root = x;
+    } else {
+        if (y_is_left_son) {
+            y_parent->left = x;
+        } else {
+            y_parent->right = x;
+        }
     }
 
     // Update heights

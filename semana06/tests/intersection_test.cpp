@@ -279,7 +279,7 @@ TEST(ListSegments, NaiveComparisonRandom) {
 
     vector<string> containers = {"unordered_list",
                                  "list",
-                                 "binary_tree"};
+                                 "binary_tree", "avl"};
     vector<string> event_containers = {"heap",
                                        "list"};
 

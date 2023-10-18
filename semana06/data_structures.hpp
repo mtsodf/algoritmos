@@ -128,6 +128,8 @@ class BinaryTree : public SegmentContainer {
     int height(TreeNode *x);
     void ordered_vec(TreeNode *x, vector<Segment *> &segments);
     int recalculate_height(TreeNode *x);
+    TreeNode *left_rotate(TreeNode *x);
+    TreeNode *right_rotate(TreeNode *y);
 };
 
 class AvlTree : public BinaryTree {
@@ -138,6 +140,6 @@ class AvlTree : public BinaryTree {
     void add(Segment *s);
     TreeNode *insert(TreeNode *x, Segment *s);
     // void remove(Segment *s);
-    TreeNode *left_rotate(TreeNode *x);
-    TreeNode *right_rotate(TreeNode *x);
 };
+
+bool is_left_son(TreeNode *x);
