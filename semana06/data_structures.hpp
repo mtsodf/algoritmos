@@ -139,7 +139,7 @@ class AvlTree : public BinaryTree {
     }
     void add(Segment *s);
     TreeNode *insert(TreeNode *x, Segment *s);
-    // void remove(Segment *s);
+    void remove(Segment *s);
 };
 
 bool is_left_son(TreeNode *x);
