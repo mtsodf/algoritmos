@@ -104,11 +104,13 @@ class BinaryTree : public SegmentContainer {
     void transplant(TreeNode *u, TreeNode *v);
 
    public:
+    bool calc_heights = false;
     TreeNode *root;
     TreeNode *find(Segment *s);
     BinaryTree() {
         root = nullptr;
         qtd_nodes = 0;
+        calc_heights = false;
     }
     void add(Segment *s);
     bool update_height(TreeNode *x);
@@ -136,6 +138,7 @@ class AvlTree : public BinaryTree {
    private:
    public:
     AvlTree() {
+       calc_heights = true;
     }
     void add(Segment *s);
     TreeNode *insert(TreeNode *x, Segment *s);

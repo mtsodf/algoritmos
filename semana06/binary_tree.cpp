@@ -50,6 +50,7 @@ void BinaryTree::add(Segment *s) {
 }
 
 void BinaryTree::update_ancestors_height(TreeNode *x) {
+    if(!calc_heights) return;
     if (x == nullptr) return;
     TreeNode *p = x;
     while (p != nullptr) {

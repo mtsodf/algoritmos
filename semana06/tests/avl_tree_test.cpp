@@ -27,6 +27,7 @@ TEST(BinaryTree, LeftRotationsTest) {
 
 TEST(BinaryTree, HeightTrackTest) {
     BinaryTree *tree = new BinaryTree();
+    tree->calc_heights = true;
     BinaryTree *ref_tree = new BinaryTree();
     double current_x = 0.5;
     int id = 0;
@@ -166,6 +167,7 @@ TEST(AvlTree, AvlTreeTest2) {
     EXPECT_EQ(tree->root->right->segment->id, 2);
     EXPECT_EQ(tree->root->right->parent->segment->id, 1);
 }
+
 TEST(AvlTree, AvlTreeTest3) {
     AvlTree *tree = new AvlTree();
     double current_x = 0.5;
@@ -187,6 +189,54 @@ TEST(AvlTree, AvlTreeTest3) {
         EXPECT_TRUE(node != nullptr);
         EXPECT_EQ(node->segment->id, segments[i]->id);
     }
+
+    tree->recalculate_height(tree->root);
+
+    vector<TreeNode*> pilha;
+
+    pilha.push_back(tree->root);
+    while(pilha.size() >0){
+        TreeNode* current = pilha.back();
+        pilha.pop_back();
+        if(current == nullptr) continue;
+        EXPECT_TRUE(tree->balance(current) <=1);
+        EXPECT_TRUE(tree->balance(current) >=-1);
+        pilha.push_back(current->left);
+        pilha.push_back(current->right);
+    }
+    
+
+    cout << "tree size: " << tree->size() << endl;
+    cout << "tree depth: " << tree->root->height << endl;
+}
+
+TEST(AvlTree, RemoveTest) {
+    AvlTree *tree = new AvlTree();
+    double current_x = 0.5;
+    vector<Segment *> segments;
+    int n = 5;
+    for (int i = 0; i < n; i++) {
+        Segment *s = new Segment(new Point(0, i), new Point(1, i), segments.size());
+        s->current_x = &current_x;
+        segments.push_back(s);
+    }
+
+    for (int i = 0; i < segments.size(); i++) {
+        tree->add(segments[i]);
+    }
+
+    EXPECT_EQ(tree->root->segment->id, 1);
+    EXPECT_EQ(tree->root->left->segment->id, 0);
+    EXPECT_EQ(tree->root->right->segment->id, 3);
+    EXPECT_EQ(tree->root->right->left->segment->id, 2);
+    EXPECT_EQ(tree->root->right->right->segment->id, 4);
+
+    tree->remove(segments[0]);
+    EXPECT_EQ(tree->root->segment->id, 3);
+    EXPECT_EQ(tree->root->left->segment->id, 1);
+    EXPECT_EQ(tree->root->left->right->segment->id, 2);
+    EXPECT_EQ(tree->root->right->segment->id, 4);
+
 
     cout << "tree size: " << tree->size() << endl;
     cout << "tree depth: " << tree->root->height << endl;
