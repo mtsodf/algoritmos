@@ -6,7 +6,7 @@
 \title{06 - Algoritmos}
 \subtitle{Interseção de Segmentos}
 \author{Mateus Oliveira de Figueiredo}
-\date{10/10/2023}
+\date{19/10/2023}
 
 \usepackage{tikz}
 \usetikzlibrary{matrix}
@@ -58,11 +58,11 @@
     \item Lista Ordenada
     \item Lista Não Ordenada
     \item Árvore Binária
+    \item Árvore AVL
   \end{itemize}
 
   \vfill
-  Lista de eventos no caso de detecção de interseção foi usado uma lista.
-
+  Estrutura de eventos no caso de detecção de interseção foi usado uma lista.
   \vfill
 \end{frame}
 
@@ -93,12 +93,18 @@
     \end{column}
     \begin{column}{0.65\textwidth}
       \begin{figure}
-        \onslide<2>\includegraphics[width=0.9\textwidth]{figs/tests_big_segments.pdf}
+        \onslide<2>\includegraphics[width=0.9\textwidth]{figs/ativos/big_detection_segments_size_100.pdf}
       \end{figure}
     \end{column}
   \end{columns}
 \end{frame}
 
+\begin{frame}{Exemplos Sem Interseção - Segmentos Grandes}
+  % Two columns
+     \begin{figure}
+        \includegraphics[width=0.5\textwidth]{figs/tempos/plot_big_detection_time.pdf}
+      \end{figure}
+\end{frame}
 
 \begin{frame}{Exemplos Sem Interseção - Segmentos Pequenos}
   % Two columns
@@ -110,18 +116,101 @@
     \end{column}
     \begin{column}{0.65\textwidth}
       \begin{figure}
-        \onslide<2>\includegraphics[width=0.9\textwidth]{figs/tests_box.pdf}
+        \onslide<2>\includegraphics[width=0.8\textwidth]{figs/ativos/small_detection_segments_size_100.pdf}
       \end{figure}
     \end{column}
   \end{columns}
 \end{frame}
 
-\begin{frame}{Comparação dos Pequenos x Grandes}
+\begin{frame}{Exemplos Sem Interseção - Segmentos Pequenos}
   % Two columns
-  \begin{figure}
-    \includegraphics[width=0.7\textwidth]{figs/comp_cases.pdf}
-  \end{figure}
+     \begin{figure}
+        \includegraphics[width=0.5\textwidth]{figs/tempos/plot_small_detection_time.pdf}
+      \end{figure}
 \end{frame}
+
+
+\begin{frame}{Listar as Interseções}
+  % Falar sobre algoritmo
+\end{frame}
+
+\begin{frame}{Segmentos Aleatórios}
+  %Mostrar como foi feita a amostragem
+\end{frame}
+
+\foreach \n in {10, 100} {
+\begin{frame}{Exemplos Sem Interseção - N = \n}
+  % Two columns
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/exemplos/random_example_0.1_\n_segments.pdf}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/exemplos/random_example_0.6_\n_segments.pdf}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Exemplos Sem Interseção - N = \n}
+  % Two columns
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/exemplos/random_example_0.1_\n_interserctions.pdf}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/exemplos/random_example_0.6_\n_interserctions.pdf}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+}
+
+\begin{frame}{Comparação com força bruta}
+\end{frame}
+
+\begin{frame}{Segmentos Ativos - Pequenos}
+      \begin{figure}
+        \includegraphics[width=0.5\textwidth]{figs/tempos/plot_random_small_time.pdf}
+      \end{figure}
+\end{frame}
+
+\begin{frame}{Segmentos Ativos - Médios}
+      \begin{figure}
+        \includegraphics[width=0.5\textwidth]{figs/tempos/plot_random_medium_time.pdf}
+      \end{figure}
+\end{frame}
+
+\begin{frame}{Segmentos Ativos - Grandes}
+      \begin{figure}
+        \includegraphics[width=0.5\textwidth]{figs/tempos/plot_random_big_time.pdf}
+      \end{figure}
+\end{frame}
+
+
+
+\begin{frame}{Exemplo Grid}
+  % Two columns
+  \begin{columns}
+    \begin{column}{0.35\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/exemplos/grid_example_10_interserctions.pdf}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.65\textwidth}
+      \begin{figure}
+        \onslide<2>\includegraphics[width=0.8\textwidth]{figs/tempos/plot_grid_time.pdf}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 
 
 \end{document}
