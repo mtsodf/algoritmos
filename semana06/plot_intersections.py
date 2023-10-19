@@ -38,27 +38,28 @@ def find_point_intersection(xa, ya, xb, yb):
     return x, y
 
 
-def plot_segments(segments, ax):
+def plot_segments(segments, ax, text=True):
     for i, segment in enumerate(segments):
-        ax.plot(segment[0::2], segment[1::2], color="blue", marker="o")
-        # Add text with the segment number
-        xm = np.mean(segment[0::2])
-        ym = np.mean(segment[1::2])
-        a = np.array([segment[2] - segment[0], segment[3] - segment[1]])
-        perp_vec = np.array([-a[1], a[0]])
-        y0, y1 = ax.get_ylim()
-        x0, x1 = ax.get_xlim()
-        dx = (x1 - x0) / 100
-        dy = (y1 - y0) / 100
-        perp_vec = perp_vec / np.linalg.norm(perp_vec)
-        ax.text(
-            xm + perp_vec[0] * dx,
-            ym + perp_vec[1] * dy,
-            str(i),
-            horizontalalignment="center",
-            verticalalignment="center",
-            fontsize=14,
-        )
+        ax.plot(segment[0::2], segment[1::2], color="blue")
+        if text:
+            # Add text with the segment number
+            xm = np.mean(segment[0::2])
+            ym = np.mean(segment[1::2])
+            a = np.array([segment[2] - segment[0], segment[3] - segment[1]])
+            perp_vec = np.array([-a[1], a[0]])
+            y0, y1 = ax.get_ylim()
+            x0, x1 = ax.get_xlim()
+            dx = (x1 - x0) / 100
+            dy = (y1 - y0) / 100
+            perp_vec = perp_vec / np.linalg.norm(perp_vec)
+            ax.text(
+                xm + perp_vec[0] * dx,
+                ym + perp_vec[1] * dy,
+                str(i),
+                horizontalalignment="center",
+                verticalalignment="center",
+                fontsize=14,
+            )
 
 
 def plot_intersections(segments, intersections, ax):
@@ -67,8 +68,8 @@ def plot_intersections(segments, intersections, ax):
     for intersection in intersections:
         s0 = intersection[0]
         s1 = intersection[1]
-        ax.plot(segments[s0][0::2], segments[s0][1::2], marker="o", color="red")
-        ax.plot(segments[s1][0::2], segments[s1][1::2], marker="o", color="red")
+        ax.plot(segments[s0][0::2], segments[s0][1::2], color="red")
+        ax.plot(segments[s1][0::2], segments[s1][1::2], color="red")
         x, y = find_point_intersection(
             segments[s0][0::2],
             segments[s0][1::2],
