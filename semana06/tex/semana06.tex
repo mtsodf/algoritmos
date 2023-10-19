@@ -132,10 +132,35 @@
 
 \begin{frame}{Algoritmo de Bentley-Ottmann - Listar}
   % Falar sobre algoritmo
+  \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{itemize}
+          \item Complexidade $O(n \log n + k \log n )$ 
+          \item Lista de eventos varia durante as iterações
+          \begin{itemize}
+            \item Lista Decrescente
+            \item \textbf{Heap-Mínimo}
+          \end{itemize}
+        \end{itemize}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        % Adicionar Figura
+      \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Comparação dos segmentos}
   % Falar sobre algoritmo
+  \begin{columns}
+      \begin{column}{0.5\textwidth}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        % Adicionar Figura
+        \begin{figure}
+        \includegraphics[width=\textwidth]{figs/segments.png}
+        \end{figure}
+      \end{column}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Segmentos Aleatórios}
@@ -184,7 +209,7 @@
 \end{frame}
 
 \foreach \n in {10, 100} {
-\begin{frame}{Exemplos Sem Interseção - N = \n}
+\begin{frame}{Exemplos Segmentos Aleatórios - N = \n}
   % Two columns
   \begin{columns}
     \begin{column}{0.5\textwidth}
@@ -200,7 +225,7 @@
   \end{columns}
 \end{frame}
 
-\begin{frame}{Exemplos Sem Interseção - N = \n}
+\begin{frame}{Exemplos Segmentos Aleatórios - N = \n}
   % Two columns
   \begin{columns}
     \begin{column}{0.5\textwidth}
@@ -218,6 +243,9 @@
 }
 
 \begin{frame}{Comparação com força bruta}
+
+
+  Ordena as interseções do algoritmo de Bentley-Ottmann e compara com as interseções do algoritmo de força bruta.
 \end{frame}
 
 \begin{frame}{Segmentos Ativos - Pequenos}
@@ -250,7 +278,26 @@
   \end{figure}
 \end{frame}
 
+\begin{frame}{ Eventos: Heap x Lista}
 
+   \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/tempos/heap_x_list_small.pdf}
+        \caption{Segmentos Pequenos}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{figure}
+        \centering
+        \onslide<2>\includegraphics[width=\textwidth]{figs/tempos/heap_x_list_big.pdf}
+        \caption{Segmentos Grandes}
+      \end{figure}
+    \end{column}
+  \end{columns}
+ 
+
+\end{frame}
 
 
 \begin{frame}{Exemplo Grid}
@@ -260,6 +307,7 @@
       \begin{figure}
         \includegraphics[width=\textwidth]{figs/exemplos/grid_example_10_interserctions.pdf}
       \end{figure}
+      $k = n^2/4$
     \end{column}
     \begin{column}{0.65\textwidth}
       \begin{figure}
