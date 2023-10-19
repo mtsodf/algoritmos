@@ -137,12 +137,14 @@ int main(int argc, char const *argv[]) {
         json_file << "  ],\n";
     }
     json_file << "  \"intersections\": [\n";
-    for (int i = 0; i < intersections.size(); i++) {
-        json_file << "    [" << intersections[i].first << ", " << intersections[i].second << "]";
-        if (i < intersections.size() - 1) {
-            json_file << ",";
+    if (sort_case != "grid" || n < 10000) {
+        for (int i = 0; i < intersections.size(); i++) {
+            json_file << "    [" << intersections[i].first << ", " << intersections[i].second << "]";
+            if (i < intersections.size() - 1) {
+                json_file << ",";
+            }
+            json_file << "\n";
         }
-        json_file << "\n";
     }
     json_file << "  ]";
     json_file << "\n}\n";
