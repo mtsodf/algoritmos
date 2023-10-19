@@ -144,7 +144,10 @@
         \end{itemize}
       \end{column}
       \begin{column}{0.5\textwidth}
-        % Adicionar Figura
+      \begin{figure}
+        \includegraphics[width=0.9\textwidth]{figs/bentley.png}
+        \caption{Força Bruta}
+      \end{figure}
       \end{column}
   \end{columns}
 \end{frame}
@@ -157,7 +160,7 @@
       \begin{column}{0.5\textwidth}
         % Adicionar Figura
         \begin{figure}
-        \includegraphics[width=\textwidth]{figs/segments.png}
+        \includegraphics[width=\textwidth]{figs/segment.png}
         \end{figure}
       \end{column}
   \end{columns}
@@ -243,9 +246,52 @@
 }
 
 \begin{frame}{Comparação com força bruta}
+      \begin{figure}
+        \includegraphics[width=0.6\textwidth]{figs/exemplos/base_segments.pdf}
+      \end{figure}
+\end{frame}
 
 
-  Ordena as interseções do algoritmo de Bentley-Ottmann e compara com as interseções do algoritmo de força bruta.
+\begin{frame}{Comparação com força bruta}
+
+  Ordenar as interseções do algoritmo de Bentley-Ottmann e comparar com as interseções do algoritmo de força bruta.
+
+   \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/exemplos/base_naive.pdf}
+        \caption{Força Bruta}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \includegraphics[width=\textwidth]{figs/exemplos/base_avl.pdf}
+        \caption{Avl}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Segmentos Ativos}
+
+   \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/ativos/active_segments_size_100.pdf}
+        \caption{N = 100}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \centering
+        \onslide<2>\includegraphics[width=\textwidth]{figs/ativos/active_segments_size_1000.pdf}
+        \caption{N = 1000 }
+      \end{figure}
+    \end{column}
+  \end{columns}
+ 
+
 \end{frame}
 
 \begin{frame}{Segmentos Ativos - Pequenos}
