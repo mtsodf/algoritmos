@@ -136,6 +136,7 @@ int main(int argc, char const *argv[]) {
         }
         json_file << "  ],\n";
     }
+    json_file << "  \"n_intersections\": " << intersections.size() << ",\n";
     json_file << "  \"intersections\": [\n";
     if (sort_case != "grid" || n < 10000) {
         for (int i = 0; i < intersections.size(); i++) {
