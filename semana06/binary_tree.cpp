@@ -50,7 +50,7 @@ void BinaryTree::add(Segment *s) {
 }
 
 void BinaryTree::update_ancestors_height(TreeNode *x) {
-    if(!calc_heights) return;
+    if (!calc_heights) return;
     if (x == nullptr) return;
     TreeNode *p = x;
     while (p != nullptr) {
@@ -265,4 +265,19 @@ int BinaryTree::count(TreeNode *x) {
 int BinaryTree::balance(TreeNode *node) {
     if (node == nullptr) return 0;
     return height(node->left) - height(node->right);
+}
+
+BinaryTree::~BinaryTree() {
+    if (root == nullptr) return;
+
+    vector<TreeNode *> nodes;
+    nodes.push_back(root);
+
+    while (!nodes.empty()) {
+        TreeNode *node = nodes.back();
+        nodes.pop_back();
+        if (node->left != nullptr) nodes.push_back(node->left);
+        if (node->right != nullptr) nodes.push_back(node->right);
+        delete node;
+    }
 }

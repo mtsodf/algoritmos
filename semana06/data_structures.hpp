@@ -52,6 +52,8 @@ class SegmentContainer {
     virtual Segment *first() = 0;
     virtual void swap(Segment *s1, Segment *s2) = 0;
     virtual int size() = 0;
+    // Default destructor
+    virtual ~SegmentContainer(){};
 };
 
 class SegmentVector : public SegmentContainer {
@@ -132,13 +134,14 @@ class BinaryTree : public SegmentContainer {
     int recalculate_height(TreeNode *x);
     TreeNode *left_rotate(TreeNode *x);
     TreeNode *right_rotate(TreeNode *y);
+    virtual ~BinaryTree();
 };
 
 class AvlTree : public BinaryTree {
    private:
    public:
     AvlTree() {
-       calc_heights = true;
+        calc_heights = true;
     }
     void add(Segment *s);
     TreeNode *insert(TreeNode *x, Segment *s);

@@ -255,6 +255,10 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
 
     if (verbose) events_file.close();
 
+    // Free memory
+    delete events;
+    delete segment_container;
+
     return intersection_pairs.size();
 }
 
