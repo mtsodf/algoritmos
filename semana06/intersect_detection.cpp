@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <unordered_set>
 
 #include "data_structures.hpp"
 #include "event.hpp"
@@ -9,6 +10,15 @@
 #include "segment.hpp"
 
 using namespace std;
+
+struct PairHash {
+    template <class T1, class T2>
+    std::size_t operator()(const std::pair<T1, T2> &p) const {
+        auto h1 = std::hash<T1>{}(p.first);
+        auto h2 = std::hash<T2>{}(p.second);
+        return h1 ^ h2;
+    }
+};
 
 double EPSILON = 0;
 
@@ -144,12 +154,19 @@ bool equal_intersection_events(Event *a, Event *b) {
     return a->type == INTERSECTION && b->type == INTERSECTION && a->seg->id == b->seg->id && a->other_seg->id == b->other_seg->id;
 }
 
-bool test_intersection(Segment *a, Segment *b, EventContainer &events, vector<pair<int, int>> &intersections_pairs, double current_x, fstream &events_file) {
+bool test_intersection(Segment *a, Segment *b, EventContainer &events, vector<pair<int, int>> &intersections_pairs, unordered_set<pair<int, int>, PairHash> &intersections_set, double current_x, fstream &events_file) {
     if (a == nullptr || b == nullptr) return false;
+
+    int id_min = min(a->id, b->id);
+    int id_max = max(a->id, b->id);
+    pair<int, int> intersection_pair = make_pair(id_min, id_max);
+    if (intersections_set.find(intersection_pair) != intersections_set.end()) return false;
+
     if (events_file.is_open()) events_file << a->id << " == " << b->id << ";";
     if (intersect(a, b)) {
         if (events_file.is_open()) events_file << "true; ";
         intersection_found(events, a, b, current_x);
+        intersections_set.insert(intersection_pair);
         return true;
     } else {
         if (events_file.is_open()) events_file << "false; ";
@@ -160,6 +177,8 @@ bool test_intersection(Segment *a, Segment *b, EventContainer &events, vector<pa
 bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &intersection_pairs, vector<int> *active_segments_size,
                           const string &segments_container_type, const string &event_container_type, const string &events_filename, bool detection) {
     bool verbose = false;
+
+    unordered_set<pair<int, int>, PairHash> intersection_pairs_set;
 
     fstream events_file;
     if (!events_filename.empty()) {
@@ -186,7 +205,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
     Event *cur_event;
     while (events->size() > 0) {
         cur_event = events->pop();
-        if (equal_intersection_events(cur_event, last_event)) continue;
+        // if (equal_intersection_events(cur_event, last_event)) continue;
 
         last_event = cur_event;
         Segment *cur_seg = cur_event->seg;
@@ -202,12 +221,12 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             if (verbose) log_ids(segment_container, events_file);
 
             Segment *prev = segment_container->prev(cur_seg);
-            if (test_intersection(prev, cur_seg, *events, intersection_pairs, current_x, events_file) && detection) {
+            if (test_intersection(prev, cur_seg, *events, intersection_pairs, intersection_pairs_set, current_x, events_file) && detection) {
                 add_intersection(intersection_pairs, prev, cur_seg);
                 return true;
             };
             Segment *next = segment_container->next(cur_seg);
-            if (test_intersection(cur_seg, next, *events, intersection_pairs, current_x, events_file) && detection) {
+            if (test_intersection(cur_seg, next, *events, intersection_pairs, intersection_pairs_set, current_x, events_file) && detection) {
                 add_intersection(intersection_pairs, cur_seg, next);
                 return true;
             };
@@ -222,7 +241,7 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
 
             Segment *prev = segment_container->prev(cur_seg);
             Segment *next = segment_container->next(cur_seg);
-            if (test_intersection(prev, next, *events, intersection_pairs, current_x, events_file) && detection) {
+            if (test_intersection(prev, next, *events, intersection_pairs, intersection_pairs_set, current_x, events_file) && detection) {
                 add_intersection(intersection_pairs, prev, next);
                 return true;
             };
@@ -240,8 +259,8 @@ bool segment_intersection(vector<Segment *> &segments, vector<pair<int, int>> &i
             segment_container->swap(cur_event->seg, cur_event->other_seg);
             current_x = cur_event->x;
 
-            test_intersection(cur_event->seg, upper, *events, intersection_pairs, current_x, events_file);
-            test_intersection(lower, cur_event->other_seg, *events, intersection_pairs, current_x, events_file);
+            test_intersection(cur_event->seg, upper, *events, intersection_pairs, intersection_pairs_set, current_x, events_file);
+            test_intersection(lower, cur_event->other_seg, *events, intersection_pairs, intersection_pairs_set, current_x, events_file);
 
             if (verbose) {
                 events_file << cur_event->seg->id << " intersect " << cur_event->other_seg->id << ";";

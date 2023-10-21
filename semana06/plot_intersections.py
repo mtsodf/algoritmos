@@ -76,6 +76,7 @@ def plot_intersections(segments, intersections, ax):
             segments[s1][0::2],
             segments[s1][1::2],
         )
+        print(x, " ", y)
         int_x_points.append(x)
         int_y_points.append(y)
 
