@@ -15,4 +15,4 @@ build*/
 *.fls
 *.synctex.gz
 *.fdb_latexmk
-
+semana07/tex/figs/paths/dfs_*.pdf
