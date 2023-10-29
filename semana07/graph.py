@@ -50,7 +50,6 @@ class Graph:
             i += 1
             for w in self.adj[v]:
                 if not marcado[w]:
-                    ordem_visita[w] = v
                     marcado[w] = True
                     queue.append(w)
 

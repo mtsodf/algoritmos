@@ -1,7 +1,9 @@
 # Add test to graph with pytest
 # Path: semana07/test_graph.py
 import pytest
+import pandas as pd
 from graph import Graph
+from airports import construct_airports
 
 
 def test_add_edge():
@@ -66,3 +68,15 @@ def test_bfs_dfs():
 
     assert marcado == [True, True, True, True, True, True, False]
     assert ordem_visita == [0, 3, 5, 4, 2, 1, -1]
+
+
+def test_brasilia_dfs():
+    df_group = pd.read_csv('./semana07/BrFlights2_group_guiana_corrected.csv')
+    df_airports, id_to_airport = construct_airports(df_group)
+    g = Graph(len(df_airports))
+    
+    
+    brasilia_id = df_airports[df_airports.city == "Brasilia"].iloc[0]["id"]
+    marcado, visit_order = g.dfs(brasilia_id)
+
+    assert visit_order[0] == brasilia_id
