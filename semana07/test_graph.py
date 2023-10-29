@@ -16,7 +16,7 @@ def test_add_edge():
     assert g.adj == [[1, 2, 4], [0, 2], [0, 1, 3], [2, 4], [3, 0]]
 
 
-def test_bfs():
+def test_bfs_dfs():
     g = Graph(5)
     g.add_edge(0, 1)
     g.add_edge(0, 2)
@@ -31,10 +31,10 @@ def test_bfs():
     assert aresta_final == [-1, 0, 0, 2, 0] or aresta_final == [-1, 0, 0, 4, 0]
 
     # 0 --- 1
-    # | \   |
-    # |  \  |
-    # |   \ |
-    # 2 --- 3
+    # | \
+    # |  \
+    # |   \
+    # 2     3
     # |     |
     # |     |
     # 4 --- 5
@@ -48,6 +48,11 @@ def test_bfs():
     g.add_edge(3, 5)
     marcado, aresta_final = g.bfs(0)
 
+    assert g.qtd_edge == 6
+
+    g.add_edge(5, 3, check=True)
+    assert g.qtd_edge == 6
+
     assert marcado == [True, True, True, True, True, True, False]
     assert aresta_final == [-1, 0, 0, 0, 2, 3, -1]
 
@@ -56,3 +61,8 @@ def test_bfs():
 
     path = g.build_path(aresta_final, 5)
     assert path == [0, 3, 5]
+
+    marcado, ordem_visita = g.dfs(0)
+
+    assert marcado == [True, True, True, True, True, True, False]
+    assert ordem_visita == [0, 3, 5, 4, 2, 1, -1]
