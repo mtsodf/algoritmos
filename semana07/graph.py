@@ -4,6 +4,7 @@ class Graph:
         for i in range(size):
             self.adj[i] = []
         self.size = size
+        self.qtd_edge = 0
 
     def add_edge(self, vert0, vert1, check=False):
         if check:
@@ -13,6 +14,7 @@ class Graph:
 
         self.adj[vert0].append(vert1)
         self.adj[vert1].append(vert0)
+        self.qtd_edge += 1
         return True
 
     def bfs(self, vert_start):
@@ -39,17 +41,20 @@ class Graph:
         marcado = [False] * self.size
         marcado[vert_start] = True
 
-        aresta_final = [-1] * self.size
+        ordem_visita = [-1] * self.size
 
+        i = 0
         while len(queue) > 0:
             v = queue.pop()
+            ordem_visita[i] = v
+            i += 1
             for w in self.adj[v]:
                 if not marcado[w]:
-                    aresta_final[w] = v
+                    ordem_visita[w] = v
                     marcado[w] = True
                     queue.append(w)
 
-        return marcado, aresta_final
+        return marcado, ordem_visita
 
     def search(self, vert_start):
         pass
