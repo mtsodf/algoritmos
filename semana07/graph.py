@@ -24,16 +24,20 @@ class Graph:
         marcado[vert_start] = True
 
         aresta_final = [-1] * self.size
+        ordem_visita = [-1] * self.size
 
+        i = 0
         while len(queue) > 0:
             v = queue.pop(0)
+            ordem_visita[i] = v
+            i+=1
             for w in self.adj[v]:
                 if not marcado[w]:
                     aresta_final[w] = v
                     marcado[w] = True
                     queue.append(w)
 
-        return marcado, aresta_final
+        return marcado, aresta_final, ordem_visita
 
     def dfs(self, vert_start):
         queue = []

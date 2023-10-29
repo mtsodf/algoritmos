@@ -27,7 +27,7 @@ def test_bfs_dfs():
     g.add_edge(3, 4)
     g.add_edge(4, 0)
 
-    marcado, aresta_final = g.bfs(0)
+    marcado, aresta_final, _ = g.bfs(0)
 
     assert marcado == [True, True, True, True, True]
     assert aresta_final == [-1, 0, 0, 2, 0] or aresta_final == [-1, 0, 0, 4, 0]
@@ -48,7 +48,7 @@ def test_bfs_dfs():
     g.add_edge(2, 4)
     g.add_edge(4, 5)
     g.add_edge(3, 5)
-    marcado, aresta_final = g.bfs(0)
+    marcado, aresta_final, _ = g.bfs(0)
 
     assert g.qtd_edge == 6
 
