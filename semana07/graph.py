@@ -71,5 +71,5 @@ class Graph:
 
         return path[::-1]
 
-    def are_neighbours(a,b):
+    def are_neighbours(self,a,b):
         return b in self.adj[a]

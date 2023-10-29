@@ -70,6 +70,19 @@ def test_bfs_dfs():
     assert ordem_visita == [0, 3, 5, 4, 2, 1, -1]
 
 
+    g = Graph(7)
+    g.add_edge(0, 5)
+    g.add_edge(0, 4)
+    g.add_edge(0, 1)
+    g.add_edge(1, 2)
+    g.add_edge(2, 3)
+    g.add_edge(3, 6)
+    g.add_edge(3, 4)
+    marcado, ordem_visita = g.dfs(0)
+    assert marcado == [True]*7
+    assert ordem_visita == [0, 1, 2, 3, 6, 4, 5]
+
+
 def test_brasilia_dfs():
     df_group = pd.read_csv('./semana07/BrFlights2_group_guiana_corrected.csv')
     df_airports, id_to_airport = construct_airports(df_group)
@@ -80,3 +93,6 @@ def test_brasilia_dfs():
     marcado, visit_order = g.dfs(brasilia_id)
 
     assert visit_order[0] == brasilia_id
+
+
+
