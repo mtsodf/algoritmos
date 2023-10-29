@@ -70,3 +70,6 @@ class Graph:
             path.append(cur_vert)
 
         return path[::-1]
+
+    def are_neighbours(a,b):
+        return b in self.adj[a]
