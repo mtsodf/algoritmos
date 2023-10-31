@@ -23,6 +23,7 @@
 \DeclareUnicodeCharacter{2212}{−}
 \usepgfplotslibrary{groupplots,dateplot}
 \usetikzlibrary{patterns,shapes.arrows, positioning}
+\usetikzlibrary{graphs, graphs.standard}
 \pgfplotsset{compat=newest}
 
 \begin{document}
@@ -47,6 +48,48 @@
 \end{frame}
 
 \begin{frame}
+\frametitle{Limpeza dos dados}
+\vfill
+\begin{itemize}
+  \item Colunas consideradas:
+  \begin{itemize}
+    \item Aeroporto.Origem, Cidade.Origem, Pais.Origem, Aeroporto.Destino, Cidade.Destino, Pais.Destino, LatOrig, LongOrig, LatDest, LongDest
+  \end{itemize}
+
+  \item Realizado \it{group-by} nas colunas:
+  \begin{itemize}
+    \item Aeroporto.Origem, Cidade.Origem, Pais.Origem, Aeroporto.Destino, Cidade.Destino, Pais.Destino
+  \end{itemize}
+\end{itemize}
+\vfill
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Exemplo DFS e BFS}
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \include{figs/dfs}
+        \caption{DFS}
+      \end{figure}
+
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+      \include{figs/bfs}
+      \caption{BFS}
+      \end{figure}
+    \end{column}
+  \end{columns}
+
+\end{frame}
+
+
+
+
+\begin{frame}
   \frametitle{Questão 01 - Item A e B}
   \begin{columns}
     \begin{column}{0.3\textwidth}
@@ -65,7 +108,7 @@
 
 \begin{frame}
   \frametitle{Questão 01 - Item C}
-  Dois aeroportos: Santos Dumont e Galeão
+  Dois aeroportos: Santos Dumont e Galeão (66 destinos)
   
   \begin{figure}
     \includegraphics[width=0.7\textwidth]{figs/vizinhos_rio_de_janeiro.pdf}
