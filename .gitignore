@@ -16,3 +16,4 @@ build*/
 *.synctex.gz
 *.fdb_latexmk
 semana07/tex/figs/paths/dfs_*.pdf
+semana07/tex/figs/paths/path_*.pdf
