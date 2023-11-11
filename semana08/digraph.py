@@ -38,25 +38,12 @@ class Digraph:
 
         return marcado, aresta_final, ordem_visita
 
-    def dfs(self, vert_start):
-        queue = []
-        queue.append(vert_start)
-        marcado = [False] * self.size
+    def dfs(self, vert_start, marcado, visitado):
         marcado[vert_start] = True
-
-        ordem_visita = [-1] * self.size
-
-        i = 0
-        while len(queue) > 0:
-            v = queue.pop()
-            ordem_visita[i] = v
-            i += 1
-            for w in self.adj[v]:
-                if not marcado[w]:
-                    marcado[w] = True
-                    queue.append(w)
-
-        return marcado, ordem_visita
+        for v in self.adj[vert_start]:
+            if not marcado[v]:
+                self.dfs(v, marcado, visitado)
+        visitado.append(vert_start)
 
     def search(self, vert_start):
         pass
@@ -72,3 +59,20 @@ class Digraph:
 
     def are_neighbours(self, a, b):
         return b in self.adj[a]
+
+    def __str__(self):
+        s = ""
+        for i in range(self.size):
+            s += f"{i}: {self.adj[i]}\n"
+        return s
+
+    def topological_order(self, vert_start):
+        marcado = [False] * self.size
+        visitado = []
+        self.dfs(vert_start, marcado, visitado)
+        for i in range(self.size):
+            if not marcado[i]:
+                self.dfs(i, marcado, visitado)
+
+        visitado = visitado[::-1]
+        return visitado
