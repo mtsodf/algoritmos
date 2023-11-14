@@ -1,5 +1,10 @@
 from digraph import Digraph
 from dag_generator import generate_dag
+import random
+import time
+import sys
+
+sys.setrecursionlimit(100000)
 
 
 def test_neighbours():
@@ -40,3 +45,56 @@ def test_topological_order():
         g, topological_order_benchmark = generate_dag(n, True, 0.4, True)
         for i in range(g.size):
             assert g.topological_order(i) == topological_order_benchmark
+
+    for i in range(100):
+        n = 20
+        g, topological_order_benchmark = generate_dag(n, False, 0.4, True)
+
+        top_order = g.topological_order(random.randint(0, n - 1))
+        check_topological_order(g, top_order)
+
+
+def check_topological_order(g, top_order):
+    for i in range(1, g.size):
+        for j in range(i):
+            assert not g.are_neighbours(top_order[i], top_order[j])
+
+
+def test_kosajaru():
+    g = Digraph(9)
+    g.add_edge(0, 1)
+    g.add_edge(1, 2)
+    g.add_edge(2, 3)
+    g.add_edge(3, 0)
+
+    g.add_edge(2, 4)
+    g.add_edge(4, 5)
+    g.add_edge(5, 6)
+    g.add_edge(6, 4)
+
+    g.add_edge(7, 6)
+    g.add_edge(7, 8)
+
+    components = g.strongly_connected_components()
+
+    set_components = [set(x) for x in components]
+
+    assert len(components) == 4
+
+    assert set([0, 1, 2, 3]) in set_components
+    assert set([4, 5, 6]) in set_components
+    assert set([7]) in set_components
+    assert set([8]) in set_components
+
+
+def test_time_topological_order():
+    for n in [10, 100, 1000]:
+        g = generate_dag(n, False, 0.5, True)[0]
+
+        # Measure time
+
+        start = time.time()
+        top_order = g.topological_order(random.randint(0, n - 1))
+        end = time.time()
+        elapsed = end - start
+        print(f"n={n} elapsed={elapsed}")

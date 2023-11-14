@@ -1,3 +1,6 @@
+import networkx as nx
+
+
 class Digraph:
     def __init__(self, size):
         self.adj = [None] * size
@@ -60,6 +63,13 @@ class Digraph:
     def are_neighbours(self, a, b):
         return b in self.adj[a]
 
+    def reverse(self):
+        g = Digraph(self.size)
+        for v in range(self.size):
+            for w in self.adj[v]:
+                g.add_edge(w, v)
+        return g
+
     def __str__(self):
         s = ""
         for i in range(self.size):
@@ -68,11 +78,78 @@ class Digraph:
 
     def topological_order(self, vert_start):
         marcado = [False] * self.size
-        visitado = []
-        self.dfs(vert_start, marcado, visitado)
+        pos_ordem = []
+
+        self.dfs(vert_start, marcado, pos_ordem)
+
         for i in range(self.size):
             if not marcado[i]:
-                self.dfs(i, marcado, visitado)
+                self.dfs(i, marcado, pos_ordem)
 
-        visitado = visitado[::-1]
-        return visitado
+        return pos_ordem[::-1]
+
+    def strongly_connected_components(self):
+        top_order = self.topological_order(0)
+        post_order = top_order[::-1]
+        components = []
+
+        marcado = [False] * self.size
+        g_reversed = self.reverse()
+
+        while len(post_order) > 0:
+            next_node = post_order.pop()
+            if not marcado[next_node]:
+                visitado = []
+                g_reversed.dfs(next_node, marcado, visitado)
+                components.append(visitado)
+
+        return components
+
+    def to_nx_graph(self):
+        G = nx.DiGraph()
+
+        G.add_nodes_from([x for x in range(self.size)])
+
+        for i in range(self.size):
+            for j in self.adj[i]:
+                G.add_edge(i, j)
+        return G
+
+    def plot(self, ax, pos=None):
+        G = self.to_nx_graph()
+
+        if pos is None:
+            pos = nx.circular_layout(G)
+
+        nx.draw(
+            G,
+            pos,
+            with_labels=True,
+            node_color="lightblue",
+            node_size=500,
+            edge_color="black",
+            ax=ax,
+        )
+
+    def plot_top(self, ax, order):
+        pos = {}
+        for i in range(self.size):
+            pos[order[i]] = (i, 0)
+
+        G = self.to_nx_graph()
+
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            width=1.0,
+            alpha=0.5,
+            edge_color="black",
+            connectionstyle="arc3, rad = 0.2",
+        )
+
+        nx.draw_networkx_nodes(G, pos, node_color="lightblue", node_size=500, ax=ax)
+        nx.draw_networkx_labels(G, pos, ax=ax)
+
+        # Remove axis
+        ax.set_xticks([])
+        ax.set_yticks([])
