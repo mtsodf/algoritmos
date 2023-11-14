@@ -59,20 +59,12 @@ Algoritmos:
 \vfill
 \end{frame}
 
-\begin{frame}
-  \frametitle{Ordem Topológica - Gerando DAG}
-
-  \begin{itemize}
-    \item Pegue uma permutação dos nós de G para ser uma ordem topológica
-    \item Adicione arestas de forma que a ordem topológica seja respeitada com determinada probabilidade
-  \end{itemize}
-\end{frame}
 
   \begin{frame}
     \frametitle{Ordem Topológica - Gerando DAG}
 
     \begin{itemize}
-      \item Pegue uma permutação dos nós de G para ser uma ordem topológica
+      \item Monte uma permutação dos nós de G para ser uma ordem topológica
       \item<2> Adicione arestas de forma que a ordem topológica seja respeitada com determinada probabilidade
     \end{itemize}
 
@@ -86,6 +78,14 @@ Algoritmos:
         \node[main node] (2) [right of=1] {1};
         \node[main node] (3) [right of=2] {0};
         \node[main node] (4) [right of=3] {3};
+
+        \path<1>[every node/.style={font=\sffamily\small}, dashed, color=white]
+          (1) edge[right] node [right] {} (2)
+          (1) edge[bend right] node [right] {} (3)
+          (1) edge[bend right] node [right] {} (4)
+          (2) edge[right] node [right] {} (3)
+          (2) edge[bend right] node [right] {} (4)
+          (3) edge[right] node [right] {} (4);
 
         \path<2>[every node/.style={font=\sffamily\small}, dashed]
           (1) edge[right] node [right] {} (2)
@@ -158,7 +158,7 @@ pos_ordem.append(vert)
 \begin{frame}[fragile]  % The 'fragile' option is needed when code listings are included
   \frametitle{Checagem da corretude}
 
-      \begin{lstlisting}[language=Python]
+      \begin{lstlisting}[language=Python, basicstyle=\ttfamily\small]
 
 def check_topological_order(g, top_order):
     for i in range(1, g.size):
@@ -241,9 +241,12 @@ def check_topological_order(g, top_order):
 \begin{frame}{Algoritmo de Kosaraju}
 
   \begin{itemize}
-    \item Realize uma DFS em $G^{R}$ e encontre uma pós-ordem reversa
-    \item Faça uma DFS em $G$ na ordem da pós-ordem reversa até marcar todos os nós
-    \item Cada DFS representa uma componente conexa
+    \item Encontre uma pós-ordem reversa $G^R$
+    \item Enquanto houver nós não marcados em $G$
+    \begin{itemize}
+      \item Faça uma DFS em $G$ no próximo nó ordem da pós-ordem reversa
+      \item O nós visitados formam uma componente fortemente conexa
+    \end{itemize}
   \end{itemize}
 
 \end{frame}
