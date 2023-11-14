@@ -189,6 +189,61 @@ def check_topological_order(g, top_order):
   \end{columns}
 \end{frame}
 
+
+
+\begin{frame}{Motivação - Algoritmo de Kosaraju}
+
+
+
+
+  
+\end{frame}
+
+
+\begin{frame}{Algoritmo de Kosaraju}
+
+  \begin{itemize}
+    \item Realize uma DFS em $G^{R}$ e encontre uma pós-ordem reversa
+    \item Faça uma DFS em $G$ na ordem da pós-ordem reversa até marcar todos os nós
+    \item Cada DFS representa uma componente conexa
+  \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Exemplo Kosaraju}
+
+  \begin{columns}
+  \column{0.5\textwidth}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figs/strongly_components_3.pdf}
+  \end{figure}
+  \column{0.5\textwidth}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics<2>[width=0.9\textwidth]{figs/strongly_components_4.pdf}
+  \end{figure}
+  \end{columns}
+
+\end{frame}
+
+\begin{frame}{Exemplo Kosaraju}
+
+  \begin{columns}
+  \column{0.5\textwidth}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\textwidth]{figs/strong_components_0.pdf}
+  \end{figure}
+  \column{0.5\textwidth}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics<2>[width=0.9\textwidth]{figs/strong_components_1.pdf}
+  \end{figure}
+  \end{columns}
+
+\end{frame}
+
 \begin{frame}{Performance Kosaraju}
   \begin{columns}
     \column{0.35\textwidth}
