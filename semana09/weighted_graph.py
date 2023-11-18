@@ -1,4 +1,23 @@
 import networkx as nx
+import heapq
+
+
+def read_from_txt(path):
+    with open(path) as f:
+        lines = f.readlines()
+        n_vert = int(lines[0])
+        n_edge = int(lines[1])
+
+        g = WeightedGraph(n_vert)
+
+        for line in lines[2:]:
+            vert0, vert1, edge_weight = line.split()
+            vert0 = int(vert0)
+            vert1 = int(vert1)
+            edge_weight = float(edge_weight)
+            g.add_edge(vert0, vert1, edge_weight)
+
+        return g
 
 
 class WeightedGraph:
@@ -17,6 +36,7 @@ class WeightedGraph:
 
         self.adj[vert0].append((vert1, edge_weight))
         self.adj[vert1].append((vert0, edge_weight))
+
         self.qtd_edge += 1
         return True
 
@@ -94,3 +114,36 @@ class WeightedGraph:
         # Remove axis
         ax.set_xticks([])
         ax.set_yticks([])
+
+    def prim(self):
+        mst = WeightedGraph(self.size)
+
+        added = [False] * self.size
+        added[0] = True
+
+        crossing_edges = []
+
+        add_edges(crossing_edges, 0, self.adj[0], added)
+
+        while len(crossing_edges) > 0:
+            w, vert_a, vert_b = heapq.heappop(crossing_edges)
+            if not added[vert_b]:
+                added[vert_b] = True
+                mst.add_edge(vert_a, vert_b, w)
+                add_edges(crossing_edges, vert_b, self.adj[vert_b], added)
+
+        return mst
+
+    def total_cost(self):
+        cost = 0
+        for i in range(self.size):
+            for vert, w in self.adj[i]:
+                cost += w
+        cost /= 2
+        return cost
+
+
+def add_edges(crossing_edges, vert_a, edges, added):
+    for vert_b, w in edges:
+        if not added[vert_b]:
+            heapq.heappush(crossing_edges, (w, vert_a, vert_b))
