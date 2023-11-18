@@ -115,26 +115,40 @@ class Digraph:
                 G.add_edge(i, j)
         return G
 
-    def plot(self, ax, pos=None):
+    def plot(self, ax, layout=nx.circular_layout, strong_components=None):
         G = self.to_nx_graph()
 
-        if pos is None:
-            pos = nx.circular_layout(G)
+        pos = layout(G)
 
-        nx.draw(
-            G,
-            pos,
-            with_labels=True,
-            node_color="lightblue",
-            node_size=500,
-            edge_color="black",
-            ax=ax,
-        )
+        if strong_components is None:
+            nx.draw(
+                G,
+                pos,
+                with_labels=True,
+                node_color="lightblue",
+                node_size=500,
+                edge_color="black",
+                ax=ax,
+            )
+        else:
+            colors = ["red", "green", "blue", "yellow", "orange", "purple", "pink"]
+
+            for i in range(len(strong_components)):
+                nx.draw_networkx_nodes(
+                    G.subgraph(strong_components[i]),
+                    pos,
+                    node_color=colors[i % len(colors)],
+                    node_size=500,
+                    ax=ax,
+                )
+
+            nx.draw_networkx_edges(G, pos, edge_color="black", ax=ax)
+            nx.draw_networkx_labels(G, pos, ax=ax)
 
     def plot_top(self, ax, order):
         pos = {}
         for i in range(self.size):
-            pos[order[i]] = (i, 0)
+            pos[order[i]] = (0, i)
 
         G = self.to_nx_graph()
 

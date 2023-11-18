@@ -146,9 +146,9 @@ pos_ordem.append(vert)
   \end{figure}
   \column{0.5\textwidth}
   \vfill
-  \begin{figure}[ht]
+  \begin{figure}[h]
   \centering
-  \includegraphics<2>[width=0.9\textwidth]{figs/dag_complete_top_5.pdf}
+  \includegraphics<2>[width=0.9\textwidth]{figs/dag_complete_top_5.png}
   \end{figure}
   \vfill
   \end{columns}
@@ -241,13 +241,39 @@ def check_topological_order(g, top_order):
 \begin{frame}{Algoritmo de Kosaraju}
 
   \begin{itemize}
-    \item Encontre uma pós-ordem reversa $G^R$
-    \item Enquanto houver nós não marcados em $G$
+    \item Encontre uma pós-ordem reversa $G^R$ (ou $G$)
+    \item Enquanto houver nós não marcados em $G$ (ou $G^R$)
     \begin{itemize}
       \item Faça uma DFS em $G$ no próximo nó ordem da pós-ordem reversa
       \item O nós visitados formam uma componente fortemente conexa
     \end{itemize}
   \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]  % The 'fragile' option is needed when code listings are included
+  \frametitle{Implementação Kosaraju}
+
+      \begin{lstlisting}[language=Python, basicstyle=\ttfamily\small]
+
+def strongly_connected_components(self):
+    top_order = self.topological_order(0)
+    post_order = top_order[::-1]
+    components = []
+
+    marcado = [False] * self.size
+    g_reversed = self.reverse()
+
+    while len(post_order) > 0:
+        next_node = post_order.pop()
+        if not marcado[next_node]:
+            visitado = []
+            g_reversed.dfs(next_node, marcado, visitado)
+            components.append(visitado)
+
+    return components
+      \end{lstlisting}
 
 \end{frame}
 
@@ -267,6 +293,8 @@ def check_topological_order(g, top_order):
   \end{columns}
 
 \end{frame}
+
+
 
 \begin{frame}{Exemplo Kosaraju}
 
