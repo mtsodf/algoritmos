@@ -53,44 +53,50 @@ class WeightedGraph:
         return s
 
     def to_nx_graph(self):
-        G = nx.DiGraph()
+        G = nx.Graph()
 
         G.add_nodes_from([x for x in range(self.size)])
 
         for i in range(self.size):
-            for j in self.adj[i]:
-                G.add_edge(i, j)
+            for j, w in self.adj[i]:
+                G.add_edge(i, j, weight=w)
+
         return G
 
-    def plot(self, ax, layout=nx.circular_layout, strong_components=None):
+    def plot(
+        self,
+        ax,
+        layout=nx.kamada_kawai_layout,
+        pos=None,
+        edge_color="black",
+        plot_vertices=True,
+    ):
         G = self.to_nx_graph()
 
-        pos = layout(G)
+        if pos is None:
+            pos = layout(G)
 
-        if strong_components is None:
+        if plot_vertices:
             nx.draw(
                 G,
                 pos,
                 with_labels=True,
                 node_color="lightblue",
                 node_size=500,
-                edge_color="black",
+                edge_color=edge_color,
                 ax=ax,
             )
         else:
-            colors = ["red", "green", "blue", "yellow", "orange", "purple", "pink"]
+            nx.draw_networkx_edges(
+                G, pos, width=1.0, alpha=0.5, edge_color=edge_color, ax=ax
+            )
 
-            for i in range(len(strong_components)):
-                nx.draw_networkx_nodes(
-                    G.subgraph(strong_components[i]),
-                    pos,
-                    node_color=colors[i % len(colors)],
-                    node_size=500,
-                    ax=ax,
-                )
+        return pos
 
-            nx.draw_networkx_edges(G, pos, edge_color="black", ax=ax)
-            nx.draw_networkx_labels(G, pos, ax=ax)
+    def plot_with_mst(self, ax, plot_vertices=True):
+        pos = self.plot(ax, edge_color="gray", plot_vertices=plot_vertices)
+        mst = self.prim_lazy()
+        mst.plot(ax, pos=pos, edge_color="red", plot_vertices=plot_vertices)
 
     def plot_top(self, ax, order):
         pos = {}
@@ -115,7 +121,7 @@ class WeightedGraph:
         ax.set_xticks([])
         ax.set_yticks([])
 
-    def prim(self):
+    def prim_lazy(self):
         mst = WeightedGraph(self.size)
 
         added = [False] * self.size

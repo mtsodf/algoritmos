@@ -1,19 +1,32 @@
+import matplotlib.pyplot as plt
 from weighted_graph import WeightedGraph, read_from_txt
 
 
 def test_sedrick_prim():
     g = read_from_txt("./semana09/data_sedrick/tinyEWG.txt")
 
-    mst = g.prim()
+    mst = g.prim_lazy()
     assert mst.size == 8
 
-    assert mst.are_neighbours(4, 5)
-    assert mst.are_neighbours(5, 7)
-    assert mst.are_neighbours(7, 1)
-    assert mst.are_neighbours(0, 7)
-    assert mst.are_neighbours(0, 2)
-    assert mst.are_neighbours(2, 3)
-    assert mst.are_neighbours(2, 6)
+    edges_benchmark = [(4, 5), (5, 7), (1, 7), (0, 7), (0, 2), (2, 3), (2, 6)]
+
+    for i in range(g.size):
+        for j in range(i + 1, g.size):
+            if (i, j) in edges_benchmark:
+                assert mst.are_neighbours(i, j)
+                assert mst.are_neighbours(j, i)
+            else:
+                assert not mst.are_neighbours(i, j)
+                assert not mst.are_neighbours(j, i)
+
+
+def test_bigger():
+    g = read_from_txt("./semana09/data_sedrick/mediumEWG.txt")
+    fig, axs = plt.subplots(1, 1, figsize=(7, 7))
+
+    g.plot_with_mst(axs, plot_vertices=False)
+    plt.show()
+    plt.close()
 
 
 def test_simple_triangle():
@@ -22,7 +35,7 @@ def test_simple_triangle():
     g.add_edge(1, 2, 2)
     g.add_edge(2, 0, 3)
 
-    mst = g.prim()
+    mst = g.prim_lazy()
 
     assert g.are_neighbours(0, 1)
     assert g.are_neighbours(1, 2)
