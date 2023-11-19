@@ -1,3 +1,4 @@
+import random
 import networkx as nx
 import heapq
 
@@ -20,6 +21,16 @@ def read_from_txt(path):
         return g
 
 
+def generate_random_forest(n_vert):
+    g = WeightedGraph(n_vert)
+
+    for i in range(len(1, n_vert)):
+        j = random.randint(0, i - 1)
+        g.add_edge(j, i, random.rand())
+
+    return g
+
+
 class WeightedGraph:
     def __init__(self, size):
         self.adj = [None] * size
@@ -27,6 +38,7 @@ class WeightedGraph:
             self.adj[i] = []
         self.size = size
         self.qtd_edge = 0
+        self.edges_list = []
 
     def add_edge(self, vert0, vert1, edge_weight, check=False):
         if check:
@@ -36,6 +48,11 @@ class WeightedGraph:
 
         self.adj[vert0].append((vert1, edge_weight))
         self.adj[vert1].append((vert0, edge_weight))
+
+        if vert0 < vert1:
+            self.edges_list.append((edge_weight, vert0, vert1))
+        else:
+            self.edges_list.append((edge_weight, vert1, vert0))
 
         self.qtd_edge += 1
         return True
@@ -93,11 +110,6 @@ class WeightedGraph:
 
         return pos
 
-    def plot_with_mst(self, ax, plot_vertices=True):
-        pos = self.plot(ax, edge_color="gray", plot_vertices=plot_vertices)
-        mst = self.prim_lazy()
-        mst.plot(ax, pos=pos, edge_color="red", plot_vertices=plot_vertices)
-
     def plot_top(self, ax, order):
         pos = {}
         for i in range(self.size):
@@ -147,6 +159,35 @@ class WeightedGraph:
                 cost += w
         cost /= 2
         return cost
+
+    def kruskal(self):
+        edges_heap = []
+        for edge in self.edges_list:
+            heapq.heappush(edges_heap, edge)
+
+        connected_components = []
+        for i in range(self.size):
+            connected_components.append(set([i]))
+
+        mst = WeightedGraph(self.size)
+        qtd_added_verts = 0
+        while len(edges_heap) > 0 and qtd_added_verts < self.size - 1:
+            w, a, b = heapq.heappop(edges_heap)
+
+            if b in connected_components[a]:
+                continue
+
+            if len(connected_components[b]) > len(connected_components[a]):
+                a, b = b, a
+
+            connected_components[a].update(connected_components[b])
+            for v in connected_components[a]:
+                connected_components[v] = connected_components[a]
+
+            mst.add_edge(a, b, w)
+            qtd_added_verts += 1
+
+        return mst
 
 
 def add_edges(crossing_edges, vert_a, edges, added):

@@ -1,3 +1,4 @@
+import time
 import matplotlib.pyplot as plt
 from weighted_graph import WeightedGraph, read_from_txt
 
@@ -5,26 +6,48 @@ from weighted_graph import WeightedGraph, read_from_txt
 def test_sedrick_prim():
     g = read_from_txt("./semana09/data_sedrick/tinyEWG.txt")
 
-    mst = g.prim_lazy()
-    assert mst.size == 8
+    for alg in [g.prim_lazy, g.kruskal]:
+        mst = alg()
+        assert mst.size == 8
 
-    edges_benchmark = [(4, 5), (5, 7), (1, 7), (0, 7), (0, 2), (2, 3), (2, 6)]
+        edges_benchmark = [(4, 5), (5, 7), (1, 7), (0, 7), (0, 2), (2, 3), (2, 6)]
 
-    for i in range(g.size):
-        for j in range(i + 1, g.size):
-            if (i, j) in edges_benchmark:
-                assert mst.are_neighbours(i, j)
-                assert mst.are_neighbours(j, i)
-            else:
-                assert not mst.are_neighbours(i, j)
-                assert not mst.are_neighbours(j, i)
+        for i in range(g.size):
+            for j in range(i + 1, g.size):
+                if (i, j) in edges_benchmark:
+                    assert mst.are_neighbours(i, j)
+                    assert mst.are_neighbours(j, i)
+                else:
+                    assert not mst.are_neighbours(i, j)
+                    assert not mst.are_neighbours(j, i)
 
 
 def test_bigger():
-    g = read_from_txt("./semana09/data_sedrick/mediumEWG.txt")
-    fig, axs = plt.subplots(1, 1, figsize=(7, 7))
+    # g = read_from_txt("./semana09/data_sedrick/mediumEWG.txt")
+    g = read_from_txt("./semana09/data_sedrick/1000EWG.txt")
 
-    g.plot_with_mst(axs, plot_vertices=False)
+    # Measure kruskal time
+    start = time.time()
+    mst_kruskal = g.kruskal()
+    kruskal_time = time.time() - start
+    start = time.time()
+    mst_prim = g.prim_lazy()
+    prim_time = time.time() - start
+
+    print("Kruskal time:", kruskal_time)
+    print("Prim time:   ", prim_time)
+
+    fig, axs = plt.subplots(1, 2, figsize=(16, 7))
+
+    pos = g.plot(axs[0], edge_color="gray", plot_vertices=False)
+    g.plot(axs[1], pos=pos, edge_color="gray", plot_vertices=False)
+
+    mst_kruskal.plot(axs[0], pos=pos, edge_color="red", plot_vertices=False)
+    mst_prim.plot(axs[1], pos=pos, edge_color="red", plot_vertices=False)
+
+    axs[0].set_title(f"Kruskal - Elapsed Time {kruskal_time:f} s")
+    axs[1].set_title(f"Prim - Elapsed Time {prim_time:f} s")
+
     plt.show()
     plt.close()
 
