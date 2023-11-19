@@ -21,12 +21,12 @@ def read_from_txt(path):
         return g
 
 
-def generate_random_forest(n_vert):
+def generate_random_tree(n_vert):
     g = WeightedGraph(n_vert)
 
-    for i in range(len(1, n_vert)):
+    for i in range(1, n_vert):
         j = random.randint(0, i - 1)
-        g.add_edge(j, i, random.rand())
+        g.add_edge(j, i, random.uniform(0, 1))
 
     return g
 
@@ -188,6 +188,13 @@ class WeightedGraph:
             qtd_added_verts += 1
 
         return mst
+
+    def copy(self):
+        g = WeightedGraph(self.size)
+        for i in range(self.size):
+            for vert, w in self.adj[i]:
+                g.add_edge(i, vert, w)
+        return g
 
 
 def add_edges(crossing_edges, vert_a, edges, added):

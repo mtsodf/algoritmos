@@ -1,6 +1,42 @@
 import time
+import random
 import matplotlib.pyplot as plt
-from weighted_graph import WeightedGraph, read_from_txt
+from weighted_graph import WeightedGraph, generate_random_tree, read_from_txt
+
+
+def generate_random_graph(n_vert, n_add_edge):
+    g = generate_random_tree(n_vert)
+    mst_benchmark = g.copy()
+
+    total_cost = mst_benchmark.total_cost()
+    for i in range(n_add_edge):
+        v, w = random.randint(0, n_vert - 1), random.randint(0, n_vert - 1)
+        if v != w and not g.are_neighbours(v, w):
+            weight = total_cost + random.uniform(0, 1)
+            g.add_edge(v, w, weight)
+
+    return g, mst_benchmark
+
+
+def test_with_random_graph():
+    for n_vert in [20, 40, 80]:
+        n_add_edge = n_vert * 2
+        for i in range(10):
+            g, mst_benchmark = generate_random_graph(n_vert, n_add_edge)
+
+            for alg in [g.prim_lazy, g.kruskal]:
+                mst = alg()
+
+                assert mst.size == n_vert
+
+                for i in range(n_vert):
+                    for j in range(i + 1, n_vert):
+                        if mst_benchmark.are_neighbours(i, j):
+                            assert mst.are_neighbours(i, j)
+                            assert mst.are_neighbours(j, i)
+                        else:
+                            assert not mst.are_neighbours(i, j)
+                            assert not mst.are_neighbours(j, i)
 
 
 def test_sedrick_prim():
