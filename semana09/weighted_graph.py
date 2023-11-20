@@ -6,7 +6,37 @@ import heapq
 class UnionFind:
     def __init__(self, size):
         self.parents = list(range(size))
-        self.sizes = [1 for x in range(size)]
+        self.rank = [0 for x in range(size)]
+
+    def find(self, i):
+        update_parents = []
+        while i != self.parents[i]:
+            update_parents.append(i)
+            i = self.parents[i]
+
+        for j in update_parents:
+            self.parents[j] = i
+
+        return i
+
+    def union(self, i, j):
+        irep = self.find(i)
+        jrep = self.find(j)
+
+        if irep == jrep:
+            return
+
+        if self.rank[irep] > self.rank[jrep]:
+            self.parents[jrep] = irep
+        else:
+            self.parents[irep] = jrep
+            if self.rank[irep] == self.rank[jrep]:
+                self.rank[jrep] += 1
+
+
+class UnionFindNaive:
+    def __init__(self, size):
+        self.parents = list(range(size))
 
     def find(self, i):
         while i != self.parents[i]:
@@ -178,12 +208,16 @@ class WeightedGraph:
         cost /= 2
         return cost
 
-    def kruskal(self):
+    def kruskal(self, naive_union_find=False):
         edges_heap = []
         for edge in self.edges_list:
             heapq.heappush(edges_heap, edge)
 
-        connected_components = UnionFind(self.size)
+        if naive_union_find:
+            connected_components = UnionFindNaive(self.size)
+        else:
+            connected_components = UnionFind(self.size)
+
         mst = WeightedGraph(self.size)
         qtd_added_verts = 0
 
