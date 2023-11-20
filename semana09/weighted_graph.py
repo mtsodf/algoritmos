@@ -3,6 +3,26 @@ import networkx as nx
 import heapq
 
 
+class UnionFind:
+    def __init__(self, size):
+        self.parents = list(range(size))
+        self.sizes = [1 for x in range(size)]
+
+    def find(self, i):
+        while i != self.parents[i]:
+            i = self.parents[i]
+        return i
+
+    def union(self, i, j):
+        irep = self.find(i)
+        jrep = self.find(j)
+
+        if irep == jrep:
+            return
+
+        self.parents[irep] = jrep
+
+
 def read_from_txt(path):
     with open(path) as f:
         lines = f.readlines()
@@ -104,9 +124,7 @@ class WeightedGraph:
                 ax=ax,
             )
         else:
-            nx.draw_networkx_edges(
-                G, pos, width=1.0, alpha=0.5, edge_color=edge_color, ax=ax
-            )
+            nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5, edge_color=edge_color, ax=ax)
 
         return pos
 
@@ -161,6 +179,28 @@ class WeightedGraph:
         return cost
 
     def kruskal(self):
+        edges_heap = []
+        for edge in self.edges_list:
+            heapq.heappush(edges_heap, edge)
+
+        connected_components = UnionFind(self.size)
+        mst = WeightedGraph(self.size)
+        qtd_added_verts = 0
+
+        while len(edges_heap) > 0 and qtd_added_verts < self.size - 1:
+            w, a, b = heapq.heappop(edges_heap)
+
+            if connected_components.find(a) == connected_components.find(b):
+                continue
+
+            connected_components.union(a, b)
+
+            mst.add_edge(a, b, w)
+            qtd_added_verts += 1
+
+        return mst
+
+    def kruskal_set(self):
         edges_heap = []
         for edge in self.edges_list:
             heapq.heappush(edges_heap, edge)

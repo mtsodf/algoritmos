@@ -24,7 +24,7 @@ def test_with_random_graph():
         for i in range(10):
             g, mst_benchmark = generate_random_graph(n_vert, n_add_edge)
 
-            for alg in [g.prim_lazy, g.kruskal]:
+            for alg in [g.prim_lazy, g.kruskal_set, g.kruskal]:
                 mst = alg()
 
                 assert mst.size == n_vert
@@ -42,7 +42,7 @@ def test_with_random_graph():
 def test_sedrick_prim():
     g = read_from_txt("./semana09/data_sedrick/tinyEWG.txt")
 
-    for alg in [g.prim_lazy, g.kruskal]:
+    for alg in [g.prim_lazy, g.kruskal_set, g.kruskal]:
         mst = alg()
         assert mst.size == 8
 
