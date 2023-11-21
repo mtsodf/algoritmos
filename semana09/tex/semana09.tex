@@ -51,6 +51,8 @@
 \begin{frame}
 \frametitle{Árvores Geradoras Mínimas}
 
+Árvore geradora que possui a menor soma de pesos das arestas.
+
 \vfill
 Algoritmos:
 \begin{itemize}
@@ -69,6 +71,27 @@ Algoritmos:
     Dado um corte em um grafo a aresta de cruzamento de menor peso está na árvore geradora mínima.
 \end{block}
 \vfill
+
+\begin{columns}
+\column{0.5\textwidth}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.5\textwidth]{figs/prim.png}
+\caption{Prim\footnote{Algorithms Fourth Edition: Sedgewick, Wayne}}
+\end{figure}
+\column{0.5\textwidth}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.5\textwidth]{figs/kruskal.png}
+\caption{Kruskal $^\text{a}$}
+\end{figure}
+\end{columns}
+\vfill
+
+% Add footnote with figures source
+
 
 \end{frame}
 
@@ -183,6 +206,18 @@ Algoritmos:
     
 \end{frame}
 
+
+\begin{frame}{Resultados com Dados da Anac}
+
+    \vfill
+    \begin{itemize}
+        \item Realizado testes com dados da ANAC
+        \item Bibliotecas: geopandas e geopy
+        \item Peso das arestas como mediana da duração do voo ou distância (geodésia)
+        \item Removido voos cancelados ou com duração negativa
+    \end{itemize}
+    \vfill
+\end{frame}
 
 \begin{frame}{Prim x Kruskal - Duração do Voo}
     \begin{figure}[ht]
