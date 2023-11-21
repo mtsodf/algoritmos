@@ -50,6 +50,7 @@
 
 \begin{frame}
 \frametitle{Árvores Geradoras Mínimas}
+
 \vfill
 Algoritmos:
 \begin{itemize}
@@ -61,43 +62,125 @@ Algoritmos:
 
 
 \begin{frame}
-\frametitle{Lema Aresta de Corte}
+\frametitle{Proposição Aresta de Cruzamento}
+
+\vfill
+\begin{block}{Proposição}
+    Dado um corte em um grafo a aresta de cruzamento de menor peso está na árvore geradora mínima.
+\end{block}
+\vfill
 
 \end{frame}
 
-\begin{frame}[fragile]  % The 'fragile' option is needed when code listings are included
-  \frametitle{Implementação Ordenação Topológica}
 
-  \begin{columns}
-    \begin{column}{0.5\textwidth}
-      \begin{lstlisting}[language=Python]
-def topological_order(self, vert_start):
-    marcado = [False] * self.size
-    pos_ordem = []
+\begin{frame}{Union Find}
+    Estrutura de Dados para representar conjuntos disjuntos.
 
-    self.dfs(vert_start, marcado, pos_ordem)
+    \begin{itemize}
+        \item Find: Encontrar o representante do conjunto
+        \item Union: Unir dois conjuntos
+    \end{itemize}
 
-    for i in range(self.size):
-        if not marcado[i]:
-            self.dfs(i, marcado, pos_ordem)
+\begin{tikzpicture}[scale=0.75, transform shape, node distance=1.5cm]
+    % Style for the circles
+    \tikzstyle{circle node}=[circle, draw, minimum size=1cm]
 
-    return pos_ordem[::-1]
-      \end{lstlisting}
-    \end{column}
-    \begin{column}{0.5\textwidth}
-      \begin{lstlisting}[language=Python]
-def dfs(self, vert, marcado, pos_ordem):
-marcado[vert] = True
+    % Draw the top array boxes and numbers
+    \foreach \x in {0,...,6}
+        \draw (\x-1,0) rectangle (\x+0,-0.5) node[pos=.5] {\x};
+    \foreach \x/\num in {0/0,1/0,2/0,3/3,4/3,5/3,6/5}
+        \draw (\x-1,-0.5) rectangle (\x+0,-1) node[pos=.5] {\num};
 
-for vizinho in self.adj[vert]:
-    if not marcado[vizinho]:
-        self.dfs(vizinho, marcado, pos_ordem)
+    % Draw the circles for the tree
+    \node[circle node] (0) at (0,2) {0};
+    \node[circle node] (1) at (-1,1) {1};
+    \node[circle node] (2) at (1,1) {2};
+    \node[circle node] (3) at (4,2) {3};
+    \node[circle node] (4) at (3,1) {4};
+    \node[circle node] (5) at (5,1) {5};
+    \node[circle node] (6) at (6,0) {6};
 
-pos_ordem.append(vert)
-      \end{lstlisting}
-    \end{column}
-  \end{columns}
+    % Draw the arrows for the tree
+    \draw[->] (1) -- (0);
+    \draw[->] (2) -- (0);
+    \draw[->] (4) -- (3);
+    \draw[->] (5) -- (3);
+    \draw[->] (6) -- (5);
 
+    % Repeat the process for the bottom part with different positions
+    % and arrows indicating values have been moved
+    
+    % Additional nodes and arrows would go here...
+
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Exemplo Pequeno - Prim}
+    \begin{columns}
+    \column{0.5\textwidth}
+    \begin{figure}[ht]
+    \centering
+        \includegraphics[width=0.9\textwidth]{figs/exemplo_0.pdf}
+    \end{figure}
+    \column{0.5\textwidth}
+        \begin{figure}[ht]
+        \centering
+            \includegraphics[width=0.9\textwidth]{figs/exemplo_0_prim.pdf}
+
+        \end{figure}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Exemplo Pequeno - Kruskal}
+    \begin{columns}
+    \column{0.5\textwidth}
+    \begin{figure}[ht]
+    \centering
+        \includegraphics[width=0.9\textwidth]{figs/exemplo_0.pdf}
+    \end{figure}
+    \column{0.5\textwidth}
+        \begin{figure}[ht]
+        \centering
+            \includegraphics[width=0.9\textwidth]{figs/exemplo_0_kruskal.pdf}
+        \end{figure}
+    \end{columns}
+\end{frame}
+
+
+\foreach \i in {28, 56, 138, 221, 249} {
+    \begin{frame}{Exemplo Médio - Prim x Kruskal}
+        \begin{columns}
+        \column{0.5\textwidth}
+        \begin{figure}[ht]
+        \centering
+            \includegraphics[width=0.9\textwidth]{figs/mediumewg/prim_step_\i.pdf}
+        \end{figure}
+        \column{0.5\textwidth}
+            \begin{figure}[ht]
+            \centering
+                \includegraphics[width=0.9\textwidth]{figs/mediumewg/kruskal_step_\i.pdf}
+            \end{figure}
+        \end{columns}
+    \end{frame}
+}
+
+\begin{frame}{Performance dos Algoritmos}
+
+    \begin{columns}
+    \column{0.4\textwidth}
+
+    \begin{itemize}
+        \item Completo: m = n(n-1)/2
+        \item m = 2n
+    \end{itemize}
+    
+    \column{0.6\textwidth}
+        \begin{figure}[ht]
+            \centering
+            \includegraphics[width=0.8\textwidth]{figs/complexity.pdf}
+        \end{figure}
+    \end{columns}
+    
 \end{frame}
 
 
