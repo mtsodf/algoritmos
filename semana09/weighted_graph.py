@@ -1,6 +1,7 @@
 import random
 import networkx as nx
 import heapq
+import matplotlib.pyplot as plt
 
 
 class UnionFind:
@@ -131,12 +132,7 @@ class WeightedGraph:
         return G
 
     def plot(
-        self,
-        ax,
-        layout=nx.kamada_kawai_layout,
-        pos=None,
-        edge_color="black",
-        plot_vertices=True,
+        self, ax, layout=nx.kamada_kawai_layout, pos=None, edge_color="black", plot_vertices=True, edge_weights=True
     ):
         G = self.to_nx_graph()
 
@@ -144,17 +140,15 @@ class WeightedGraph:
             pos = layout(G)
 
         if plot_vertices:
-            nx.draw(
-                G,
-                pos,
-                with_labels=True,
-                node_color="lightblue",
-                node_size=500,
-                edge_color=edge_color,
-                ax=ax,
-            )
+            nx.draw(G, pos, with_labels=True, node_color="lightblue", node_size=500, edge_color=edge_color, ax=ax)
         else:
             nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5, edge_color=edge_color, ax=ax)
+
+        if edge_weights:
+            labels = {}
+            for edge in G.edges:
+                labels[edge] = G.edges[edge]["weight"]
+            nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=labels)
 
         return pos
 
@@ -181,7 +175,7 @@ class WeightedGraph:
         ax.set_xticks([])
         ax.set_yticks([])
 
-    def prim_lazy(self):
+    def prim_lazy(self, plot_at_steps=None, output_folder=None):
         mst = WeightedGraph(self.size)
 
         added = [False] * self.size
@@ -191,12 +185,22 @@ class WeightedGraph:
 
         add_edges(crossing_edges, 0, self.adj[0], added)
 
+        qtd_added_edges = 0
         while len(crossing_edges) > 0:
             w, vert_a, vert_b = heapq.heappop(crossing_edges)
             if not added[vert_b]:
                 added[vert_b] = True
                 mst.add_edge(vert_a, vert_b, w)
                 add_edges(crossing_edges, vert_b, self.adj[vert_b], added)
+                qtd_added_edges += 1
+
+                if plot_at_steps is not None and qtd_added_edges in plot_at_steps:
+                    fig, ax = plt.subplots(figsize=(7, 7))
+                    pos = self.plot(ax, edge_color="gray", edge_weights=False, plot_vertices=False)
+                    mst.plot(ax, pos=pos, edge_color="red", edge_weights=False, plot_vertices=False)
+                    ax.set_title(f"Prim - Step {qtd_added_edges}")
+                    plt.savefig(f"{output_folder}/prim_step_{qtd_added_edges}.pdf", bbox_inches="tight")
+                    plt.close()
 
         return mst
 
@@ -208,7 +212,7 @@ class WeightedGraph:
         cost /= 2
         return cost
 
-    def kruskal(self, naive_union_find=False):
+    def kruskal(self, naive_union_find=False, plot_at_steps=None, output_folder=None):
         edges_heap = []
         for edge in self.edges_list:
             heapq.heappush(edges_heap, edge)
@@ -231,6 +235,14 @@ class WeightedGraph:
 
             mst.add_edge(a, b, w)
             qtd_added_verts += 1
+
+            if plot_at_steps is not None and qtd_added_verts in plot_at_steps:
+                fig, ax = plt.subplots(figsize=(7, 7))
+                pos = self.plot(ax, edge_color="gray", edge_weights=False, plot_vertices=False)
+                mst.plot(ax, pos=pos, edge_color="red", edge_weights=False, plot_vertices=False)
+                ax.set_title(f"Kruskal - Step {qtd_added_verts}")
+                plt.savefig(f"{output_folder}/kruskal_step_{qtd_added_verts}.pdf", bbox_inches="tight")
+                plt.close()
 
         return mst
 

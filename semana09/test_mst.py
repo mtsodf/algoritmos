@@ -59,8 +59,8 @@ def test_sedrick_prim():
 
 
 def test_bigger():
-    # g = read_from_txt("./semana09/data_sedrick/mediumEWG.txt")
-    g = read_from_txt("./semana09/data_sedrick/1000EWG.txt")
+    g = read_from_txt("./semana09/data_sedrick/mediumEWG.txt")
+    # g = read_from_txt("./semana09/data_sedrick/1000EWG.txt")
 
     # Measure kruskal time
     start = time.time()
@@ -73,13 +73,16 @@ def test_bigger():
     print("Kruskal time:", kruskal_time)
     print("Prim time:   ", prim_time)
 
+    assert len(mst_kruskal.edges_list) == g.size - 1
+    assert len(mst_prim.edges_list) == g.size - 1
+
     fig, axs = plt.subplots(1, 2, figsize=(16, 7))
 
-    pos = g.plot(axs[0], edge_color="gray", plot_vertices=False)
-    g.plot(axs[1], pos=pos, edge_color="gray", plot_vertices=False)
+    pos = g.plot(axs[0], edge_color="gray", plot_vertices=False, edge_weights=False)
+    pos = g.plot(axs[1], edge_color="gray", plot_vertices=False, edge_weights=False)
 
-    mst_kruskal.plot(axs[0], pos=pos, edge_color="red", plot_vertices=False)
-    mst_prim.plot(axs[1], pos=pos, edge_color="red", plot_vertices=False)
+    mst_kruskal.plot(axs[0], pos=pos, edge_color="red", plot_vertices=False, edge_weights=False)
+    mst_prim.plot(axs[1], pos=pos, edge_color="red", plot_vertices=False, edge_weights=False)
 
     axs[0].set_title(f"Kruskal - Elapsed Time {kruskal_time:f} s")
     axs[1].set_title(f"Prim - Elapsed Time {prim_time:f} s")
