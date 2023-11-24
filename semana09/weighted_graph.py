@@ -132,7 +132,14 @@ class WeightedGraph:
         return G
 
     def plot(
-        self, ax, layout=nx.kamada_kawai_layout, pos=None, edge_color="black", plot_vertices=True, edge_weights=True
+        self,
+        ax,
+        layout=nx.kamada_kawai_layout,
+        pos=None,
+        edge_color="black",
+        plot_vertices=True,
+        edge_weights=True,
+        width=1.0,
     ):
         G = self.to_nx_graph()
 
@@ -140,9 +147,18 @@ class WeightedGraph:
             pos = layout(G)
 
         if plot_vertices:
-            nx.draw(G, pos, with_labels=True, node_color="lightblue", node_size=500, edge_color=edge_color, ax=ax)
+            nx.draw(
+                G,
+                pos,
+                with_labels=True,
+                node_color="lightblue",
+                node_size=500,
+                width=width,
+                edge_color=edge_color,
+                ax=ax,
+            )
         else:
-            nx.draw_networkx_edges(G, pos, width=1.0, alpha=0.5, edge_color=edge_color, ax=ax)
+            nx.draw_networkx_edges(G, pos, width=width, alpha=0.5, edge_color=edge_color, ax=ax)
 
         if edge_weights:
             labels = {}
@@ -197,7 +213,7 @@ class WeightedGraph:
                 if plot_at_steps is not None and qtd_added_edges in plot_at_steps:
                     fig, ax = plt.subplots(figsize=(7, 7))
                     pos = self.plot(ax, edge_color="gray", edge_weights=False, plot_vertices=False)
-                    mst.plot(ax, pos=pos, edge_color="red", edge_weights=False, plot_vertices=False)
+                    mst.plot(ax, pos=pos, edge_color="red", edge_weights=False, plot_vertices=False, width=2.5)
                     ax.set_title(f"Prim - Step {qtd_added_edges}")
                     plt.savefig(f"{output_folder}/prim_step_{qtd_added_edges}.pdf", bbox_inches="tight")
                     plt.close()
@@ -239,7 +255,7 @@ class WeightedGraph:
             if plot_at_steps is not None and qtd_added_verts in plot_at_steps:
                 fig, ax = plt.subplots(figsize=(7, 7))
                 pos = self.plot(ax, edge_color="gray", edge_weights=False, plot_vertices=False)
-                mst.plot(ax, pos=pos, edge_color="red", edge_weights=False, plot_vertices=False)
+                mst.plot(ax, pos=pos, edge_color="red", edge_weights=False, plot_vertices=False, width=2.5)
                 ax.set_title(f"Kruskal - Step {qtd_added_verts}")
                 plt.savefig(f"{output_folder}/kruskal_step_{qtd_added_verts}.pdf", bbox_inches="tight")
                 plt.close()

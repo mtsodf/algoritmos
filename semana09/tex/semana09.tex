@@ -56,8 +56,8 @@
 \vfill
 Algoritmos:
 \begin{itemize}
-  \item Algoritmo de Prim
-  \item Algoritmo de Kruskal
+  \item Algoritmo de Prim ($mlog(m)$ - lazy)
+  \item Algoritmo de Kruskal ($mlog(m)$)
 \end{itemize}
 \vfill
 \end{frame}
@@ -96,6 +96,7 @@ Algoritmos:
 \end{frame}
 
 
+
 \begin{frame}{Union Find}
     Estrutura de Dados para representar conjuntos disjuntos.
 
@@ -104,15 +105,17 @@ Algoritmos:
         \item Union: Unir dois conjuntos
     \end{itemize}
 
+    \begin{center}
+        
 \begin{tikzpicture}[scale=0.75, transform shape, node distance=1.5cm]
     % Style for the circles
     \tikzstyle{circle node}=[circle, draw, minimum size=1cm]
 
     % Draw the top array boxes and numbers
     \foreach \x in {0,...,6}
-        \draw (\x-1,0) rectangle (\x+0,-0.5) node[pos=.5] {\x};
+        \draw[draw=white] (\x-1,-1) rectangle (\x+0,-1.5) node[pos=.5] {\x};
     \foreach \x/\num in {0/0,1/0,2/0,3/3,4/3,5/3,6/5}
-        \draw (\x-1,-0.5) rectangle (\x+0,-1) node[pos=.5] {\num};
+        \draw (\x-1,-1.5) rectangle (\x+0,-2) node[pos=.5] {\num};
 
     % Draw the circles for the tree
     \node[circle node] (0) at (0,2) {0};
@@ -130,12 +133,67 @@ Algoritmos:
     \draw[->] (5) -- (3);
     \draw[->] (6) -- (5);
 
+    \draw[->] (0) to [out=120,in=60,looseness=5] (0);
+    \draw[->] (3) to [out=120,in=60,looseness=5] (3);
+
     % Repeat the process for the bottom part with different positions
     % and arrows indicating values have been moved
     
     % Additional nodes and arrows would go here...
 
-\end{tikzpicture}
+    \end{tikzpicture}
+    \end{center}
+
+\end{frame}
+
+\begin{frame}{Union Find}
+    Estrutura de Dados para representar conjuntos disjuntos.
+
+    \begin{itemize}
+        \item Find: Encontrar o representante do conjunto
+        \item Union: Unir dois conjuntos
+    \end{itemize}
+
+    \begin{center}
+        
+\begin{tikzpicture}[scale=0.75, transform shape, node distance=1.5cm]
+    % Style for the circles
+    \tikzstyle{circle node}=[circle, draw, minimum size=1cm]
+
+    % Draw the top array boxes and numbers
+    \foreach \x in {0,...,6}
+        \draw[draw=white] (\x-1,-1) rectangle (\x+0,-1.5) node[pos=.5] {\x};
+    \foreach \x/\num in {0/3,1/0,2/0,3/3,4/3,5/3,6/5}
+        \draw (\x-1,-1.5) rectangle (\x+0,-2) node[pos=.5] {\num};
+
+    % Draw the circles for the tree
+    \node[circle node] (0) at (0,1) {0};
+    \node[circle node] (1) at (-1,0) {1};
+    \node[circle node] (2) at (1,0) {2};
+    \node[circle node] (3) at (4,2) {3};
+    \node[circle node] (4) at (3,1) {4};
+    \node[circle node] (5) at (5,1) {5};
+    \node[circle node] (6) at (6,0) {6};
+
+    % Draw the arrows for the tree
+    \draw[->] (1) -- (0);
+    \draw[->] (2) -- (0);
+    \draw[->] (4) -- (3);
+    \draw[->] (5) -- (3);
+    \draw[->] (6) -- (5);
+
+    \draw[->] (0) -- (3);
+
+    \draw[->] (3) to [out=120,in=60,looseness=5] (3);
+
+    % Repeat the process for the bottom part with different positions
+    % and arrows indicating values have been moved
+    
+    % Additional nodes and arrows would go here...
+
+    \end{tikzpicture}
+    \end{center}
+
 \end{frame}
 
 \begin{frame}{Exemplo Pequeno - Prim}
