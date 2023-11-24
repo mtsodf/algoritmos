@@ -9,13 +9,13 @@ class WeightedDigraph:
         self.size = size
         self.qtd_edge = 0
 
-    def add_edge(self, vert0, vert1, check=False):
+    def add_edge(self, vert0, vert1, weight, check=False):
         if check:
             for adj_vert in self.adj[vert0]:
                 if adj_vert == vert1:
                     return False
 
-        self.adj[vert0].append(vert1)
+        self.adj[vert0].append((vert1, weight))
         self.qtd_edge += 1
         return True
 
@@ -33,7 +33,7 @@ class WeightedDigraph:
             v = queue.pop(0)
             ordem_visita[i] = v
             i += 1
-            for w in self.adj[v]:
+            for w, _ in self.adj[v]:
                 if not marcado[w]:
                     aresta_final[w] = v
                     marcado[w] = True
@@ -43,7 +43,7 @@ class WeightedDigraph:
 
     def dfs(self, vert_start, marcado, visitado):
         marcado[vert_start] = True
-        for v in self.adj[vert_start]:
+        for v, _ in self.adj[vert_start]:
             if not marcado[v]:
                 self.dfs(v, marcado, visitado)
         visitado.append(vert_start)
@@ -61,13 +61,16 @@ class WeightedDigraph:
         return path[::-1]
 
     def are_neighbours(self, a, b):
-        return b in self.adj[a]
+        for v, w in self.adj[a]:
+            if v == b:
+                return True
+        return False
 
     def reverse(self):
         g = WeightedDigraph(self.size)
         for v in range(self.size):
-            for w in self.adj[v]:
-                g.add_edge(w, v)
+            for b, w in self.adj[v]:
+                g.add_edge(b, v, w)
         return g
 
     def __str__(self):

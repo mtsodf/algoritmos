@@ -10,7 +10,7 @@ sys.setrecursionlimit(100000)
 def test_neighbours():
     g = WeightedDigraph(2)
 
-    g.add_edge(0, 1)
+    g.add_edge(0, 1, 0.1)
 
     assert g.are_neighbours(0, 1)
     assert not g.are_neighbours(1, 0)
@@ -62,18 +62,18 @@ def check_topological_order(g, top_order):
 
 def test_kosajaru():
     g = WeightedDigraph(9)
-    g.add_edge(0, 1)
-    g.add_edge(1, 2)
-    g.add_edge(2, 3)
-    g.add_edge(3, 0)
+    g.add_edge(0, 1, 0.1)
+    g.add_edge(1, 2, 0.1)
+    g.add_edge(2, 3, 0.1)
+    g.add_edge(3, 0, 0.1)
 
-    g.add_edge(2, 4)
-    g.add_edge(4, 5)
-    g.add_edge(5, 6)
-    g.add_edge(6, 4)
+    g.add_edge(2, 4, 0.1)
+    g.add_edge(4, 5, 0.1)
+    g.add_edge(5, 6, 0.1)
+    g.add_edge(6, 4, 0.1)
 
-    g.add_edge(7, 6)
-    g.add_edge(7, 8)
+    g.add_edge(7, 6, 0.1)
+    g.add_edge(7, 8, 0.1)
 
     components = g.strongly_connected_components()
 
