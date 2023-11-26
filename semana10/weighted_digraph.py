@@ -1,4 +1,44 @@
+import itertools
+import heapq
 import networkx as nx
+
+
+class IndexMinPQ:
+    REMOVED = "<removed-task>"
+
+    def __init__(self):
+        self.pq = []
+        self.entry_finder = {}
+        self.counter = itertools.count()
+        self.qtd_verts = 0
+
+    def push(self, vert, weight):
+        if vert in self.entry_finder:
+            self.remove(vert)
+
+        count = next(self.counter)
+        entry = [weight, count, vert]
+
+        self.entry_finder[vert] = entry
+        heapq.heappush(self.pq, entry)
+        self.qtd_verts += 1
+
+    def remove(self, vert):
+        entry = self.entry_finder.pop(vert)
+        entry[-1] = IndexMinPQ.REMOVED
+        self.qtd_verts -= 1
+
+    def pop(self):
+        while self.pq:
+            weight, count, vert = heapq.heappop(self.pq)
+            if vert is not IndexMinPQ.REMOVED:
+                del self.entry_finder[vert]
+                self.qtd_verts -= 1
+                return weight, vert
+        raise KeyError("pop from an empty queue")
+
+    def __len__(self):
+        return self.qtd_verts
 
 
 def read_from_txt(path):
@@ -236,8 +276,26 @@ class WeightedDigraph:
         cost, path_from = self._initialize_alg_lists(vert_init)
 
         for i in range(self.size):
+            any_relaxed = False
             for weight, a, b in self.edges_list:
-                self.relax_edge(cost, path_from, a, b, weight)
+                any_relaxed = self.relax_edge(cost, path_from, a, b, weight) or any_relaxed
+
+            if not any_relaxed:
+                break
+
+        return cost, path_from
+
+    def dijstrak(self, vert_init=0):
+        cost, path_from = self._initialize_alg_lists(vert_init)
+
+        vert_heap = IndexMinPQ()
+        vert_heap.push(vert_init, 0)
+
+        while len(vert_heap) > 0:
+            _, vert = vert_heap.pop()
+            for next_vert, weight in self.adj[vert]:
+                if self.relax_edge(cost, path_from, vert, next_vert, weight):
+                    vert_heap.push(next_vert, cost[next_vert])
 
         return cost, path_from
 
