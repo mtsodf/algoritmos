@@ -114,11 +114,11 @@ class WeightedDigraph:
         G.add_nodes_from([x for x in range(self.size)])
 
         for i in range(self.size):
-            for j in self.adj[i]:
-                G.add_edge(i, j)
+            for j, w in self.adj[i]:
+                G.add_edge(i, j, weight=w)
         return G
 
-    def plot(self, ax, layout=nx.circular_layout, strong_components=None):
+    def plot(self, ax, layout=nx.circular_layout, strong_components=None, edge_weights=True):
         G = self.to_nx_graph()
 
         pos = layout(G)
@@ -148,13 +148,23 @@ class WeightedDigraph:
             nx.draw_networkx_edges(G, pos, edge_color="black", ax=ax)
             nx.draw_networkx_labels(G, pos, ax=ax)
 
-    def plot_top(self, ax, order):
+        if edge_weights:
+            labels = {}
+            for edge in G.edges:
+                labels[edge] = G.edges[edge]["weight"]
+            nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=labels)
+
+    def plot_top(self, ax, order=None, edge_weights=True):
+        if order is None:
+            order = self.topological_order(0)
+
         pos = {}
         for i in range(self.size):
-            pos[order[i]] = (0, i)
+            pos[order[i]] = (i, 0)
 
         G = self.to_nx_graph()
 
+        # Draw edges with weights
         nx.draw_networkx_edges(
             G,
             pos,
@@ -167,6 +177,48 @@ class WeightedDigraph:
         nx.draw_networkx_nodes(G, pos, node_color="lightblue", node_size=500, ax=ax)
         nx.draw_networkx_labels(G, pos, ax=ax)
 
+        if edge_weights:
+            labels = {}
+            for edge in G.edges:
+                labels[edge] = round(G.edges[edge]["weight"], 2)
+            nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=labels)
+
         # Remove axis
         ax.set_xticks([])
         ax.set_yticks([])
+
+    def relax_edge(self, path_cost, path_from, a, b, weight):
+        if path_cost[a] + weight < path_cost[b]:
+            path_from[b] = a
+            path_cost[b] = path_cost[a] + weight
+            return True
+        return False
+
+    def relax_vertice(self, path_cost, path_from, a):
+        any_relaxed = False
+        for b, weight in self.adj[a]:
+            any_relaxed = any_relaxed or self.relax_edge(path_cost, path_from, a, b, weight)
+        return any_relaxed
+
+    def dag_minimum_path(self):
+        post_order_reverse = self.topological_order(0)
+        cost, path_from = self._initialize_alg_lists()
+
+        for v in post_order_reverse:
+            self.relax_vertice(cost, path_from, v)
+
+        return cost, path_from
+
+    def _initialize_alg_lists(self, vert_init=0):
+        cost = [float("inf")] * self.size
+        cost[vert_init] = 0
+        path_from = [None] * self.size
+
+        return cost, path_from
+
+    def copy(self):
+        g = WeightedDigraph(self.size)
+        for i in range(self.size):
+            for j, w in self.adj[i]:
+                g.add_edge(i, j, w)
+        return g

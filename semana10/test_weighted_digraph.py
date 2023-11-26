@@ -1,8 +1,9 @@
-from weighted_digraph import WeightedDigraph
-from dag_generator import generate_dag
 import random
 import time
 import sys
+import matplotlib.pyplot as plt
+from weighted_digraph import WeightedDigraph
+from dag_generator import generate_dag
 
 sys.setrecursionlimit(100000)
 
@@ -98,3 +99,31 @@ def test_time_topological_order():
         end = time.time()
         elapsed = end - start
         print(f"n={n} elapsed={elapsed}")
+
+
+def test_dag_minimum_path():
+    for i in range(100):
+        g, v_order = generate_dag(4, shuffle=True)
+
+        path_from, cost = g.dag_minimum_path()
+
+        all_relaxed = True
+        gcopy = g.copy()
+        for i in range(gcopy.size):
+            all_relaxed = (not gcopy.relax_vertice(path_from, cost, i)) and all_relaxed
+
+        if not all_relaxed:
+            print(g)
+
+        # if not all_relaxed:
+        #     print("Not all relaxed")
+        #     print(path_from)
+        #     print(cost)
+
+        # fig, ax = plt.subplots(1, 1, figsize=(7, 7))
+        # g.plot_top(ax)
+        # plt.show()
+        # plt.close()
+
+        for i in range(g.size):
+            assert not g.relax_vertice(path_from, cost, i)
