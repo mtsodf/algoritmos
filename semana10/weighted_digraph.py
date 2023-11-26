@@ -1,6 +1,24 @@
 import networkx as nx
 
 
+def read_from_txt(path):
+    with open(path) as f:
+        lines = f.readlines()
+        n_vert = int(lines[0])
+        n_edge = int(lines[1])
+
+        g = WeightedDigraph(n_vert)
+
+        for line in lines[2:]:
+            vert0, vert1, edge_weight = line.split()
+            vert0 = int(vert0)
+            vert1 = int(vert1)
+            edge_weight = float(edge_weight)
+            g.add_edge(vert0, vert1, edge_weight)
+
+        return g
+
+
 class WeightedDigraph:
     def __init__(self, size):
         self.adj = [None] * size
@@ -93,23 +111,6 @@ class WeightedDigraph:
 
         return pos_ordem[::-1]
 
-    def strongly_connected_components(self):
-        top_order = self.topological_order(0)
-        post_order = top_order[::-1]
-        components = []
-
-        marcado = [False] * self.size
-        g_reversed = self.reverse()
-
-        while len(post_order) > 0:
-            next_node = post_order.pop()
-            if not marcado[next_node]:
-                visitado = []
-                g_reversed.dfs(next_node, marcado, visitado)
-                components.append(visitado)
-
-        return components
-
     def to_nx_graph(self):
         G = nx.DiGraph()
 
@@ -120,31 +121,34 @@ class WeightedDigraph:
                 G.add_edge(i, j, weight=w)
         return G
 
-    def plot(self, ax, layout=nx.circular_layout, strong_components=None, edge_weights=True, edges_list=None):
+    def plot(
+        self,
+        ax,
+        layout=nx.circular_layout,
+        strong_components=None,
+        edge_weights=True,
+        edges_list=None,
+        edge_color="black",
+        width=1.0,
+        plot_vertices=True,
+        plot_arrows=False,
+    ):
         G = self.to_nx_graph()
 
         pos = layout(G)
 
-        if strong_components is None:
+        if plot_vertices:
             nx.draw(
                 G,
                 pos,
                 with_labels=True,
                 node_color="lightblue",
                 node_size=500,
-                edge_color="black",
+                edge_color=edge_color,
                 ax=ax,
             )
         else:
-            colors = ["red", "green", "blue", "yellow", "orange", "purple", "pink"]
-
-            for i in range(len(strong_components)):
-                nx.draw_networkx_nodes(
-                    G.subgraph(strong_components[i]), pos, node_color=colors[i % len(colors)], node_size=500, ax=ax
-                )
-
-            nx.draw_networkx_edges(G, pos, edge_color="black", ax=ax)
-            nx.draw_networkx_labels(G, pos, ax=ax)
+            nx.draw_networkx_edges(G, pos, width=width, alpha=0.5, edge_color=edge_color, ax=ax, arrows=plot_arrows)
 
         if edge_weights:
             labels = {}
@@ -156,7 +160,7 @@ class WeightedDigraph:
             gsub = G.edge_subgraph(edges_list)
             for edge in gsub.edges:
                 print(edge)
-            nx.draw_networkx_edges(gsub, pos, width=3.0, alpha=0.5, edge_color="red", ax=ax)
+            nx.draw_networkx_edges(gsub, pos, width=3.0, alpha=0.5, edge_color="red", ax=ax, arrows=plot_arrows)
 
     def plot_top(self, ax, order=None, edge_weights=True):
         if order is None:

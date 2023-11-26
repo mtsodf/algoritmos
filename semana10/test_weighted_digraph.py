@@ -2,7 +2,7 @@ import random
 import time
 import sys
 import matplotlib.pyplot as plt
-from weighted_digraph import WeightedDigraph, path_from_to_edges, nx
+from weighted_digraph import WeightedDigraph, path_from_to_edges, nx, read_from_txt
 from dag_generator import generate_dag
 
 sys.setrecursionlimit(100000)
@@ -61,33 +61,6 @@ def check_topological_order(g, top_order):
             assert not g.are_neighbours(top_order[i], top_order[j])
 
 
-def test_kosajaru():
-    g = WeightedDigraph(9)
-    g.add_edge(0, 1, 0.1)
-    g.add_edge(1, 2, 0.1)
-    g.add_edge(2, 3, 0.1)
-    g.add_edge(3, 0, 0.1)
-
-    g.add_edge(2, 4, 0.1)
-    g.add_edge(4, 5, 0.1)
-    g.add_edge(5, 6, 0.1)
-    g.add_edge(6, 4, 0.1)
-
-    g.add_edge(7, 6, 0.1)
-    g.add_edge(7, 8, 0.1)
-
-    components = g.strongly_connected_components()
-
-    set_components = [set(x) for x in components]
-
-    assert len(components) == 4
-
-    assert set([0, 1, 2, 3]) in set_components
-    assert set([4, 5, 6]) in set_components
-    assert set([7]) in set_components
-    assert set([8]) in set_components
-
-
 def test_time_topological_order():
     for n in [10, 100, 1000]:
         g = generate_dag(n, False, 0.5, True)[0]
@@ -114,7 +87,7 @@ def test_dag_minimum_path():
     cost, path_from = g.dag_minimum_path()
 
     fig, ax = plt.subplots(1, 1, figsize=(7, 7))
-    g.plot(ax, edges_list=path_from_to_edges(path_from))
+    g.plot(ax, edges_list=path_from_to_edges(path_from), plot_arrows=True)
     plt.show()
     plt.close()
 
@@ -136,6 +109,27 @@ def test_dag_minimum_path_random():
         cost, path_from = g.dag_minimum_path()
 
         assert_min_path(g, cost, path_from)
+
+
+def test_sedrick_data():
+    g = read_from_txt("semana10/data_sedrick/tinyEWD.txt")
+    g = read_from_txt("semana10/data_sedrick/mediumEWD.txt")
+
+    cost, path_from = g.bellman_ford()
+
+    fig, ax = plt.subplots(1, 1, figsize=(7, 7))
+    g.plot(
+        ax,
+        edge_weights=False,
+        plot_vertices=False,
+        edge_color="gray",
+        layout=nx.kamada_kawai_layout,
+        edges_list=path_from_to_edges(path_from),
+    )
+    plt.show()
+    plt.close()
+
+    assert_min_path(g, cost, path_from)
 
 
 def assert_min_path(g, cost, path_from):
