@@ -2,7 +2,7 @@ import random
 import time
 import sys
 import matplotlib.pyplot as plt
-from weighted_digraph import WeightedDigraph, path_from_to_edges
+from weighted_digraph import WeightedDigraph, path_from_to_edges, nx
 from dag_generator import generate_dag
 
 sys.setrecursionlimit(100000)
@@ -118,8 +118,15 @@ def test_dag_minimum_path():
     plt.show()
     plt.close()
 
-    for i in range(g.size):
-        assert not g.relax_vertice(cost, path_from, i)
+    assert_min_path(g, cost, path_from)
+
+
+def test_bellman_form_random():
+    for i in range(100):
+        g = generate_random_graph(20, edge_propability=0.8)
+        cost, path_from = g.bellman_ford()
+
+        assert_min_path(g, cost, path_from)
 
 
 def test_dag_minimum_path_random():
@@ -128,23 +135,20 @@ def test_dag_minimum_path_random():
 
         cost, path_from = g.dag_minimum_path()
 
-        all_relaxed = True
-        gcopy = g.copy()
-        for i in range(gcopy.size):
-            all_relaxed = (not gcopy.relax_vertice(cost, path_from, i)) and all_relaxed
+        assert_min_path(g, cost, path_from)
 
-        if not all_relaxed:
-            print(g)
 
-        # if not all_relaxed:
-        #     print("Not all relaxed")
-        #     print(path_from)
-        #     print(cost)
+def assert_min_path(g, cost, path_from):
+    gcopy = g.copy()
+    for i in range(gcopy.size):
+        assert not gcopy.relax_vertice(cost, path_from, i)
 
-        # fig, ax = plt.subplots(1, 1, figsize=(7, 7))
-        # g.plot_top(ax)
-        # plt.show()
-        # plt.close()
 
-        for i in range(g.size):
-            assert not g.relax_vertice(cost, path_from, i)
+def generate_random_graph(n, edge_propability=1):
+    g = WeightedDigraph(n)
+
+    for i in range(n):
+        for j in range(n):
+            if i != j and random.uniform(0, 1) <= edge_propability:
+                g.add_edge(i, j, random.uniform(0, 1))
+    return g

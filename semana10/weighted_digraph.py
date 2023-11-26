@@ -8,6 +8,7 @@ class WeightedDigraph:
             self.adj[i] = []
         self.size = size
         self.qtd_edge = 0
+        self.edges_list = []
 
     def add_edge(self, vert0, vert1, weight, check=False):
         if check:
@@ -16,6 +17,7 @@ class WeightedDigraph:
                     return False
 
         self.adj[vert0].append((vert1, weight))
+        self.edges_list.append((weight, vert0, vert1))
         self.qtd_edge += 1
         return True
 
@@ -199,7 +201,8 @@ class WeightedDigraph:
     def relax_vertice(self, path_cost, path_from, a):
         any_relaxed = False
         for b, weight in self.adj[a]:
-            any_relaxed = self.relax_edge(path_cost, path_from, a, b, weight) or any_relaxed
+            relaxed = self.relax_edge(path_cost, path_from, a, b, weight)
+            any_relaxed = relaxed or any_relaxed
         return any_relaxed
 
     def dag_minimum_path(self):
@@ -224,6 +227,15 @@ class WeightedDigraph:
             for j, w in self.adj[i]:
                 g.add_edge(i, j, w)
         return g
+
+    def bellman_ford(self, vert_init=0):
+        cost, path_from = self._initialize_alg_lists(vert_init)
+
+        for i in range(self.size):
+            for weight, a, b in self.edges_list:
+                self.relax_edge(cost, path_from, a, b, weight)
+
+        return cost, path_from
 
 
 def path_from_to_edges(path_from):
