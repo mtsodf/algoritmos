@@ -118,7 +118,7 @@ class WeightedDigraph:
                 G.add_edge(i, j, weight=w)
         return G
 
-    def plot(self, ax, layout=nx.circular_layout, strong_components=None, edge_weights=True):
+    def plot(self, ax, layout=nx.circular_layout, strong_components=None, edge_weights=True, edges_list=None):
         G = self.to_nx_graph()
 
         pos = layout(G)
@@ -138,11 +138,7 @@ class WeightedDigraph:
 
             for i in range(len(strong_components)):
                 nx.draw_networkx_nodes(
-                    G.subgraph(strong_components[i]),
-                    pos,
-                    node_color=colors[i % len(colors)],
-                    node_size=500,
-                    ax=ax,
+                    G.subgraph(strong_components[i]), pos, node_color=colors[i % len(colors)], node_size=500, ax=ax
                 )
 
             nx.draw_networkx_edges(G, pos, edge_color="black", ax=ax)
@@ -152,7 +148,13 @@ class WeightedDigraph:
             labels = {}
             for edge in G.edges:
                 labels[edge] = G.edges[edge]["weight"]
-            nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=labels)
+            nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=labels, label_pos=0.3)
+
+        if edges_list is not None:
+            gsub = G.edge_subgraph(edges_list)
+            for edge in gsub.edges:
+                print(edge)
+            nx.draw_networkx_edges(gsub, pos, width=3.0, alpha=0.5, edge_color="red", ax=ax)
 
     def plot_top(self, ax, order=None, edge_weights=True):
         if order is None:
@@ -197,7 +199,7 @@ class WeightedDigraph:
     def relax_vertice(self, path_cost, path_from, a):
         any_relaxed = False
         for b, weight in self.adj[a]:
-            any_relaxed = any_relaxed or self.relax_edge(path_cost, path_from, a, b, weight)
+            any_relaxed = self.relax_edge(path_cost, path_from, a, b, weight) or any_relaxed
         return any_relaxed
 
     def dag_minimum_path(self):
@@ -222,3 +224,11 @@ class WeightedDigraph:
             for j, w in self.adj[i]:
                 g.add_edge(i, j, w)
         return g
+
+
+def path_from_to_edges(path_from):
+    edges = []
+    for i in range(len(path_from)):
+        if path_from[i] is not None:
+            edges.append((path_from[i], i))
+    return edges

@@ -2,7 +2,7 @@ import random
 import time
 import sys
 import matplotlib.pyplot as plt
-from weighted_digraph import WeightedDigraph
+from weighted_digraph import WeightedDigraph, path_from_to_edges
 from dag_generator import generate_dag
 
 sys.setrecursionlimit(100000)
@@ -102,15 +102,36 @@ def test_time_topological_order():
 
 
 def test_dag_minimum_path():
-    for i in range(100):
-        g, v_order = generate_dag(4, shuffle=True)
+    # Test with the following weighted digraph:
+    g = WeightedDigraph(4)
+    g.add_edge(0, 1, 0.97)
+    g.add_edge(0, 2, 0.93)
+    g.add_edge(0, 3, 0.53)
+    g.add_edge(1, 2, 0.14)
+    g.add_edge(1, 3, 0.67)
+    g.add_edge(2, 3, 0.89)
 
-        path_from, cost = g.dag_minimum_path()
+    cost, path_from = g.dag_minimum_path()
+
+    fig, ax = plt.subplots(1, 1, figsize=(7, 7))
+    g.plot(ax, edges_list=path_from_to_edges(path_from))
+    plt.show()
+    plt.close()
+
+    for i in range(g.size):
+        assert not g.relax_vertice(cost, path_from, i)
+
+
+def test_dag_minimum_path_random():
+    for i in range(100):
+        g, v_order = generate_dag(20, shuffle=False)
+
+        cost, path_from = g.dag_minimum_path()
 
         all_relaxed = True
         gcopy = g.copy()
         for i in range(gcopy.size):
-            all_relaxed = (not gcopy.relax_vertice(path_from, cost, i)) and all_relaxed
+            all_relaxed = (not gcopy.relax_vertice(cost, path_from, i)) and all_relaxed
 
         if not all_relaxed:
             print(g)
@@ -126,4 +147,4 @@ def test_dag_minimum_path():
         # plt.close()
 
         for i in range(g.size):
-            assert not g.relax_vertice(path_from, cost, i)
+            assert not g.relax_vertice(cost, path_from, i)
