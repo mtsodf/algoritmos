@@ -157,3 +157,20 @@ def generate_random_graph(n, edge_propability=1, random_weight=lambda: random.un
             if i != j and random.uniform(0, 1) <= edge_propability:
                 g.add_edge(i, j, random_weight())
     return g
+
+
+def generate_random_connected_graph(n, n_add, random_weight=lambda: random.uniform(0, 1)):
+    g = WeightedDigraph(n)
+
+    for i in range(1, n):
+        g.add_edge(random.randint(0, i - 1), i, random_weight())
+
+    cont = 0
+    while cont < n_add:
+        a = random.randint(0, n - 1)
+        b = random.randint(0, n - 1)
+        if a != b and not g.are_neighbours(a, b):
+            g.add_edge(a, b, random_weight())
+            cont += 1
+
+    return g
