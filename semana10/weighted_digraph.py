@@ -272,7 +272,7 @@ class WeightedDigraph:
                 g.add_edge(i, j, w)
         return g
 
-    def bellman_ford(self, vert_init=0):
+    def bellman_ford_queue(self, vert_init=0):
         cost, path_from = self._initialize_alg_lists(vert_init)
 
         vert_queue = []

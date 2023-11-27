@@ -19,6 +19,13 @@ def test_neighbours():
     assert not g.are_neighbours(1, 0)
 
 
+def test_negative_edges():
+    pass
+    g = generate_random_graph(4, 1, lambda: random.randint(-5, 5))
+    cost, path_from = g.dijstrak()
+    assert_min_path(g, cost, path_from)
+
+
 def test_generate_dag():
     g, _ = generate_dag(3)
 
@@ -99,7 +106,7 @@ def test_dag_minimum_path():
 def test_random_graph_min_path():
     for i in range(100):
         g = generate_random_graph(20, edge_propability=0.8)
-        for alg in [g.dijstrak, g.bellman_ford]:
+        for alg in [g.dijstrak, g.bellman_ford_queue]:
             cost, path_from = alg()
             assert_min_path(g, cost, path_from)
 
@@ -120,7 +127,7 @@ def test_sedrick_data(input_file):
     g = read_from_txt(input_file)
 
     fig, axs = plt.subplots(1, 2, figsize=(16, 7))
-    for alg, ax in zip([g.bellman_ford, g.dijstrak], axs):
+    for alg, ax in zip([g.bellman_ford_queue, g.dijstrak], axs):
         cost, path_from = alg()
         g.plot(
             ax,
@@ -142,11 +149,11 @@ def assert_min_path(g, cost, path_from):
         assert not gcopy.relax_vertice(cost, path_from, i)
 
 
-def generate_random_graph(n, edge_propability=1):
+def generate_random_graph(n, edge_propability=1, random_weight=lambda: random.uniform(0, 1)):
     g = WeightedDigraph(n)
 
     for i in range(n):
         for j in range(n):
             if i != j and random.uniform(0, 1) <= edge_propability:
-                g.add_edge(i, j, random.uniform(0, 1))
+                g.add_edge(i, j, random_weight())
     return g
