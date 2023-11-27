@@ -272,6 +272,18 @@ class WeightedDigraph:
                 g.add_edge(i, j, w)
         return g
 
+    def bellman_ford(self, vert_init=0):
+        cost, path_from = self._initialize_alg_lists(vert_init)
+
+        for i in range(self.size):
+            any_relaxed = False
+            for weight, a, b in self.edges_list:
+                any_relaxed = self.relax_edge(cost, path_from, a, b, weight) or any_relaxed
+
+            if not any_relaxed:
+                break
+        return cost, path_from
+
     def bellman_ford_queue(self, vert_init=0):
         cost, path_from = self._initialize_alg_lists(vert_init)
 

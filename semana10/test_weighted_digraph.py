@@ -106,7 +106,7 @@ def test_dag_minimum_path():
 def test_random_graph_min_path():
     for i in range(100):
         g = generate_random_graph(20, edge_propability=0.8)
-        for alg in [g.dijstrak, g.bellman_ford_queue]:
+        for alg in [g.dijstrak, g.bellman_ford_queue, g.bellman_ford]:
             cost, path_from = alg()
             assert_min_path(g, cost, path_from)
 
