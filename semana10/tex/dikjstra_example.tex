@@ -1,0 +1,166 @@
+% Slide 1
+\begin{frame}{Dijkstra - IndexMinPQ}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                            thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+
+        \node[main node, fill=red] (1) {0};
+        \node[main node] (2) [right of=1] {1};
+        \node[main node] (3) [above of=1] {2};
+
+        \path[every node/.style={font=\sffamily\small}]
+            (1) edge[color=gray] node [below] {1} (2)
+            (2) edge[color=gray] node [right] {2} (3)
+            (1) edge[color=gray] node [left] {10} (3);
+        \end{tikzpicture}
+    \column{0.5\textwidth}
+    \begin{center}
+        \textbf{IndexMinPQ}
+    % Add table with 2 columns (dist_to, vertex)
+        
+        \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|}
+        \hline
+        dist\_to & vertex \\ \hline
+        0        & 0      \\ \hline
+                &        \\ \hline
+                &        \\ \hline
+        \end{tabular}
+        \end{table}
+    \end{center}
+    \end{columns}
+\end{frame}
+
+% Slide 2
+\begin{frame}{Dijkstra - IndexMinPQ}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                            thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+
+        \node[main node] (1) {0};
+        \node[main node] (2) [right of=1] {1};
+        \node[main node] (3) [above of=1] {2};
+
+        \path[every node/.style={font=\sffamily\small}]
+            (1) edge[color=gray] node [below] {1} (2)
+            (2) edge[color=gray] node [right] {2} (3)
+            (1) edge[color=gray] node [left] {10} (3);
+        \end{tikzpicture}
+    \column{0.5\textwidth}
+    \begin{center}
+        \textbf{IndexMinPQ}
+        \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|}
+        \hline
+        dist\_to & vertex \\ \hline
+        1        & 1      \\ \hline
+        10       & 2      \\ \hline
+                 &        \\ \hline
+        \end{tabular}
+        \end{table}
+    \end{center}
+    \end{columns}
+\end{frame}
+
+% Slide 3
+\begin{frame}{Dijkstra - IndexMinPQ}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                            thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+
+        \node[main node] (1) {0};
+        \node[main node, fill=red] (2) [right of=1] {1};
+        \node[main node] (3) [above of=1] {2};
+
+        \path[every node/.style={font=\sffamily\small}]
+            (1) edge[color=black] node [below] {1} (2)
+            (2) edge[color=gray] node [right] {2} (3)
+            (1) edge[color=gray] node [left] {10} (3);
+        \end{tikzpicture}
+    \column{0.5\textwidth}
+    \begin{center}
+        \textbf{IndexMinPQ}
+        \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|}
+        \hline
+        dist\_to & vertex \\ \hline
+        10       & 2      \\ \hline
+                 &        \\ \hline
+                 &        \\ \hline
+        \end{tabular}
+        \end{table}
+    \end{center}
+    \end{columns}
+\end{frame}
+
+% Slide 4
+\begin{frame}{Dijkstra - IndexMinPQ}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                            thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+
+        \node[main node] (1) {0};
+        \node[main node, fill=red] (2) [right of=1] {1};
+        \node[main node] (3) [above of=1] {2};
+
+        \path[every node/.style={font=\sffamily\small}]
+            (1) edge[color=black] node [below] {1} (2)
+            (2) edge[color=gray] node [right] {2} (3)
+            (1) edge[color=gray] node [left] {10} (3);
+        \end{tikzpicture}
+    \column{0.5\textwidth}
+    \begin{center}
+        \textbf{IndexMinPQ}
+        \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|}
+        \hline
+        dist\_to  & vertex \\ \hline
+        {\color{red}3}  & 2      \\ \hline
+                  &        \\ \hline
+                  &        \\ \hline
+        \end{tabular}
+        \end{table}
+    \end{center}
+    \end{columns}
+\end{frame}
+
+% Slide 5
+\begin{frame}{Dijkstra - IndexMinPQ}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                            thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+
+        \node[main node] (1) {0};
+        \node[main node] (2) [right of=1] {1};
+        \node[main node, fill=red] (3) [above of=1] {2};
+
+        \path[every node/.style={font=\sffamily\small}]
+            (1) edge[color=black] node [below] {1} (2)
+            (2) edge[color=black] node [right] {2} (3)
+            (1) edge[color=gray] node [left] {10} (3);
+        \end{tikzpicture}
+    \column{0.5\textwidth}
+    \begin{center}
+        \textbf{IndexMinPQ}
+        \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|}
+        \hline
+        dist\_to  & vertex \\ \hline
+                  &        \\ \hline
+                  &        \\ \hline
+                  &        \\ \hline
+        \end{tabular}
+        \end{table}
+    \end{center}
+    \end{columns}
+\end{frame}
