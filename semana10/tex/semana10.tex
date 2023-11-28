@@ -56,10 +56,10 @@ Dado um nó fonte encontrar o menor caminho para todos os outros nós.
 \vfill
 Algoritmos:
 \begin{itemize}
-  \item Algoritmo de Dijkstra ($O(mlog(m))$)
-  \item Algoritmo de Bellman-Ford ($O(mn)$)
-  \item Algoritmo de Bellman-Ford com filas ($O(mn)$)
-  \item Algoritmo DAGS ($O(m+n)$)
+  \item Dijkstra ($O(mlog(m))$)
+  \item Bellman-Ford ($O(mn)$)
+  \item Bellman-Ford com filas ($O(mn)$)
+  \item DAGS ($O(m+n)$)
 \end{itemize}
 \vfill
 \end{frame}
@@ -81,8 +81,93 @@ Este vetor contém as distâncias mínimas se e somente se:
 
 \end{frame}
 
-\begin{frame}{Bellamn Ford}
-    Relaxar todas as arestas $|V|-1$ vezes.
+\begin{frame}{Bellman-Ford}
+    Relaxar todas as arestas $|V|$ vezes.
+
+    \vfill
+
+    \onslide<2->{
+        \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.4\textwidth]{figs/bellman/mediumEWD_0021.pdf}
+        \end{figure}
+    }
+
+    \vfill
+    \onslide<3>{
+        \begin{itemize}
+            \item Utilizar fila para guardar nós que devem ser relaxados
+        \end{itemize}
+    }
+
+    \vfill
+
+\end{frame}
+
+\begin{frame}{Dijkstra} 
+
+    A cada passo, relaxar o vértice com atual menor distância ao vértice fonte
+
+    \vfill
+
+    \onslide<2->{
+        \begin{figure}[ht]
+        \centering
+        \includegraphics[width=0.4\textwidth]{figs/sedrick_dijkstra.png}
+        %Add tiny caption with fig source
+        \footnote{Algorithms Fourth Edition: Sedgewick, Wayne}
+        \end{figure}
+    }
+
+    \vfill
+    
+\end{frame}
+
+\begin{frame}{Dijkstra - IndexMinPQ}
+    \vfill
+    \begin{itemize}
+        \item Heap que possui operações de alterar prioridade e remover o menor elemento em $O(log(n))$.
+        \item Necessário quando aparece um caminho menor que o anterior. 
+    \end{itemize}
+    \vfill
+\end{frame}
+
+
+\begin{frame}{Resultados - Grafo Completo}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{itemize}
+            \item m = n(n-1)
+            \item Pesos aleatórios no intervalo [0, 1]
+        \end{itemize}
+    \column{0.5\textwidth}
+    \begin{figure}[ht]
+        \centering
+        \includegraphics<1>[width=0.9\textwidth]{figs/complete_graphs.pdf}
+        \includegraphics<2>[width=0.9\textwidth]{figs/complete_graphs_log.pdf}
+    \end{figure}
+
+    \end{columns}
+
+\end{frame}
+
+
+\begin{frame}{Resultados - DAG Completo}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{itemize}
+            \item m = n(n-1)/2
+            \item Pesos aleatórios no intervalo [0, 1]
+        \end{itemize}
+    \column{0.5\textwidth}
+    \begin{figure}[ht]
+        \centering
+        \includegraphics<1>[width=0.9\textwidth]{figs/dag_graphs_0.pdf}
+        \includegraphics<2>[width=0.9\textwidth]{figs/dag_graphs_1.pdf}
+        \includegraphics<3>[width=0.9\textwidth]{figs/dag_graphs_log.pdf}
+    \end{figure}
+
+    \end{columns}
 
 \end{frame}
 
