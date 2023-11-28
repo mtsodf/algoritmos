@@ -139,14 +139,12 @@ Este vetor contém as distâncias mínimas se e somente se:
 
     \vfill
 
-    \onslide<2->{
-        \begin{figure}[ht]
-        \centering
-        \includegraphics[width=0.4\textwidth]{figs/sedrick_dijkstra.png}
-        %Add tiny caption with fig source
-        \footnote{Algorithms Fourth Edition: Sedgewick, Wayne}
-        \end{figure}
-    }
+    \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\textwidth]{figs/sedrick_dijkstra.png}
+    %Add tiny caption with fig source
+    \footnote{Algorithms Fourth Edition: Sedgewick, Wayne}
+    \end{figure}
 
     \vfill
     
@@ -280,5 +278,42 @@ Este vetor contém as distâncias mínimas se e somente se:
 
 \end{frame}
 
+\begin{frame}{Sobre Arestas Negativas}
+    \vfill
+    \begin{itemize}
+        \item<1-> O problema fica mal definido quando existem ciclos negativos
+        \item<2-> Bellman-Ford funciona com arestas negativas
+        \item<3-> Dijkstra não funciona com arestas negativas
+            \begin{itemize}
+                \item<4> {\color{red} Não consegui encontrar exemplo disso com o IndexMinPQ}
+            \end{itemize}
+    \end{itemize}
+    \vfill
+\end{frame}
+
+
+\include{negative_edge_example}
+
+
+\begin{frame}{Sobre Arestas Negativas}
+
+    \vfill
+    \begin{figure}[ht]
+    \centering
+        \includegraphics[width=0.5\textwidth]{figs/dijkstra_sedrick.png}
+        \footnote{Algorithms Fourth Edition: Sedgewick, Wayne}
+    \end{figure}
+    \vfill
+\end{frame}
+
+% Final frame with Obrigado
+\begin{frame}
+\frametitle{Fim}
+\vfill
+\begin{center}
+    \Huge{Obrigado!}
+\end{center}
+\vfill
+\end{frame}
 
 \end{document}

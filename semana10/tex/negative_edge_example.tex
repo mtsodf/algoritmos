@@ -1,0 +1,34 @@
+% Slide 1
+\begin{frame}{Sobre arestas negativas}
+    \begin{columns}
+    \column{0.5\textwidth}
+        \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+                            thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries}]
+
+        \node[main node, fill=red] (1) {20};
+        \node[main node] (2) [right of=1] {21};
+        \node[main node] (3) [above of=1] {22};
+
+        \path[every node/.style={font=\sffamily\small}]
+            (1) edge[color=gray] node [below] {1} (2)
+            (1) edge[color=gray] node [left] {2} (3)
+            (2) edge[color=gray] node [right] {-5} (3);
+        \end{tikzpicture}
+    \column{0.5\textwidth}
+    \begin{center}
+        \textbf{IndexMinPQ}
+    % Add table with 2 columns (dist_to, vertex)
+        
+        \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|}
+        \hline
+        dist\_to & vertex \\ \hline
+        10        & 20      \\ \hline
+                &        \\ \hline
+                &        \\ \hline
+        \end{tabular}
+        \end{table}
+    \end{center}
+    \end{columns}
+\end{frame}
