@@ -19,11 +19,54 @@ def test_neighbours():
     assert not g.are_neighbours(1, 0)
 
 
+def test_negative_cycle():
+    g = WeightedDigraph(4)
+    g.add_edge(0, 1, 0.1)
+    g.add_edge(1, 2, 0.1)
+    g.add_edge(2, 3, 0.1)
+    g.add_edge(3, 0, -1.0)
+
+    assert g.has_negative_cycle()
+
+
+def test_negative_edges2():
+    g = WeightedDigraph(3)
+
+    g.add_edge(0, 1, 1)
+    g.add_edge(0, 2, 1)
+    g.add_edge(1, 2, -10)
+
+    print(g.dijstrak())
+
+
 def test_negative_edges():
-    pass
-    g = generate_random_graph(4, 1, lambda: random.randint(-5, 5))
-    cost, path_from = g.dijstrak()
-    assert_min_path(g, cost, path_from)
+    cost_dijstrak = 0
+    cost_bellman = 0
+    cont = 0
+    while cost_dijstrak == cost_bellman and cont < 20:
+        print(f"Generating graph {cont}")
+        g = generate_random_connected_graph(10, 10, lambda: random.randint(-5, 5))
+
+        i = 0
+        while g.has_negative_cycle() and i < 10:
+            g = generate_random_graph(10, 10, lambda: random.randint(-5, 5))
+            i += 1
+
+        if i == 10:
+            continue
+
+        print(g)
+
+        cost_dijstrak, path_from_dijstrak = g.dijstrak()
+
+        cost_bellman, path_from_bellman = g.bellman_ford_queue()
+
+        assert_min_path(g, cost_dijstrak, path_from_dijstrak)
+
+        if cost_bellman != cost_dijstrak:
+            return
+
+        cont += 1
 
 
 def test_generate_dag():
@@ -93,7 +136,7 @@ def test_dag_minimum_path():
     g.add_edge(1, 3, 0.67)
     g.add_edge(2, 3, 0.89)
 
-    cost, path_from = g.dag_minimum_path()
+    cost, path_from, _ = g.dag_minimum_path()
 
     fig, ax = plt.subplots(1, 1, figsize=(7, 7))
     g.plot(ax, edges_list=path_from_to_edges(path_from), plot_arrows=True)
@@ -114,7 +157,7 @@ def test_random_graph_min_path():
 def test_dag_minimum_path_random():
     for i in range(100):
         g, v_order = generate_dag(20, shuffle=False)
-        cost, path_from = g.dag_minimum_path()
+        cost, path_from, _ = g.dag_minimum_path()
         assert_min_path(g, cost, path_from)
 
 

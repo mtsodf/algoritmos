@@ -1,3 +1,4 @@
+import time
 import itertools
 import heapq
 import networkx as nx
@@ -251,12 +252,15 @@ class WeightedDigraph:
 
     def dag_minimum_path(self):
         post_order_reverse = self.topological_order(0)
+
         cost, path_from = self._initialize_alg_lists()
 
+        start = time.time()
         for v in post_order_reverse:
             self.relax_vertice(cost, path_from, v)
+        elapsed = time.time() - start
 
-        return cost, path_from
+        return cost, path_from, elapsed
 
     def _initialize_alg_lists(self, vert_init=0):
         cost = [float("inf")] * self.size
@@ -272,6 +276,13 @@ class WeightedDigraph:
                 g.add_edge(i, j, w)
         return g
 
+    def has_negative_cycle(self):
+        cost, path_from = self.bellman_ford()
+        any_relaxed = False
+        for weight, a, b in self.edges_list:
+            any_relaxed = self.relax_edge(cost, path_from, a, b, weight) or any_relaxed
+        return any_relaxed
+
     def bellman_ford(self, vert_init=0):
         cost, path_from = self._initialize_alg_lists(vert_init)
 
@@ -280,8 +291,6 @@ class WeightedDigraph:
             for weight, a, b in self.edges_list:
                 any_relaxed = self.relax_edge(cost, path_from, a, b, weight) or any_relaxed
 
-            if not any_relaxed:
-                break
         return cost, path_from
 
     def bellman_ford_queue(self, vert_init=0):
