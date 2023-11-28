@@ -1,0 +1,89 @@
+\documentclass[aspectratio=169,usenames,dvipsnames]{beamer}
+
+
+\usetheme{default}  % You can choose any other theme you prefer
+
+\title{10 - Algoritmos}
+\subtitle{Caminho Mínimo}
+\author{Mateus Oliveira de Figueiredo}
+\date{27/11/2023}
+
+\usepackage{tikz}
+\usetikzlibrary{matrix}
+\usepackage{multicol}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage{amsmath} % for "pmatrix" environment  
+\usepackage{pgffor} 
+\usepackage{listings}
+
+\usepackage{pgfplots}
+\DeclareUnicodeCharacter{2212}{−}
+\usepgfplotslibrary{groupplots,dateplot}
+\usetikzlibrary{patterns,shapes.arrows, positioning, arrows}
+\usetikzlibrary{graphs, graphs.standard}
+\pgfplotsset{compat=newest}
+
+\lstset{
+  language=Python,
+  basicstyle=\ttfamily\tiny,
+  keywordstyle=\color{blue},
+  commentstyle=\color{green},
+  stringstyle=\color{red},
+  stepnumber=1,
+  numbersep=10pt,
+  showspaces=false,
+  showstringspaces=false,
+  tabsize=2,
+  breaklines=true,
+  breakatwhitespace=true,
+}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{Caminho Mínimo}
+
+Dado um nó fonte encontrar o menor caminho para todos os outros nós.
+
+\vfill
+Algoritmos:
+\begin{itemize}
+  \item Algoritmo de Dijkstra ($O(mlog(m))$)
+  \item Algoritmo de Bellman-Ford ($O(mn)$)
+  \item Algoritmo de Bellman-Ford com filas ($O(mn)$)
+  \item Algoritmo DAGS ($O(m+n)$)
+\end{itemize}
+\vfill
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Proposição Relaxamento}
+
+\vfill
+\begin{block}{Proposição}
+Seja G um dígrafo com fonte $s \in V$. Seja dist\_para um vetor de distâncias de s para cada vértice de G. 
+Este vetor contém as distâncias mínimas se e somente se:
+\begin{itemize}
+  \item Para cada aresta $u \rightarrow v$ de G, temos que dist\_para[v] $\leq$ dist\_para[u] + peso(u,v).
+  \item dist\_para[s] = 0
+\end{itemize}
+\end{block}
+\vfill
+
+\end{frame}
+
+\begin{frame}{Bellamn Ford}
+    Relaxar todas as arestas $|V|-1$ vezes.
+
+\end{frame}
+
+\end{document}
